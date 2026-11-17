@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <!-- JEMBATAN API KE GOOGLE APPS SCRIPT -->
+  <script>
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycby1WiRhGdIHsaA6brxkaOVWn4mqS5cV3naYfKZmOJErpRJl0wkTUbSMIUrJLkTzkoPO/exec";
+
+    (function () {
+      function createRunner(successCb, failureCb, userObj) {
+        return new Proxy({}, {
+          get: function (_, prop) {
+            if (prop === 'withSuccessHandler') {
+              return function (fn) { return createRunner(fn, failureCb, userObj); };
+            }
+            if (prop === 'withFailureHandler') {
+              return function (fn) { return createRunner(successCb, fn, userObj); };
+            }
+            if (prop === 'withUserObject') {
+              return function (obj) { return createRunner(successCb, failureCb, obj); };
+            }
+            return function () {
+              const args = Array.prototype.slice.call(arguments);
+              if (!GAS_API_URL || GAS_API_URL.indexOf("TEMPEL_LINK_EXEC") !== -1) {
+                const err = new Error("Link GAS_API_URL belum diisi di dalam file dashboard.html.");
+                if (typeof failureCb === 'function') failureCb(err, userObj);
+                else alert(err.message);
+                return;
+              }
+              fetch(GAS_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ action: String(prop), args: args })
+              })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                  if (typeof successCb === 'function') successCb(data, userObj);
+                })
+                .catch(function (err) {
+                  if (typeof failureCb === 'function') failureCb(err, userObj);
+                  else console.error('GAS API Error:', err);
+                });
+            };
+          }
+        });
+      }
+
+      window.google = window.google || {};
+      window.google.script = window.google.script || {};
+      window.google.script.run = createRunner(null, null, null);
+    })();
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Guru - New English Evaluation (NEng Eva)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    .clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+    .clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col text-xs">
+
+  <!-- LAYAR LOGIN GURU -->
+  <div id="login-overlay" class="fixed inset-0 bg-slate-900 z-[80] flex items-center justify-center p-4">
+    <form onsubmit="doTeacherLogin(event)" class="bg-white rounded-xl p-6 w-full max-w-xs space-y-3 shadow-2xl">
+      <div class="text-center space-y-1">
+        <div class="w-11 h-11 bg-indigo-600 text-white rounded-lg flex items-center justify-center mx-auto text-lg"><i class="fa-solid fa-lock"></i></div>
+        <h2 class="font-bold text-sm text-slate-800">Login Guru</h2>
+        <p class="text-[11px] text-slate-500">Masukkan PIN guru (tab Config &rarr; TEACHER_PIN)</p>
+      </div>
+      <label for="login-pin" class="sr-only">PIN guru</label>
+      <input id="login-pin" type="password" autocomplete="off" placeholder="PIN guru" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-indigo-500" autofocus>
+      <p id="login-error" class="text-rose-600 text-[11px] hidden"></p>
+      <button class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-lg text-xs transition">Masuk</button>
+    </form>
+  </div>
+
+  <!-- LOADING OVERLAY -->
+  <div id="loading-overlay" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[90] flex flex-col items-center justify-center text-white hidden">
+    <div class="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin mb-2"></div>
+    <p id="loading-text" class="text-xs font-semibold">Memuat Data...</p>
+  </div>
+
+  <!-- HEADER DASHBOARD -->
+  <header class="bg-slate-900 text-white shadow-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
+      <div class="flex items-center space-x-2.5">
+        <div class="bg-indigo-600 p-1.5 rounded-lg text-white font-bold text-sm">
+          <i class="fa-solid fa-chart-line"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-sm leading-tight">Dashboard Guru NEng Eva</h1>
+          <p class="text-[10px] text-slate-400">Portal Analisis &amp; Monitoring Evaluasi</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-2">
+        <div class="bg-slate-800 p-0.5 rounded-lg flex space-x-1 border border-slate-700">
+          <button id="tab-btn-results" onclick="switchTab('results')" class="px-3 py-1 rounded-md font-bold text-[11px] bg-indigo-600 text-white shadow transition flex items-center space-x-1">
+            <i class="fa-solid fa-list-check"></i>
+            <span>Hasil Evaluasi</span>
+          </button>
+          <button id="tab-btn-packages" onclick="switchTab('packages')" class="px-3 py-1 rounded-md font-bold text-[11px] text-slate-300 hover:bg-slate-700 transition flex items-center space-x-1">
+            <i class="fa-solid fa-box-archive"></i>
+            <span>Kelola Ujian</span>
+          </button>
+        </div>
+
+        <button onclick="refreshAll()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-[11px] font-semibold px-2.5 py-1 rounded-lg transition flex items-center space-x-1">
+          <i class="fa-solid fa-rotate"></i>
+          <span class="hidden sm:inline">Refresh</span>
+        </button>
+        <button onclick="doTeacherLogout()" class="bg-slate-800 hover:bg-rose-700 text-slate-200 border border-slate-700 text-[11px] font-semibold px-2.5 py-1 rounded-lg transition flex items-center space-x-1" title="Keluar">
+          <i class="fa-solid fa-right-from-bracket"></i>
+          <span class="hidden sm:inline">Keluar</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTAINER UTAMA -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-3 md:p-4 space-y-3">
+
+    <!-- TAB 1: HASIL EVALUASI SISWA -->
+    <section id="tab-results" class="space-y-3">
+
+      <!-- STATISTIK RINGKAS (PESERTA UNIK = KELAS + NAMA + PAKET) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+        <div class="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm flex items-center justify-between" title="Kombinasi Kelas + Nama + Paket">
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Peserta Unik</span>
+            <div id="stat-total" class="text-base font-black text-slate-800 leading-none mt-0.5">0</div>
+          </div>
+          <div class="w-7 h-7 bg-indigo-50 text-indigo-600 rounded-md flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-users"></i></div>
+        </div>
+        <div class="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Rata-rata</span>
+            <div id="stat-avg" class="text-base font-black text-slate-800 leading-none mt-0.5">0</div>
+          </div>
+          <div class="w-7 h-7 bg-blue-50 text-blue-600 rounded-md flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-calculator"></i></div>
+        </div>
+        <div class="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Skor Max</span>
+            <div id="stat-max" class="text-base font-black text-indigo-600 leading-none mt-0.5">0</div>
+          </div>
+          <div class="w-7 h-7 bg-purple-50 text-purple-600 rounded-md flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-arrow-up-right-dots"></i></div>
+        </div>
+        <div class="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Skor Min</span>
+            <div id="stat-min" class="text-base font-black text-amber-600 leading-none mt-0.5">0</div>
+          </div>
+          <div class="w-7 h-7 bg-amber-50 text-amber-600 rounded-md flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-arrow-down-short-wide"></i></div>
+        </div>
+        <div class="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Lulus KKM</span>
+            <div id="stat-passed" class="text-base font-black text-emerald-600 leading-none mt-0.5">0 (0%)</div>
+          </div>
+          <div class="w-7 h-7 bg-emerald-50 text-emerald-600 rounded-md flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-circle-check"></i></div>
+        </div>
+        <div class="bg-white p-2.5 rounded-lg border border-slate-200 shadow-sm flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-bold text-slate-400 uppercase">Remedial</span>
+            <div id="stat-remedi" class="text-base font-black text-rose-600 leading-none mt-0.5">0</div>
+          </div>
+          <div class="w-7 h-7 bg-rose-50 text-rose-600 rounded-md flex items-center justify-center text-xs shrink-0"><i class="fa-solid fa-rotate-right"></i></div>
+        </div>
+      </div>
+
+      <!-- PANEL FILTER, SEARCH & EXPORT -->
+      <div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm space-y-2">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 border-b border-slate-100 pb-2">
+          <div class="flex items-center space-x-1.5 flex-wrap">
+            <i class="fa-solid fa-sliders text-indigo-600 text-xs"></i>
+            <h3 class="font-bold text-xs text-slate-800">Filter Data</h3>
+            <span class="text-[10px] text-slate-400 font-medium ml-2">
+              <b id="filtered-count-display" class="text-indigo-600">0 baris</b> &bull;
+              <b id="peserta-count-display" class="text-indigo-600">0 peserta</b>
+              (dari <span id="total-count-display">0</span> sesi)
+            </span>
+          </div>
+          <div class="flex items-center space-x-1.5">
+            <select id="filter-range" onchange="loadDashboardData()" aria-label="Rentang waktu data" class="bg-white border border-slate-300 text-[10px] font-semibold text-slate-700 rounded p-1">
+              <option value="0">Semua waktu</option>
+              <option value="1">24 jam</option>
+              <option value="7">7 hari</option>
+              <option value="30">30 hari</option>
+              <option value="120">120 hari</option>
+            </select>
+            <button onclick="exportRekap()" class="text-[10px] font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-2.5 py-1 rounded border border-indigo-200 transition flex items-center space-x-1" title="Satu baris per siswa, kolom per paket (nilai terbaik)">
+              <i class="fa-solid fa-table-list"></i><span>Rekap Nilai</span>
+            </button>
+            <button onclick="exportToCSV()" class="text-[10px] font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2.5 py-1 rounded border border-emerald-200 transition flex items-center space-x-1">
+              <i class="fa-solid fa-file-excel"></i><span>Export CSV</span>
+            </button>
+            <button onclick="resetFilters()" class="text-[10px] font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-2 py-1 rounded border border-rose-200 transition">
+              <i class="fa-solid fa-rotate-left mr-1"></i>Reset
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-7 gap-2">
+          <div class="col-span-2 sm:col-span-3 md:col-span-2 relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-2.5 top-2.5 text-slate-400 text-[10px]"></i>
+            <input type="text" id="search-input" onkeyup="applyFilters()" placeholder="Cari nama siswa..." aria-label="Cari nama siswa" class="w-full bg-slate-50 border border-slate-300 text-xs rounded-md pl-7 pr-2 py-1.5 focus:ring-1 focus:ring-indigo-500 font-medium">
+          </div>
+          <select id="filter-kelas" onchange="applyFilters()" aria-label="Filter kelas" class="w-full bg-slate-50 border border-slate-300 text-xs font-semibold text-slate-700 rounded-md p-1.5 focus:ring-1 focus:ring-indigo-500">
+            <option value="">-- Semua Kelas --</option>
+          </select>
+          <select id="filter-paket" onchange="applyFilters()" aria-label="Filter paket" class="w-full bg-slate-50 border border-slate-300 text-xs font-semibold text-slate-700 rounded-md p-1.5 focus:ring-1 focus:ring-indigo-500">
+            <option value="">-- Semua Paket --</option>
+          </select>
+          <select id="filter-status" onchange="applyFilters()" aria-label="Filter status" class="w-full bg-slate-50 border border-slate-300 text-xs font-semibold text-slate-700 rounded-md p-1.5 focus:ring-1 focus:ring-indigo-500">
+            <option value="">-- Semua Status --</option>
+            <option value="LULUS">LULUS KKM</option>
+            <option value="REMEDI">REMEDIAL</option>
+          </select>
+          <select id="filter-view" onchange="applyFilters()" aria-label="Tampilan percobaan" class="w-full bg-slate-50 border border-slate-300 text-xs font-semibold text-slate-700 rounded-md p-1.5 focus:ring-1 focus:ring-indigo-500">
+            <option value="all">Semua Percobaan</option>
+            <option value="best">Percobaan Terbaik</option>
+          </select>
+          <select id="filter-sort" onchange="applyFilters()" aria-label="Urutan data" class="w-full bg-slate-50 border border-slate-300 text-xs font-semibold text-slate-700 rounded-md p-1.5 focus:ring-1 focus:ring-indigo-500">
+            <option value="newest">Terbaru</option>
+            <option value="oldest">Terlama</option>
+            <option value="score_desc">Skor High</option>
+            <option value="score_asc">Skor Low</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- SEDANG MENGERJAKAN -->
+      <details id="active-details" class="bg-white rounded-lg border border-slate-200 shadow-sm group">
+        <summary class="p-3 cursor-pointer flex items-center justify-between select-none font-bold text-xs text-slate-800">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-user-clock text-amber-500"></i>
+            <span>Sedang mengerjakan: <b id="active-count" class="text-amber-600">0</b></span>
+          </div>
+          <i class="fa-solid fa-chevron-down text-xs text-slate-400 group-open:rotate-180 transition-transform"></i>
+        </summary>
+        <div id="active-list" class="px-3 pb-3 text-[11px] text-slate-600 space-y-1">Belum ada siswa yang sedang mengerjakan.</div>
+      </details>
+
+      <!-- GRAFIK -->
+      <details id="charts-details" class="bg-white rounded-lg border border-slate-200 shadow-sm group">
+        <summary class="p-3 cursor-pointer flex items-center justify-between select-none font-bold text-xs text-slate-800">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-chart-column text-indigo-500"></i>
+            <span>Grafik Sebaran Skor &amp; Rata-rata per Kelas</span>
+          </div>
+          <i class="fa-solid fa-chevron-down text-xs text-slate-400 group-open:rotate-180 transition-transform"></i>
+        </summary>
+        <div class="p-3 pt-2 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Sebaran skor terbaik per peserta</p>
+            <div class="h-44"><canvas id="chart-hist" aria-label="Histogram sebaran skor"></canvas></div>
+          </div>
+          <div>
+            <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">Rata-rata skor terbaik per kelas</p>
+            <div class="h-44"><canvas id="chart-class" aria-label="Rata-rata skor per kelas"></canvas></div>
+          </div>
+        </div>
+      </details>
+
+      <!-- ANALISIS BUTIR SOAL -->
+      <details class="bg-white rounded-lg border border-slate-200 shadow-sm group">
+        <summary class="p-3 cursor-pointer flex items-center justify-between select-none font-bold text-xs text-slate-800">
+          <div class="flex items-center space-x-2 flex-wrap gap-y-1">
+            <i class="fa-solid fa-chart-pie text-rose-500"></i>
+            <span>Analisis Butir Soal &amp; Pengecekan Opsi Jawaban</span>
+            <span id="item-analysis-badge" class="bg-rose-50 text-rose-700 border border-rose-200 font-bold text-[10px] px-2 py-0.5 rounded">Semua Paket</span>
+            <span id="item-problem-badge" class="hidden bg-amber-50 text-amber-800 border border-amber-200 font-bold text-[10px] px-2 py-0.5 rounded"></span>
+          </div>
+          <i class="fa-solid fa-chevron-down text-xs text-slate-400 group-open:rotate-180 transition-transform"></i>
+        </summary>
+
+        <div class="p-3 pt-2 border-t border-slate-100 space-y-2">
+          <div class="flex flex-wrap items-center gap-2 text-[10px]">
+            <label for="item-sort" class="font-bold text-slate-500 uppercase">Urutkan:</label>
+            <select id="item-sort" onchange="renderItemAnalysis()" class="bg-slate-50 border border-slate-300 rounded-md p-1 font-semibold text-slate-700">
+              <option value="error">Paling sering salah</option>
+              <option value="disc">Daya beda terendah</option>
+              <option value="no">Nomor soal</option>
+            </select>
+            <label class="flex items-center space-x-1 font-semibold text-slate-600 cursor-pointer">
+              <input type="checkbox" id="item-only-problem" onchange="renderItemAnalysis()" class="rounded">
+              <span>Hanya soal bermasalah</span>
+            </label>
+            <span class="text-slate-400">Daya beda (D) = proporsi benar kelompok atas 27% &minus; kelompok bawah 27% (min. 8 sesi per paket).</span>
+          </div>
+          <div id="item-analysis-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 max-h-80 overflow-y-auto custom-scrollbar pt-1">
+            <p class="text-xs text-slate-400 italic col-span-full">Memuat analisis butir soal...</p>
+          </div>
+        </div>
+      </details>
+
+      <!-- TABEL HASIL EVALUASI -->
+      <div class="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
+        <div class="overflow-x-auto custom-scrollbar">
+          <table class="w-full text-left text-[11px] text-slate-700">
+            <thead class="bg-slate-800 text-slate-200 uppercase font-bold text-[10px] tracking-wider">
+              <tr>
+                <th class="py-2 px-3">Waktu</th>
+                <th class="py-2 px-3">Kelas</th>
+                <th class="py-2 px-3">Nama Siswa</th>
+                <th class="py-2 px-3">Paket</th>
+                <th class="py-2 px-3 text-center">Coba</th>
+                <th class="py-2 px-3 text-center">Benar</th>
+                <th class="py-2 px-3 text-center">Skor</th>
+                <th class="py-2 px-3 text-center">Status</th>
+                <th class="py-2 px-3 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="table-results-body" class="divide-y divide-slate-200 font-medium">
+              <tr><td colspan="9" class="p-4 text-center text-slate-400 italic">Masuk sebagai guru untuk memuat data...</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="table-more" class="hidden p-2 text-center border-t border-slate-100">
+          <button onclick="showMoreRows()" class="text-[11px] font-bold text-indigo-600 hover:text-indigo-800 underline">Tampilkan lebih banyak</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: KELOLA PAKET SOAL -->
+    <section id="tab-packages" class="hidden space-y-3 max-w-3xl mx-auto">
+      <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm space-y-3">
+        <div>
+          <h3 class="font-bold text-slate-800 text-sm">Manajemen Akses Ujian</h3>
+          <p class="text-[11px] text-slate-500">Aktifkan atau nonaktifkan paket soal agar siswa hanya dapat memilih ujian yang aktif.</p>
+        </div>
+
+        <div class="overflow-x-auto border border-slate-200 rounded-lg">
+          <table class="w-full text-left text-[11px]">
+            <thead class="bg-slate-100 text-slate-700 font-bold uppercase text-[10px]">
+              <tr>
+                <th class="p-2.5">ID Paket</th>
+                <th class="p-2.5">Nama Paket</th>
+                <th class="p-2.5 text-center">Soal</th>
+                <th class="p-2.5 text-center">Pengerjaan</th>
+                <th class="p-2.5 text-center">Status</th>
+                <th class="p-2.5 text-center">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="table-packages-body" class="divide-y divide-slate-200 font-semibold">
+              <tr><td colspan="6" class="p-3 text-center text-slate-400 italic">Memuat paket...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-lg border border-slate-200 shadow-sm space-y-2">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-bold text-slate-800 text-sm">Validator Bank Soal</h3>
+            <p class="text-[11px] text-slate-500">Memeriksa kunci kosong, nomor ganda, tipe tak dikenal, dan kunci MATRIKS yang tidak sesuai.</p>
+          </div>
+          <button onclick="runValidator()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-[11px] px-3 py-1.5 rounded-lg transition flex items-center space-x-1">
+            <i class="fa-solid fa-magnifying-glass-chart"></i><span>Cek Data Soal</span>
+          </button>
+        </div>
+        <div id="validator-result" class="hidden text-[11px] border border-slate-200 rounded-lg p-2.5 max-h-72 overflow-y-auto custom-scrollbar"></div>
+      </div>
+    </section>
+
+    <!-- MODAL DETAIL JAWABAN SISWA -->
+    <div id="modal-detail-student" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 hidden">
+      <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[88vh] flex flex-col overflow-hidden border border-slate-200 text-xs">
+        <div class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between shrink-0">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span id="modal-student-badge" class="bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">Kelas</span>
+              <h3 id="modal-student-name" class="font-bold text-sm">Nama Siswa</h3>
+            </div>
+            <p id="modal-student-sub" class="text-[11px] text-slate-400 mt-0.5">Paket Soal</p>
+          </div>
+          <button onclick="closeStudentDetailModal()" aria-label="Tutup" class="text-slate-400 hover:text-white font-bold text-xl px-1 leading-none">&times;</button>
+        </div>
+        <div id="modal-student-body" class="p-4 overflow-y-auto custom-scrollbar space-y-2.5 bg-slate-50"></div>
+        <div class="bg-white px-4 py-2.5 border-t border-slate-200 text-right shrink-0">
+          <button onclick="closeStudentDetailModal()" class="bg-slate-800 hover:bg-slate-900 text-white font-semibold px-4 py-1.5 rounded-lg text-xs transition shadow">Tutup</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL PRATINJAU SOAL -->
+    <div id="modal-preview" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] flex items-center justify-center p-2 sm:p-4 hidden" role="dialog" aria-modal="true" aria-labelledby="pv-title">
+      <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl h-[92vh] flex flex-col overflow-hidden">
+        <div class="bg-slate-900 text-white px-4 py-3 flex items-start justify-between gap-3">
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span id="pv-badge" class="bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded shrink-0">Paket</span>
+              <h3 id="pv-title" class="font-bold text-sm truncate">Pratinjau Soal</h3>
+            </div>
+            <p id="pv-sub" class="text-[11px] text-slate-400 mt-0.5"></p>
+          </div>
+          <button type="button" onclick="closePaketPreview()" aria-label="Tutup pratinjau" class="text-slate-400 hover:text-white text-xl leading-none">&times;</button>
+        </div>
+        <div class="px-3 py-2 border-b border-slate-200 bg-slate-50 flex flex-wrap items-center gap-2 text-[11px]">
+          <input id="pv-search" type="text" oninput="renderPreview()" placeholder="Cari no. atau isi soal..." aria-label="Cari soal" class="bg-white border border-slate-300 rounded-md px-2 py-1 w-44 text-xs">
+          <select id="pv-type" onchange="renderPreview()" aria-label="Filter tipe soal" class="bg-white border border-slate-300 rounded-md px-1.5 py-1 text-xs font-semibold text-slate-700"></select>
+          <label class="flex items-center gap-1 font-semibold text-slate-700 cursor-pointer"><input type="checkbox" id="pv-showkey" checked onchange="renderPreview()"> Tampilkan kunci &amp; pembahasan</label>
+          <label class="flex items-center gap-1 font-semibold text-slate-700 cursor-pointer"><input type="checkbox" id="pv-issues" onchange="renderPreview()"> Hanya yang bermasalah</label>
+          <button type="button" onclick="reloadPaketPreview()" class="ml-auto text-[10px] font-semibold text-slate-700 bg-white hover:bg-slate-100 border border-slate-300 px-2 py-1 rounded" title="Baca ulang dari sheet Bank_Soal"><i class="fa-solid fa-rotate mr-1"></i>Muat ulang</button>
+        </div>
+        <div id="pv-summary" class="px-3 py-2 border-b border-slate-200 text-[11px] text-slate-600 flex flex-wrap items-center gap-1.5"></div>
+        <div id="pv-body" class="flex-1 overflow-y-auto custom-scrollbar p-3 sm:p-4 space-y-3 bg-slate-100"></div>
+      </div>
+    </div>
+
+    <!-- MODAL DISTRIBUSI OPSI JAWABAN -->
+    <div id="modal-option-distribution" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-3 hidden">
+      <div class="bg-white rounded-xl shadow-2xl max-w-md w-full max-h-[85vh] flex flex-col overflow-hidden border border-slate-200 text-xs">
+        <div class="bg-slate-900 text-white px-4 py-3 flex items-center justify-between shrink-0">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-chart-column text-indigo-400"></i>
+            <h3 id="modal-dist-title" class="font-bold text-xs">Distribusi Opsi Soal</h3>
+          </div>
+          <button onclick="closeOptionDistModal()" aria-label="Tutup" class="text-slate-400 hover:text-white font-bold text-xl px-1 leading-none">&times;</button>
+        </div>
+        <div id="modal-dist-body" class="p-4 overflow-y-auto custom-scrollbar space-y-3"></div>
+        <div class="bg-slate-50 px-4 py-2 border-t border-slate-200 text-right shrink-0">
+          <button onclick="closeOptionDistModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-4 py-1.5 rounded-lg text-xs transition shadow">Selesai</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    /* ============================================================
+     * STATE & UTILITAS
+     * ============================================================ */
+    let TEACHER_TOKEN = '';
+    try { TEACHER_TOKEN = sessionStorage.getItem('neng_token') || ''; } catch (e) { }
+
+    let dashboardState = {
+      rawResults: [], bankSoal: {}, filteredResults: [], packages: [],
+      currentOptionStats: {}, kkm: 80, visibleRows: 100
+    };
+    const PAGE_SIZE = 100;
+    let chartHist = null, chartClass = null;
+
+    function esc(s) {
+      return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, c => (
+        { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+      ));
+    }
+
+    // Teks soal bisa berisi HTML/tautan dari guru: tampilkan sebagai teks polos ringkas
+    function plainText(text, max) {
+      let t = String(text || '')
+        .replace(/\[(?:HEADER:\s*)?([^\]]+)\]/i, '')
+        .replace(/<[^>]*>/g, ' ')
+        .replace(/https?:\/\/\S+/gi, '[gambar/tautan]')
+        .replace(/\s+/g, ' ').trim();
+      if (max && t.length > max) t = t.substring(0, max) + '...';
+      return t;
+    }
+
+    function cleanToken(val) {
+      if (val === null || val === undefined) return '';
+      return String(val).trim().toUpperCase().replace(/^[-_\s\W]+|[-_\s\W]+$/g, '');
+    }
+
+    // Hanya untuk menandai opsi kunci pada grafik distribusi (penilaian dilakukan server)
+    function isKeyOption(opt, key, tipe) {
+      const k = String(key || '');
+      if (tipe === 'PGK') return k.replace(/[^A-E,|;]/gi, '').toUpperCase().split(/[,|;]/).includes(opt);
+      const kt = cleanToken(k);
+      if (kt === opt) return true;
+      const T = ['A', 'TRUE', 'BENAR', '1', 'T'], F = ['B', 'FALSE', 'SALAH', '0', 'F'];
+      return (T.includes(kt) && opt === 'A') || (F.includes(kt) && opt === 'B');
+    }
+
+    function showLoading(msg) {
+      document.getElementById('loading-text').innerText = msg || "Memuat data...";
+      document.getElementById('loading-overlay').classList.remove('hidden');
+    }
+    function hideLoading() { document.getElementById('loading-overlay').classList.add('hidden'); }
+
+    function showToast(msg, type, ms) {
+      let stack = document.getElementById('toast-stack');
+      if (!stack) {
+        stack = document.createElement('div');
+        stack.id = 'toast-stack';
+        stack.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:1rem;z-index:95;width:min(92vw,28rem);display:flex;flex-direction:column;gap:.5rem;pointer-events:none;';
+        document.body.appendChild(stack);
+      }
+      const colors = { error: 'bg-rose-600', warn: 'bg-amber-600', info: 'bg-slate-800', ok: 'bg-emerald-600' };
+      const el = document.createElement('div');
+      el.className = (colors[type] || colors.info) + ' text-white text-sm rounded-xl shadow-lg px-4 py-3 flex items-start justify-between gap-3 whitespace-pre-line';
+      el.style.pointerEvents = 'auto';
+      el.setAttribute('role', type === 'error' ? 'alert' : 'status');
+      const span = document.createElement('span');
+      span.className = 'leading-snug';
+      span.textContent = msg;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'font-bold opacity-80 hover:opacity-100 shrink-0';
+      btn.setAttribute('aria-label', 'Tutup');
+      btn.textContent = '\u2715';
+      btn.onclick = () => el.remove();
+      el.appendChild(span); el.appendChild(btn); stack.appendChild(el);
+      const life = (ms === undefined) ? 6000 : ms;
+      if (life > 0) setTimeout(() => el.remove(), life);
+    }
+
+    function getClientId() {
+      let id = '';
+      try { id = localStorage.getItem('neng_cid') || ''; } catch (e) { }
+      if (!id) {
+        id = 'c' + Math.random().toString(36).slice(2, 12) + Date.now().toString(36);
+        try { localStorage.setItem('neng_cid', id); } catch (e) { }
+      }
+      return id;
+    }
+
+    function showLogin(msg) {
+      document.getElementById('login-overlay').classList.remove('hidden');
+      const el = document.getElementById('login-error');
+      if (msg) { el.innerText = msg; el.classList.remove('hidden'); } else { el.classList.add('hidden'); }
+    }
+
+    // Pemanggil server terpusat: menangani token & kegagalan
+    function callServer(fn, args, onOk, loadingMsg) {
+      if (!(typeof google !== 'undefined' && google.script && google.script.run)) {
+        showToast('Halaman ini harus dibuka dari tautan Web App Google Apps Script.', 'error', 0);
+        return;
+      }
+      if (loadingMsg) showLoading(loadingMsg);
+      const runner = google.script.run
+        .withSuccessHandler(res => {
+          hideLoading();
+          if (res && res.code === 'UNAUTHORIZED') {
+            TEACHER_TOKEN = '';
+            try { sessionStorage.removeItem('neng_token'); } catch (e) { }
+            showLogin(res.message);
+            return;
+          }
+          onOk(res);
+        })
+        .withFailureHandler(err => {
+          hideLoading();
+          showToast("Terjadi kesalahan sistem: " + (err && err.message ? err.message : err), 'error', 0);
+        });
+      runner[fn].apply(runner, args);
+    }
+
+    /* ============================================================
+     * LOGIN / LOGOUT
+     * ============================================================ */
+    document.addEventListener("DOMContentLoaded", () => {
+      if (TEACHER_TOKEN) {
+        document.getElementById('login-overlay').classList.add('hidden');
+        refreshAll();
+      }
+      document.getElementById('active-details').addEventListener('toggle', () => {
+        if (document.getElementById('active-details').open && TEACHER_TOKEN) loadActiveSessions();
+      });
+      setInterval(() => {
+        if (TEACHER_TOKEN && !document.hidden && document.getElementById('active-details').open) loadActiveSessions();
+      }, 60000);
+      document.getElementById('charts-details').addEventListener('toggle', () => {
+        if (document.getElementById('charts-details').open) renderCharts();
+      });
+    });
+
+    function loadActiveSessions() {
+      callServer('getActiveSessions', [TEACHER_TOKEN], res => {
+        if (!res || res.status !== 'success') return;
+        const list = res.sessions || [];
+        document.getElementById('active-count').innerText = list.length;
+        document.getElementById('active-list').innerHTML = list.length
+          ? list.map(s => `<div class="flex justify-between bg-slate-50 border border-slate-200 rounded-md px-2.5 py-1.5">
+              <span><b>${esc(s.namaSiswa)}</b> <span class="text-slate-400">(${esc(s.kelas)} &bull; ${esc(s.paketId)})</span></span>
+              <span class="text-slate-500 shrink-0 ml-2">${esc(s.menit)} mnt</span></div>`).join('')
+          : 'Belum ada siswa yang sedang mengerjakan.';
+      });
+    }
+
+    function doTeacherLogin(e) {
+      e.preventDefault();
+      const pin = document.getElementById('login-pin').value;
+      callServer('teacherLogin', [pin, getClientId()], res => {
+        if (!res || res.status !== 'success') { showLogin((res && res.message) || 'Login gagal.'); return; }
+        TEACHER_TOKEN = res.token;
+        try { sessionStorage.setItem('neng_token', res.token); } catch (e) { }
+        document.getElementById('login-pin').value = '';
+        document.getElementById('login-overlay').classList.add('hidden');
+        refreshAll();
+      }, 'Memeriksa PIN...');
+    }
+
+    function doTeacherLogout() {
+      const tok = TEACHER_TOKEN;
+      TEACHER_TOKEN = '';
+      try { sessionStorage.removeItem('neng_token'); } catch (e) { }
+      dashboardState.rawResults = []; dashboardState.filteredResults = []; dashboardState.bankSoal = {};
+      if (tok && typeof google !== 'undefined' && google.script && google.script.run) {
+        google.script.run.teacherLogout(tok);
+      }
+      showLogin('');
+    }
+
+    function refreshAll() { loadDashboardData(); loadPackagesData(); loadActiveSessions(); }
+
+    function switchTab(tabName) {
+      const isRes = tabName === 'results';
+      document.getElementById('tab-results').classList.toggle('hidden', !isRes);
+      document.getElementById('tab-packages').classList.toggle('hidden', isRes);
+      document.getElementById('tab-btn-results').className = isRes
+        ? "px-3 py-1 rounded-md font-bold text-[11px] bg-indigo-600 text-white shadow transition flex items-center space-x-1"
+        : "px-3 py-1 rounded-md font-bold text-[11px] text-slate-300 hover:bg-slate-700 transition flex items-center space-x-1";
+      document.getElementById('tab-btn-packages').className = !isRes
+        ? "px-3 py-1 rounded-md font-bold text-[11px] bg-indigo-600 text-white shadow transition flex items-center space-x-1"
+        : "px-3 py-1 rounded-md font-bold text-[11px] text-slate-300 hover:bg-slate-700 transition flex items-center space-x-1";
+    }
+
+    /* ============================================================
+     * MUAT DATA
+     * ============================================================ */
+    function loadDashboardData() {
+      callServer('getDashboardData', [TEACHER_TOKEN, { sinceDays: parseInt((document.getElementById('filter-range') || {}).value, 10) || 0 }], json => {
+        if (json.status !== 'success') { showToast("Gagal memuat data: " + json.message, 'error', 0); return; }
+        dashboardState.rawResults = json.data || [];
+        dashboardState.bankSoal = json.bankSoal || {};
+        dashboardState.kkm = json.kkm || 80;
+        populateFilterDropdowns();
+        applyFilters();
+      }, "Mengambil data...");
+    }
+
+    function loadPackagesData() {
+      callServer('getPaketManagementData', [TEACHER_TOKEN], json => {
+        if (json.status === 'success') {
+          dashboardState.packages = json.packages || [];
+          renderPackagesTable();
+        }
+      });
+    }
+
+    function populateFilterDropdowns() {
+      const selK = document.getElementById('filter-kelas');
+      const selP = document.getElementById('filter-paket');
+      const curK = selK.value, curP = selP.value;
+      const setK = new Set(), setP = new Set();
+      dashboardState.rawResults.forEach(r => { if (r.kelas) setK.add(r.kelas); if (r.paketId) setP.add(r.paketId); });
+
+      selK.innerHTML = '<option value="">-- Semua Kelas --</option>' +
+        Array.from(setK).sort().map(k => `<option value="${esc(k)}">${esc(k)}</option>`).join('');
+      selP.innerHTML = '<option value="">-- Semua Paket --</option>' +
+        Array.from(setP).sort().map(p => `<option value="${esc(p)}">${esc(p)}</option>`).join('');
+      selK.value = setK.has(curK) ? curK : '';
+      selP.value = setP.has(curP) ? curP : '';
+    }
+
+    /* ============================================================
+     * FILTER
+     * ============================================================ */
+    function studentKey(r) {
+      return `${(r.kelas || '').trim().toUpperCase()}|${(r.namaSiswa || '').trim().toLowerCase()}|${r.paketId}`;
+    }
+
+    function bestPerStudent(list) {
+      const map = {};
+      list.forEach(r => {
+        const k = studentKey(r);
+        const cur = map[k];
+        if (!cur || (r.skorAkhir > cur.skorAkhir) || (r.skorAkhir === cur.skorAkhir && r.id > cur.id)) map[k] = r;
+      });
+      return Object.keys(map).map(k => map[k]);
+    }
+
+    function applyFilters() {
+      const fk = document.getElementById('filter-kelas').value;
+      const fp = document.getElementById('filter-paket').value;
+      const fs = document.getElementById('filter-status').value;
+      const fv = document.getElementById('filter-view').value;
+      const sort = document.getElementById('filter-sort').value;
+      const q = document.getElementById('search-input').value.toLowerCase().trim();
+
+      let list = dashboardState.rawResults.filter(r =>
+        (!fk || r.kelas === fk) &&
+        (!fp || r.paketId === fp) &&
+        (!fs || (r.status || '').toUpperCase() === fs) &&
+        (!q || (r.namaSiswa || '').toLowerCase().includes(q))
+      );
+      if (fv === 'best') list = bestPerStudent(list);
+
+      list.sort((a, b) => {
+        if (sort === 'oldest') return (a.id || 0) - (b.id || 0);
+        if (sort === 'score_desc') return (b.skorAkhir || 0) - (a.skorAkhir || 0);
+        if (sort === 'score_asc') return (a.skorAkhir || 0) - (b.skorAkhir || 0);
+        return (b.id || 0) - (a.id || 0);
+      });
+
+      dashboardState.filteredResults = list;
+      dashboardState.visibleRows = PAGE_SIZE;
+      updateStats();
+      renderItemAnalysis();
+      renderResultsTable();
+      if (document.getElementById('charts-details').open) renderCharts();
+    }
+
+    function resetFilters() {
+      ['filter-kelas', 'filter-paket', 'filter-status'].forEach(id => document.getElementById(id).value = "");
+      document.getElementById('filter-view').value = "all";
+      document.getElementById('filter-sort').value = "newest";
+      document.getElementById('search-input').value = "";
+      applyFilters();
+    }
+
+    /* ============================================================
+     * STATISTIK (PESERTA UNIK; LULUS BILA MINIMAL 1 PERCOBAAN >= KKM)
+     * ============================================================ */
+    function uniqueParticipants(list) {
+      const map = {};
+      list.forEach(r => { (map[studentKey(r)] = map[studentKey(r)] || []).push(r); });
+      return Object.keys(map).map(k => {
+        const attempts = map[k];
+        const best = Math.max.apply(null, attempts.map(a => Number(a.skorAkhir) || 0));
+        const passed = attempts.some(a => (Number(a.skorAkhir) >= dashboardState.kkm) || ((a.status || '').toUpperCase() === 'LULUS'));
+        return { key: k, kelas: attempts[0].kelas, best: best, passed: passed };
+      });
+    }
+
+    function updateStats() {
+      const list = dashboardState.filteredResults;
+      const totalRaw = dashboardState.rawResults.length;
+      const set = (id, v) => { document.getElementById(id).innerText = v; };
+
+      if (list.length === 0) {
+        set('stat-total', '0'); set('stat-avg', '0'); set('stat-max', '0'); set('stat-min', '0');
+        set('stat-passed', '0 (0%)'); set('stat-remedi', '0');
+        set('filtered-count-display', '0 baris'); set('peserta-count-display', '0 peserta');
+        set('total-count-display', totalRaw);
+        return;
+      }
+
+      const people = uniqueParticipants(list);
+      const n = people.length;
+      const scores = people.map(p => p.best);
+      const passed = people.filter(p => p.passed).length;
+
+      set('stat-total', n);
+      set('stat-avg', Math.round(scores.reduce((a, b) => a + b, 0) / n));
+      set('stat-max', Math.max.apply(null, scores));
+      set('stat-min', Math.min.apply(null, scores));
+      set('stat-passed', `${passed} (${Math.round(passed / n * 100)}%)`);
+      set('stat-remedi', n - passed);
+      set('filtered-count-display', `${list.length} baris`);
+      set('peserta-count-display', `${n} peserta`);
+      set('total-count-display', totalRaw);
+    }
+
+    /* ============================================================
+     * GRAFIK (Chart.js)
+     * ============================================================ */
+    function renderCharts() {
+      if (typeof Chart === 'undefined') return;
+      const people = uniqueParticipants(dashboardState.filteredResults);
+      const kkm = dashboardState.kkm;
+
+      const bins = new Array(10).fill(0);
+      people.forEach(p => { bins[Math.min(9, Math.floor(p.best / 10))]++; });
+      const labels = bins.map((_, i) => i === 9 ? '90-100' : `${i * 10}-${i * 10 + 9}`);
+      const colors = bins.map((_, i) => (i * 10 >= kkm) ? '#10b981' : '#f59e0b');
+
+      if (chartHist) chartHist.destroy();
+      chartHist = new Chart(document.getElementById('chart-hist'), {
+        type: 'bar',
+        data: { labels: labels, datasets: [{ label: 'Peserta', data: bins, backgroundColor: colors, borderRadius: 3 }] },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { callbacks: { footer: () => 'Hijau: rentang ≥ KKM (' + kkm + ')' } } },
+          scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
+        }
+      });
+
+      const byClass = {};
+      people.forEach(p => { (byClass[p.kelas] = byClass[p.kelas] || []).push(p.best); });
+      const cls = Object.keys(byClass).sort();
+      const avgs = cls.map(c => Math.round(byClass[c].reduce((a, b) => a + b, 0) / byClass[c].length));
+
+      if (chartClass) chartClass.destroy();
+      chartClass = new Chart(document.getElementById('chart-class'), {
+        type: 'bar',
+        data: { labels: cls, datasets: [{ label: 'Rata-rata', data: avgs, backgroundColor: '#6366f1', borderRadius: 3 }] },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true, max: 100 } }
+        }
+      });
+    }
+
+    /* ============================================================
+     * ANALISIS BUTIR SOAL
+     * ============================================================ */
+    function computeDiscrimination(list, stats) {
+      const byPaket = {};
+      list.forEach(r => { (byPaket[r.paketId] = byPaket[r.paketId] || []).push(r); });
+      Object.keys(byPaket).forEach(pId => {
+        const rows = byPaket[pId].slice().sort((a, b) => (b.skorMentah || 0) - (a.skorMentah || 0));
+        if (rows.length < 8) return;
+        const n = Math.max(2, Math.round(rows.length * 0.27));
+        const upper = rows.slice(0, n), lower = rows.slice(-n);
+        const prop = (grp, no) => grp.reduce((s, r) => {
+          const d = (r.details || []).find(x => String(x.noSoal) === String(no));
+          return s + ((d && Number(d.score) >= 1) ? 1 : 0);
+        }, 0) / grp.length;
+        Object.keys(stats).forEach(k => {
+          const st = stats[k];
+          if (st.paketId === pId) st.discrimination = Math.round((prop(upper, st.noSoal) - prop(lower, st.noSoal)) * 100) / 100;
+        });
+      });
+    }
+
+    function renderItemAnalysis() {
+      const container = document.getElementById('item-analysis-container');
+      const badge = document.getElementById('item-analysis-badge');
+      const probBadge = document.getElementById('item-problem-badge');
+      const list = dashboardState.filteredResults;
+
+      const selectedPaket = document.getElementById('filter-paket').value;
+      badge.innerText = selectedPaket ? `Paket ${selectedPaket}` : 'Semua Paket';
+
+      if (list.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 italic col-span-full">Tidak ada data untuk dianalisis.</p>`;
+        probBadge.classList.add('hidden');
+        return;
+      }
+
+      const questionStats = {};
+      list.forEach(row => {
+        const pId = row.paketId;
+        const bank = dashboardState.bankSoal[pId] || [];
+        (row.details || []).forEach(d => {
+          const qKey = `${pId}_Q${d.noSoal}`;
+          if (!questionStats[qKey]) {
+            const meta = bank.find(b => String(b.noSoal) === String(d.noSoal)) || {};
+            questionStats[qKey] = {
+              paketId: pId, noSoal: d.noSoal, tipeSoal: d.tipeSoal,
+              pertanyaan: meta.pertanyaan || '', kunciJawaban: meta.kunciJawaban || '',
+              totalSubmissions: 0, wrongOrPartialCount: 0, textCounts: {},
+              optionCounts: { A: 0, B: 0, C: 0, D: 0, E: 0, Lainnya: 0 }
+            };
+          }
+          const st = questionStats[qKey];
+          (d.picked || []).forEach(o => {
+            if (st.optionCounts[o] !== undefined) st.optionCounts[o]++; else st.optionCounts.Lainnya++;
+          });
+          if (d.tipeSoal === 'IS' && d.studentAns && d.studentAns !== '(Tidak Dijawab)') {
+            const t = String(d.studentAns).trim().toLowerCase();
+            st.textCounts[t] = (st.textCounts[t] || 0) + 1;
+          }
+          st.totalSubmissions++;
+          if (Number(d.score) < 1) st.wrongOrPartialCount++;
+        });
+      });
+
+      computeDiscrimination(list, questionStats);
+      dashboardState.currentOptionStats = questionStats;
+
+      let arr = Object.keys(questionStats).map(k => {
+        const it = questionStats[k];
+        const errorPct = it.totalSubmissions > 0 ? Math.round(it.wrongOrPartialCount / it.totalSubmissions * 100) : 0;
+        const problem = errorPct >= 70 || (it.discrimination !== undefined && it.discrimination < 0.2);
+        return Object.assign({}, it, { key: k, errorPct: errorPct, problem: problem });
+      });
+
+      const problemCount = arr.filter(a => a.problem).length;
+      if (problemCount > 0) {
+        probBadge.innerText = `${problemCount} soal perlu ditinjau`;
+        probBadge.classList.remove('hidden');
+      } else {
+        probBadge.classList.add('hidden');
+      }
+
+      if (document.getElementById('item-only-problem').checked) arr = arr.filter(a => a.problem);
+
+      const sortMode = document.getElementById('item-sort').value;
+      if (sortMode === 'no') {
+        arr.sort((a, b) => a.paketId.localeCompare(b.paketId) || (parseInt(a.noSoal, 10) || 0) - (parseInt(b.noSoal, 10) || 0));
+      } else if (sortMode === 'disc') {
+        arr.sort((a, b) => (a.discrimination === undefined ? 9 : a.discrimination) - (b.discrimination === undefined ? 9 : b.discrimination));
+      } else {
+        arr.sort((a, b) => b.errorPct - a.errorPct);
+      }
+
+      if (arr.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 italic col-span-full">Tidak ada butir soal yang cocok.</p>`;
+        return;
+      }
+
+      container.innerHTML = arr.map(item => {
+        let errorBg = "bg-emerald-500", badgeBg = "bg-emerald-100 text-emerald-800 border-emerald-200", diffLabel = "Mudah";
+        if (item.errorPct >= 70) { errorBg = "bg-rose-500"; badgeBg = "bg-rose-100 text-rose-800 border-rose-200"; diffLabel = "Sangat Sulit"; }
+        else if (item.errorPct >= 30) { errorBg = "bg-amber-500"; badgeBg = "bg-amber-100 text-amber-800 border-amber-200"; diffLabel = "Sedang"; }
+
+        let discBadge = `<span class="text-[9px] text-slate-400">D: -</span>`;
+        if (item.discrimination !== undefined) {
+          const d = item.discrimination;
+          let cls = "bg-emerald-50 text-emerald-700 border-emerald-200", lab = "baik";
+          if (d < 0) { cls = "bg-rose-100 text-rose-800 border-rose-300"; lab = "negatif!"; }
+          else if (d < 0.2) { cls = "bg-amber-50 text-amber-800 border-amber-200"; lab = "lemah"; }
+          else if (d < 0.3) { cls = "bg-sky-50 text-sky-700 border-sky-200"; lab = "cukup"; }
+          discBadge = `<span class="text-[9px] font-bold px-1 rounded border ${cls}" title="Daya beda soal">D ${d.toFixed(2)} (${lab})</span>`;
+        }
+
+        const text = plainText(item.pertanyaan, 45);
+        return `
+          <div class="p-2.5 bg-slate-50 rounded-lg border ${item.problem ? 'border-amber-300' : 'border-slate-200'} space-y-1.5 text-[11px]">
+            <div class="flex items-center justify-between gap-1">
+              <div class="flex items-center space-x-1">
+                <span class="font-bold bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded text-[10px]">#${esc(item.noSoal)}</span>
+                <span class="text-[9px] font-semibold text-slate-400 bg-white border px-1 rounded">${esc(item.tipeSoal)}</span>
+                <span class="text-[9px] text-slate-400">${esc(item.paketId)}</span>
+              </div>
+              <span class="font-bold text-[9px] px-1.5 rounded-full border ${badgeBg}">${item.errorPct}% Salah (${diffLabel})</span>
+            </div>
+            ${text ? `<p class="text-slate-600 font-medium text-[10px] leading-tight clamp-1">${esc(text)}</p>` : ''}
+            <div class="space-y-0.5 pt-0.5">
+              <div class="w-full bg-slate-200 rounded-full h-1 overflow-hidden"><div class="${errorBg} h-1 rounded-full" style="width: ${item.errorPct}%"></div></div>
+              <div class="flex justify-between items-center text-[9px] text-slate-400 font-medium">
+                <span>Salah: <b>${item.wrongOrPartialCount}</b> / ${item.totalSubmissions}</span>
+                ${discBadge}
+                <button data-key="${esc(item.key)}" onclick="openOptionDistModal(this.dataset.key)" class="text-indigo-600 hover:text-indigo-800 font-bold underline text-[9px]">Cek Opsi</button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function openOptionDistModal(qKey) {
+      const data = dashboardState.currentOptionStats[qKey];
+      if (!data) return;
+
+      document.getElementById('modal-dist-title').innerText = `Distribusi Opsi - Paket ${data.paketId} Soal #${data.noSoal}`;
+      const total = data.totalSubmissions || 1;
+      let body = "";
+
+      if (data.tipeSoal === 'MATRIKS') {
+        body = `<p class="text-slate-500 italic">Distribusi opsi per baris belum tersedia untuk tipe MATRIKS.</p>`;
+      } else if (data.tipeSoal === 'IS') {
+        const rows = Object.keys(data.textCounts).map(t => ({ t: t, c: data.textCounts[t] }))
+          .sort((a, b) => b.c - a.c).slice(0, 10);
+        body = `<p class="font-bold text-slate-600 text-[11px]">Jawaban siswa paling sering (maks. 10)</p>` +
+          (rows.length ? rows.map(r => `
+            <div class="flex justify-between items-center bg-slate-50 border border-slate-200 rounded-md px-2.5 py-1.5 text-[11px]">
+              <span class="font-semibold text-slate-800 break-all">${esc(r.t)}</span>
+              <span class="text-slate-500 shrink-0 ml-2">${r.c} siswa (${Math.round(r.c / total * 100)}%)</span>
+            </div>`).join('') : `<p class="text-slate-400 italic">Belum ada jawaban terisi.</p>`) +
+          `<p class="text-[10px] text-slate-500 pt-1">Kunci: <b>${esc(data.kunciJawaban)}</b></p>`;
+      } else {
+        body = ["A", "B", "C", "D", "E"].map(opt => {
+          const count = data.optionCounts[opt] || 0;
+          const pct = Math.round(count / total * 100);
+          const isKey = isKeyOption(opt, data.kunciJawaban, data.tipeSoal);
+          const barColor = isKey ? "bg-emerald-500" : "bg-indigo-400";
+          return `
+            <div class="space-y-1">
+              <div class="flex justify-between font-bold text-[11px]">
+                <span class="${isKey ? 'text-emerald-700 font-black' : 'text-slate-700'}">Opsi ${opt} ${isKey ? '(Kunci Jawaban)' : ''}</span>
+                <span class="text-slate-500">${count} siswa (${pct}%)</span>
+              </div>
+              <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden border border-slate-200"><div class="${barColor} h-2 rounded-full transition-all" style="width: ${pct}%"></div></div>
+            </div>`;
+        }).join('');
+        if (data.optionCounts.Lainnya > 0) {
+          body += `<p class="text-[10px] text-slate-400">Pilihan di luar A–E: ${data.optionCounts.Lainnya}</p>`;
+        }
+      }
+
+      const q = plainText(data.pertanyaan, 400);
+      document.getElementById('modal-dist-body').innerHTML = `
+        ${q ? `<div class="bg-indigo-50/70 p-2.5 rounded-lg border border-indigo-100 text-[11px] text-indigo-900 leading-relaxed font-medium">${esc(q)}</div>` : ''}
+        <div class="space-y-2.5 pt-1">${body}</div>
+        <div class="pt-2 border-t border-slate-100">
+          <button type="button" data-p="${esc(data.paketId)}" data-n="${esc(data.noSoal)}" onclick="closeOptionDistModal(); openPaketPreview(this.dataset.p, this.dataset.n)" class="text-[11px] font-semibold text-indigo-700 hover:text-indigo-900 underline"><i class="fa-solid fa-eye mr-1"></i>Lihat soal ini di pratinjau</button>
+        </div>`;
+      document.getElementById('modal-option-distribution').classList.remove('hidden');
+    }
+
+    function closeOptionDistModal() { document.getElementById('modal-option-distribution').classList.add('hidden'); }
+
+    /* ============================================================
+     * EXPORT CSV (BOM UTF-8 + perlindungan formula Excel)
+     * ============================================================ */
+    function csvCell(v) {
+      let s = String(v === null || v === undefined ? '' : v);
+      if (/^[=+\-@\t\r]/.test(s)) s = "'" + s; // cegah injeksi formula
+      return '"' + s.replace(/"/g, '""') + '"';
+    }
+
+    // Rekap untuk rapor: satu baris per siswa, satu kolom per paket (nilai terbaik), plus rata-rata.
+    function exportRekap() {
+      const list = dashboardState.filteredResults;
+      if (list.length === 0) { showToast("Tidak ada data untuk direkap!", 'warn'); return; }
+      const paketIds = Array.from(new Set(list.map(r => r.paketId))).sort();
+      const map = {};
+      list.forEach(r => {
+        const k = (r.kelas || '').trim() + '|' + (r.namaSiswa || '').trim();
+        const o = map[k] || (map[k] = { kelas: r.kelas, nama: r.namaSiswa, best: {} });
+        const sc = Number(r.skorAkhir) || 0;
+        if (o.best[r.paketId] === undefined || sc > o.best[r.paketId]) o.best[r.paketId] = sc;
+      });
+      const people = Object.keys(map).map(k => map[k]).sort((a, b) =>
+        String(a.kelas).localeCompare(String(b.kelas)) || String(a.nama).localeCompare(String(b.nama)));
+      const lines = [["Kelas", "Nama Siswa"].concat(paketIds, ["Rata-rata"]).map(csvCell).join(',')];
+      people.forEach(p => {
+        const vals = paketIds.map(id => p.best[id]);
+        const have = vals.filter(v => v !== undefined);
+        const avg = have.length ? Math.round(have.reduce((a, b) => a + b, 0) / have.length) : '';
+        lines.push([p.kelas, p.nama].concat(vals.map(v => v === undefined ? '' : v), [avg]).map(csvCell).join(','));
+      });
+      const blob = new Blob(["\ufeff" + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Rekap_Nilai_Per_Siswa_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link); link.click(); document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function exportToCSV() {
+      const list = dashboardState.filteredResults;
+      if (list.length === 0) { showToast("Tidak ada data untuk diexport!", 'warn'); return; }
+
+      const header = ["Timestamp", "Kelas", "Nama Siswa", "ID Paket", "Percobaan Ke", "Soal Benar", "Total Soal", "Skor Akhir", "Status"];
+      const lines = [header.map(csvCell).join(',')];
+      list.forEach(r => {
+        lines.push([r.timestamp, r.kelas, r.namaSiswa, r.paketId, r.percobaanKe, r.jumlahBenar, r.totalSoal, r.skorAkhir, r.status].map(csvCell).join(','));
+      });
+
+      const blob = new Blob(["\ufeff" + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Rekap_Evaluasi_NEng_Eva_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    /* ============================================================
+     * TABEL HASIL
+     * ============================================================ */
+    function renderResultsTable() {
+      const tbody = document.getElementById('table-results-body');
+      const list = dashboardState.filteredResults;
+      const more = document.getElementById('table-more');
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" class="p-4 text-center text-slate-400 italic">Tidak ada data evaluasi yang sesuai filter.</td></tr>`;
+        more.classList.add('hidden');
+        return;
+      }
+
+      const shown = list.slice(0, dashboardState.visibleRows);
+      tbody.innerHTML = shown.map((row, idx) => {
+        const isLulus = (row.status || '').toUpperCase() === 'LULUS';
+        const badge = isLulus
+          ? `<span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full text-[9px] font-bold">LULUS</span>`
+          : `<span class="bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full text-[9px] font-bold">REMEDI</span>`;
+        return `
+          <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+            <td class="py-2 px-3 text-slate-500 whitespace-nowrap text-[10px]">${esc(row.timestamp)}</td>
+            <td class="py-2 px-3 font-bold text-slate-800">${esc(row.kelas)}</td>
+            <td class="py-2 px-3 font-semibold text-indigo-700 whitespace-nowrap">${esc(row.namaSiswa)}</td>
+            <td class="py-2 px-3"><span class="bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded text-[10px] font-bold">${esc(row.paketId)}</span></td>
+            <td class="py-2 px-3 text-center font-bold">${row.percobaanKe}</td>
+            <td class="py-2 px-3 text-center">${row.jumlahBenar}/${row.totalSoal}</td>
+            <td class="py-2 px-3 text-center font-black text-xs text-indigo-600">${row.skorAkhir}</td>
+            <td class="py-2 px-3 text-center">${badge}</td>
+            <td class="py-2 px-3 text-center">
+              <button onclick="openStudentDetailModal(${idx})" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold px-2 py-0.5 rounded text-[10px] transition border border-indigo-200">
+                <i class="fa-solid fa-eye mr-1"></i>Detail
+              </button>
+            </td>
+          </tr>`;
+      }).join('');
+
+      more.classList.toggle('hidden', list.length <= dashboardState.visibleRows);
+    }
+
+    function showMoreRows() {
+      dashboardState.visibleRows += PAGE_SIZE;
+      renderResultsTable();
+    }
+
+    function openStudentDetailModal(filteredIndex) {
+      const data = dashboardState.filteredResults[filteredIndex];
+      if (!data) return;
+
+      const trend = dashboardState.rawResults
+        .filter(r => studentKey(r) === studentKey(data))
+        .sort((a, b) => (a.percobaanKe || 0) - (b.percobaanKe || 0))
+        .map(r => (r.id === data.id ? `<b>${esc(r.skorMentah)}</b>` : esc(r.skorMentah)));
+      const extra = [];
+      if (data.durasi !== '' && data.durasi !== undefined) extra.push(`Durasi ${data.durasi} mnt`);
+      if (data.pindahTab > 0) extra.push(`Pindah tab ${data.pindahTab}x`);
+
+      document.getElementById('modal-student-badge').innerText = data.kelas;
+      document.getElementById('modal-student-name').innerText = data.namaSiswa;
+      document.getElementById('modal-student-sub').innerText =
+        `Paket: ${data.paketId} • Coba ke-${data.percobaanKe} • Skor: ${data.skorAkhir} (${data.status})` +
+        (extra.length ? ' • ' + extra.join(' • ') : '');
+
+      const modalBody = document.getElementById('modal-student-body');
+      const trendHtml = trend.length > 1
+        ? `<div class="text-[11px] text-slate-600 bg-white border border-slate-200 rounded-lg p-2">Skor mentah per percobaan: ${trend.join(' &rarr; ')}</div>` : '';
+      modalBody.innerHTML = trendHtml + `<p class="text-xs text-slate-400 italic">Memuat rincian...</p>`;
+      document.getElementById('modal-detail-student').classList.remove('hidden');
+
+      callServer('getAttemptDetail', [TEACHER_TOKEN, data.id], res => {
+        if (!res || res.status !== 'success') {
+          modalBody.innerHTML = trendHtml + `<p class="text-xs text-rose-500">${esc((res && res.message) || 'Gagal memuat rincian.')}</p>`;
+          return;
+        }
+        modalBody.innerHTML = trendHtml + renderStudentDetailBody(res.details || [], data);
+      });
+    }
+
+    function renderStudentDetailBody(details, data) {
+      const bank = dashboardState.bankSoal[data.paketId] || [];
+      if (details.length === 0) return `<p class="text-xs text-slate-400 italic">Rincian penilaian tidak tersedia.</p>`;
+      return details.map(d => {
+        const qScore = Number(d.score) || 0;
+        const meta = bank.find(b => String(b.noSoal) === String(d.noSoal)) || {};
+        const q = plainText(meta.pertanyaan, 160);
+
+        let badge = `<span class="bg-rose-100 text-rose-700 px-1.5 rounded text-[9px] font-bold">SALAH (0.0)</span>`;
+        if (qScore >= 1) badge = `<span class="bg-emerald-100 text-emerald-700 px-1.5 rounded text-[9px] font-bold">BENAR (1.0)</span>`;
+        else if (qScore > 0) badge = `<span class="bg-amber-100 text-amber-800 px-1.5 rounded text-[9px] font-bold">PARSIAL (${qScore})</span>`;
+
+        return `
+          <div class="p-2.5 rounded-lg border border-slate-200 bg-white space-y-1.5 text-xs shadow-sm">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-1.5">
+                <span class="font-bold bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded text-[10px]">#${esc(d.noSoal)}</span>
+                <span class="font-semibold text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded text-[9px]">${esc(d.tipeSoal)}</span>
+              </div>${badge}
+            </div>
+            ${q ? `<p class="text-slate-700 font-medium text-[11px] leading-snug clamp-2">${esc(q)}</p>` : ''}
+            <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-100 text-[10px]">
+              <div class="bg-slate-50 p-1.5 rounded border border-slate-200"><span class="text-slate-400 font-bold block uppercase text-[9px]">Siswa:</span><span class="font-bold text-slate-800 block break-words">${esc(d.studentAns || '-')}</span></div>
+              <div class="bg-indigo-50/60 p-1.5 rounded border border-indigo-100"><span class="text-indigo-400 font-bold block uppercase text-[9px]">Kunci:</span><span class="font-bold text-indigo-900 block break-words">${esc(d.keyAns || '-')}</span></div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    function closeStudentDetailModal() { document.getElementById('modal-detail-student').classList.add('hidden'); }
+
+    /* ============================================================
+     * PRATINJAU SOAL (tampilan seperti siswa, dengan kunci untuk guru)
+     * ============================================================ */
+    const PV_ALLOWED = { B: 1, I: 1, U: 1, EM: 1, STRONG: 1, BR: 1, P: 1, DIV: 1, SPAN: 1, UL: 1, OL: 1, LI: 1, SUB: 1, SUP: 1,
+      IMG: 1, TABLE: 1, THEAD: 1, TBODY: 1, TR: 1, TD: 1, TH: 1, H1: 1, H2: 1, H3: 1, H4: 1, BLOCKQUOTE: 1, SMALL: 1, A: 1 };
+
+    function pvSanitize(html) {
+      const doc = new DOMParser().parseFromString('<body>' + html + '</body>', 'text/html');
+      (function walk(node) {
+        Array.from(node.childNodes).forEach(child => {
+          if (child.nodeType === 3) return;
+          if (child.nodeType !== 1) { child.remove(); return; }
+          walk(child);
+          const tag = child.tagName;
+          if (!PV_ALLOWED[tag]) {
+            if (/^(SCRIPT|STYLE|IFRAME|OBJECT|EMBED|LINK|META|FORM|INPUT|BUTTON|TEXTAREA|SELECT|SVG|MATH|BASE)$/.test(tag)) { child.remove(); return; }
+            while (child.firstChild) node.insertBefore(child.firstChild, child);
+            child.remove(); return;
+          }
+          Array.from(child.attributes).forEach(a => {
+            const n = a.name.toLowerCase(), v = a.value.trim();
+            const ok = (tag === 'IMG' && (n === 'alt' || (n === 'src' && /^https:\/\//i.test(v)))) ||
+                       (tag === 'A' && n === 'href' && /^https?:\/\//i.test(v)) ||
+                       ((tag === 'TD' || tag === 'TH') && (n === 'colspan' || n === 'rowspan'));
+            if (!ok) child.removeAttribute(a.name);
+          });
+          if (tag === 'IMG') {
+            child.setAttribute('referrerpolicy', 'no-referrer');
+            child.className = 'max-h-72 w-auto rounded-lg my-2 border border-slate-200 shadow-sm object-contain';
+          }
+          if (tag === 'A') { child.setAttribute('target', '_blank'); child.setAttribute('rel', 'noopener noreferrer'); }
+        });
+      })(doc.body);
+      return doc.body.innerHTML;
+    }
+
+    function pvRich(text) {
+      if (!text) return '';
+      let clean = pvSanitize(String(text).trim());
+      clean = clean.replace(/https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/[^\s]*/gi, 'https://drive.google.com/uc?export=view&id=$1');
+      clean = clean.replace(/https:\/\/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/gi, 'https://drive.google.com/uc?export=view&id=$1');
+      const imgRegex = /(https?:\/\/[^\s]+?\.(?:png|jpg|jpeg|gif|webp|svg)(?:\?[^\s]*)?|https:\/\/drive\.google\.com\/uc\?[^\s]+|https:\/\/lh3\.googleusercontent\.com\/[^\s]+|https:\/\/(?:i\.)?ibb\.co\/[^\s]+)/gi;
+      const img = url => `<img src="${url}" referrerpolicy="no-referrer" loading="lazy" class="max-h-72 w-auto rounded-lg my-2 border border-slate-200 shadow-sm object-contain" alt="Gambar">`;
+      if (clean.match(/^https?:\/\/[^\s]+$/i) && clean.match(imgRegex)) return img(clean);
+      return clean.replace(/\r?\n/g, '<br>').replace(imgRegex, url => '<br>' + img(url) + '<br>');
+    }
+
+    function pvPassage(text) {
+      const clean = String(text || '').trim();
+      if (!clean) return '';
+      if (!clean.includes('<p>')) {
+        return clean.split(/\n\s*\n|\n/).filter(p => p.trim()).map(p => `<div class="mb-2">${pvRich(p.trim())}</div>`).join('');
+      }
+      return pvRich(clean);
+    }
+
+    function pvType(q) {
+      const t = String(q.tipeSoal || 'PG').toUpperCase();
+      if (t === 'MATCHING') return 'MENJODOHKAN';
+      if (t === 'KATEGORI' || t === 'MATRIX') return 'MATRIKS';
+      return t;
+    }
+
+    const PV_LABEL = { PG: 'Pilihan Ganda', PGK: 'PGK (Multi-Pilih)', BS: 'Benar / Salah', MENJODOHKAN: 'Menjodohkan', MATRIKS: 'Matriks / Kategorisasi', IS: 'Isian Singkat' };
+
+    function pvMatrixParts(q) {
+      let raw = q.pertanyaan || '';
+      let header = 'Pernyataan / Trait';
+      const hm = raw.match(/\[(?:HEADER:\s*)?([^\]]+)\]/i);
+      if (hm) { header = hm[1].trim(); raw = raw.replace(hm[0], '').trim(); }
+      const parts = raw.split(/[\|\n]/).map(p => p.trim()).filter(Boolean);
+      return { header: header, title: parts.length > 0 ? parts[0] : raw, items: parts.length > 1 ? parts.slice(1) : [raw] };
+    }
+
+    function pvOptions(q) {
+      const out = [];
+      ['A', 'B', 'C', 'D', 'E'].forEach(k => {
+        const v = String((q.options && q.options[k]) || '').trim();
+        if (v !== '' && v !== '-') out.push({ key: k, text: v });
+      });
+      return out;
+    }
+
+    let pvState = { paketId: '', data: null };
+
+    function openPaketPreview(paketId, focusNo, fresh) {
+      callServer('getPaketPreview', [TEACHER_TOKEN, paketId, !!fresh], res => {
+        if (!res || res.status !== 'success') { showToast((res && res.message) || 'Gagal memuat pratinjau.', 'error', 0); return; }
+        pvState.paketId = paketId;
+        pvState.data = res;
+        const types = Array.from(new Set(res.questions.map(pvType)));
+        document.getElementById('pv-type').innerHTML = '<option value="">Semua tipe</option>' +
+          types.map(t => `<option value="${esc(t)}">${esc(PV_LABEL[t] || t)}</option>`).join('');
+        document.getElementById('pv-search').value = '';
+        document.getElementById('pv-issues').checked = false;
+        document.getElementById('modal-preview').classList.remove('hidden');
+        renderPreview();
+        if (focusNo) pvFocus(focusNo);
+        else document.getElementById('pv-body').scrollTop = 0;
+      }, 'Memuat pratinjau soal...');
+    }
+
+    function reloadPaketPreview() {
+      if (pvState.paketId) openPaketPreview(pvState.paketId, '', true);
+    }
+
+    function closePaketPreview() { document.getElementById('modal-preview').classList.add('hidden'); }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && !document.getElementById('modal-preview').classList.contains('hidden')) closePaketPreview();
+    });
+
+    function pvFocus(no) {
+      const el = Array.from(document.getElementById('pv-body').children).find(c => c.dataset && c.dataset.no === String(no));
+      if (!el) return;
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      el.classList.add('ring-2', 'ring-indigo-500');
+      setTimeout(() => el.classList.remove('ring-2', 'ring-indigo-500'), 2500);
+    }
+
+    function pvOptRow(key, textHtml, isKey, showKey, round) {
+      const mark = showKey && isKey;
+      return `<div class="flex items-start gap-2.5 p-2.5 rounded-lg border text-sm ${mark ? 'border-emerald-300 bg-emerald-50' : 'border-slate-200 bg-slate-50'}">
+        <span class="mt-0.5 w-4 h-4 shrink-0 border ${round ? 'rounded-full' : 'rounded'} ${mark ? 'bg-emerald-500 border-emerald-500' : 'border-slate-400 bg-white'}"></span>
+        <div class="flex-1 text-slate-700 leading-relaxed"><b class="mr-1">${esc(key)}.</b>${textHtml}</div>
+        ${mark ? '<span class="text-[10px] font-bold text-emerald-700 shrink-0">KUNCI</span>' : ''}
+      </div>`;
+    }
+
+    function pvCard(q, showKey) {
+      const type = pvType(q);
+      const letters = (q.key && q.key.letters) || [];
+      let title = pvRich(q.pertanyaan);
+      let optionsHTML = '';
+
+      if (type === 'BS') {
+        const a = (q.options && q.options.A && q.options.A !== '-') ? q.options.A : 'TRUE';
+        const b = (q.options && q.options.B && q.options.B !== '-') ? q.options.B : 'FALSE';
+        optionsHTML = pvOptRow('A', pvRich(a), letters.includes('A'), showKey, true) + pvOptRow('B', pvRich(b), letters.includes('B'), showKey, true);
+      } else if (type === 'MATRIKS') {
+        const mp = pvMatrixParts(q);
+        title = pvRich(mp.title);
+        const cats = pvOptions(q);
+        const th = `<th class="p-2 text-left border-r border-slate-200 font-bold">${pvRich(mp.header)}</th>` +
+          cats.map(c => `<th class="p-2 text-center border-r border-slate-200 last:border-r-0 font-bold">${pvRich(c.text)}</th>`).join('');
+        const rows = mp.items.map((it, i) => `<tr>
+            <td class="p-2 border-r border-slate-200 text-slate-700">${pvRich(it)}</td>
+            ${cats.map(c => {
+              const hit = showKey && letters[i] === c.key;
+              return `<td class="p-2 text-center border-r border-slate-200 last:border-r-0 ${hit ? 'bg-emerald-50' : ''}">
+                <span class="inline-block w-4 h-4 rounded-full border align-middle ${hit ? 'bg-emerald-500 border-emerald-500' : 'border-slate-400 bg-white'}"></span></td>`;
+            }).join('')}
+          </tr>`).join('');
+        optionsHTML = `<div class="overflow-x-auto border border-slate-200 rounded-xl"><table class="w-full text-xs border-collapse bg-white">
+          <thead class="bg-slate-100 text-slate-700 border-b border-slate-200"><tr>${th}</tr></thead>
+          <tbody class="divide-y divide-slate-200">${rows}</tbody></table></div>`;
+      } else if (type === 'IS') {
+        const accepted = (q.key && q.key.accepted) || [];
+        optionsHTML = `<div class="border border-slate-300 bg-slate-50 rounded-lg p-2.5 text-xs text-slate-400 italic">Siswa mengetik jawaban singkat di sini...</div>` +
+          (showKey ? `<div class="text-[11px] text-emerald-800 bg-emerald-50 border border-emerald-200 rounded-lg p-2">Jawaban diterima: ${
+            accepted.length ? accepted.map(a => `<b class="bg-white border border-emerald-200 rounded px-1.5 py-0.5 mr-1">${esc(a)}</b>`).join('') : '<i>belum ada kunci</i>'}</div>` : '');
+      } else {
+        const round = (type !== 'PGK');
+        const opts = pvOptions(q);
+        const head = (type === 'MENJODOHKAN') ? `<p class="text-[11px] text-slate-500 italic">Siswa memilih pasangan lewat menu pilihan (dropdown).</p>` : '';
+        optionsHTML = head + (opts.length ? opts.map(o => pvOptRow(o.key, pvRich(o.text), letters.includes(o.key), showKey, round)).join('')
+          : `<p class="text-[11px] text-rose-500 italic">Tidak ada opsi yang terisi.</p>`);
+      }
+
+      const issues = q.issues || [];
+      const issueBadge = issues.length
+        ? `<span class="text-[10px] font-bold bg-amber-100 text-amber-800 px-2 py-0.5 rounded" title="${esc(issues.join(' | '))}"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${issues.length} masalah</span>` : '';
+      const issueBox = issues.length
+        ? `<ul class="text-[11px] text-amber-900 bg-amber-50 border border-amber-200 rounded-lg p-2 space-y-0.5 list-disc list-inside">${issues.map(i => `<li>${esc(i)}</li>`).join('')}</ul>` : '';
+      const bahas = (showKey && q.pembahasan)
+        ? `<div class="text-[11px] text-slate-700 bg-amber-50 border border-amber-100 rounded-lg p-2.5 leading-relaxed"><b>Pembahasan:</b> ${esc(q.pembahasan)}</div>` : '';
+
+      return `<div data-no="${esc(q.noSoal)}" class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-2.5 transition">
+        <div class="flex items-center justify-between gap-2 flex-wrap">
+          <span class="text-xs font-bold bg-indigo-100 text-indigo-700 px-2.5 py-1 rounded">Soal #${esc(q.noSoal)}</span>
+          <div class="flex items-center gap-1.5">${issueBadge}
+            <span class="text-[10px] font-semibold bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded">${esc(PV_LABEL[type] || type)}</span>
+            <span class="text-[10px] text-slate-400" title="Baris pada sheet Bank_Soal">Baris ${esc(q.sheetRow)}</span></div>
+        </div>
+        <div class="text-sm font-semibold text-slate-800 leading-relaxed">${title}</div>
+        <div class="space-y-1.5">${optionsHTML}</div>
+        ${showKey ? `<p class="text-[10px] text-slate-400">Kunci di sheet: <b class="text-slate-600">${esc(q.kunciJawaban || '(kosong)')}</b></p>` : ''}
+        ${bahas}${issueBox}
+      </div>`;
+    }
+
+    function renderPreview() {
+      const d = pvState.data;
+      if (!d) return;
+      const showKey = document.getElementById('pv-showkey').checked;
+      const fType = document.getElementById('pv-type').value;
+      const onlyIssues = document.getElementById('pv-issues').checked;
+      const needle = document.getElementById('pv-search').value.toLowerCase().trim();
+      const qs = d.questions;
+
+      let active = '';
+      const groups = [];
+      qs.forEach(q => {
+        const raw = String(q.teksBacaan || '').trim();
+        if (raw && raw !== '-') active = raw;
+        if (active) {
+          let g = groups.find(x => x.text === active);
+          if (!g) { g = { text: active, nos: [] }; groups.push(g); }
+          g.nos.push(q.noSoal);
+          q._g = groups.indexOf(g);
+        } else { q._g = -1; }
+      });
+
+      const counts = {};
+      qs.forEach(q => { const t = pvType(q); counts[t] = (counts[t] || 0) + 1; });
+      const withIssues = qs.filter(q => (q.issues || []).length > 0).length;
+
+      document.getElementById('pv-badge').innerText = d.paket.id;
+      document.getElementById('pv-title').innerText = d.paket.name;
+      document.getElementById('pv-sub').innerText =
+        `${qs.length} soal • ${groups.length} teks bacaan • status ${d.paket.status}` + (d.paket.status !== 'AKTIF' ? ' (tidak tampil bagi siswa)' : '');
+      document.getElementById('pv-summary').innerHTML =
+        Object.keys(counts).map(t => `<span class="bg-white border border-slate-200 rounded px-2 py-0.5">${esc(PV_LABEL[t] || t)}: <b>${counts[t]}</b></span>`).join('') +
+        (withIssues
+          ? `<span class="bg-amber-100 text-amber-800 border border-amber-200 rounded px-2 py-0.5 font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>${withIssues} soal perlu diperiksa</span>`
+          : `<span class="bg-emerald-50 text-emerald-700 border border-emerald-200 rounded px-2 py-0.5 font-bold"><i class="fa-solid fa-circle-check mr-1"></i>Tidak ada masalah terdeteksi</span>`);
+
+      const list = qs.filter(q =>
+        (!fType || pvType(q) === fType) &&
+        (!onlyIssues || (q.issues || []).length > 0) &&
+        (!needle || String(q.noSoal).toLowerCase() === needle.replace(/^#/, '') || plainText(q.pertanyaan, 600).toLowerCase().includes(needle)));
+
+      const body = document.getElementById('pv-body');
+      if (qs.length === 0) { body.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-8">Paket ini belum memiliki butir soal.</p>`; return; }
+      if (list.length === 0) { body.innerHTML = `<p class="text-xs text-slate-400 italic text-center py-8">Tidak ada soal yang cocok dengan filter.</p>`; return; }
+
+      let lastG = -2;
+      body.innerHTML = list.map(q => {
+        let passage = '';
+        if (q._g !== lastG && q._g >= 0) {
+          const g = groups[q._g];
+          const rng = g.nos.length === 1 ? `Soal #${esc(g.nos[0])}` : `Soal #${esc(g.nos[0])} - #${esc(g.nos[g.nos.length - 1])}`;
+          passage = `<details open class="bg-white rounded-xl border border-indigo-200 shadow-sm">
+            <summary class="cursor-pointer select-none p-2.5 text-xs font-bold text-indigo-700"><i class="fa-solid fa-book-open mr-1.5"></i>Bacaan / Infografik (${rng})</summary>
+            <div class="px-3 pb-3 text-sm text-slate-800 leading-relaxed">${pvPassage(g.text)}</div></details>`;
+        }
+        lastG = q._g;
+        return passage + pvCard(q, showKey);
+      }).join('');
+    }
+
+    /* ============================================================
+     * KELOLA PAKET & VALIDATOR
+     * ============================================================ */
+    function renderPackagesTable() {
+      const tbody = document.getElementById('table-packages-body');
+      if (dashboardState.packages.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-3 text-center text-slate-400 italic">Belum ada paket soal.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = dashboardState.packages.map(pkg => {
+        const isAktif = pkg.status === 'AKTIF';
+        const badge = isAktif
+          ? `<span class="bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full text-[9px] font-bold">AKTIF</span>`
+          : `<span class="bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full text-[9px] font-bold">NONAKTIF</span>`;
+        const next = isAktif ? 'NONAKTIF' : 'AKTIF';
+        const btnCls = isAktif
+          ? "bg-rose-50 hover:bg-rose-100 text-rose-700 border-rose-200"
+          : "bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border-emerald-200";
+        return `
+          <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+            <td class="p-2.5 font-bold text-slate-800">${esc(pkg.id)}</td>
+            <td class="p-2.5 font-medium text-slate-700">${esc(pkg.name)}</td>
+            <td class="p-2.5 text-center">${pkg.jumlahSoal === undefined ? '-' : pkg.jumlahSoal}</td>
+            <td class="p-2.5 text-center">${pkg.jumlahPengerjaan === undefined ? '-' : pkg.jumlahPengerjaan}</td>
+            <td class="p-2.5 text-center">${badge}</td>
+            <td class="p-2.5 text-center">
+              <button data-id="${esc(pkg.id)}" onclick="openPaketPreview(this.dataset.id)" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 px-2 py-0.5 rounded text-[10px] font-bold transition mr-1"><i class="fa-solid fa-eye mr-1"></i>Pratinjau</button>
+              <button data-id="${esc(pkg.id)}" data-status="${next}" onclick="handleTogglePackage(this.dataset.id, this.dataset.status)" class="${btnCls} border px-2 py-0.5 rounded text-[10px] font-bold transition">${isAktif ? 'Nonaktifkan' : 'Aktifkan'}</button>
+            </td>
+          </tr>`;
+      }).join('');
+    }
+
+    function handleTogglePackage(paketId, newStatus) {
+      callServer('togglePaketStatus', [TEACHER_TOKEN, paketId, newStatus], res => {
+        if (res.status === 'success') loadPackagesData();
+        else showToast("Gagal: " + res.message, 'error', 0);
+      }, "Mengubah status...");
+    }
+
+    function runValidator() {
+      const box = document.getElementById('validator-result');
+      callServer('getBankValidation', [TEACHER_TOKEN], res => {
+        box.classList.remove('hidden');
+        if (res.status !== 'success') { box.innerHTML = `<p class="text-rose-600">${esc(res.message)}</p>`; return; }
+        if (!res.issues || res.issues.length === 0) {
+          box.innerHTML = `<p class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check mr-1"></i>Tidak ditemukan masalah pada Bank_Soal.</p>`;
+          return;
+        }
+        box.innerHTML = `<p class="font-bold text-amber-800 mb-1">${res.issues.length} masalah ditemukan:</p>` +
+          `<ul class="list-disc pl-4 space-y-0.5 text-slate-700">${res.issues.map(i => `<li>${esc(i)}</li>`).join('')}</ul>`;
+      }, "Memeriksa Bank Soal...");
+    }
+  </script>
+</body>
+</html>
