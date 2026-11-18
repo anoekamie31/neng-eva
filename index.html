@@ -24,37 +24,42 @@
       --text-muted: #626d69;
       --border-line: #8c9692;
       --border-soft: #d5d7ce;
-      --success: #2f6f5e;
-      --success-soft: #e4f2ed;
       --danger: #c93b2b;
       --danger-soft: #fbeae8;
+      --success: #2f6f5e;
+      --success-soft: #e4f2ed;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
 
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg-cream);
       color: var(--text-main);
-      line-height: 1.55;
+      line-height: 1.5;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      overflow-x: clip;
     }
 
     .hidden { display: none !important; }
 
-    /* EDITORIAL TOPBAR */
+    /* TOPBAR */
     .topbar {
       background: var(--card-bg);
       border-bottom: 1.5px solid var(--border-line);
-      padding: 13px 20px;
+      padding: 11px 18px;
       position: sticky;
       top: 0;
       z-index: 30;
     }
     .topbar-inner {
-      max-width: 1160px;
+      max-width: 960px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -65,206 +70,89 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 11px;
     }
     .brand-monogram {
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       background: var(--teal-dark);
       color: #fff;
       font-family: 'Lora', Georgia, serif;
       font-weight: 700;
-      font-size: 16px;
+      font-size: 15px;
       display: grid;
       place-items: center;
       border: 1.5px solid var(--text-main);
       flex-shrink: 0;
     }
-    .brand-title {
-      font-family: 'Lora', Georgia, serif;
-      font-size: 19px;
-      font-weight: 700;
-      color: var(--text-main);
-      line-height: 1.15;
-    }
-    .brand-title span { color: var(--teal-dark); }
-    .brand-sub {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .dot-matrix-decor {
-      display: grid;
-      grid-template-columns: repeat(5, 4px);
-      gap: 4px;
-      opacity: 0.65;
-    }
-    .dot-matrix-decor span {
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--text-main);
-      display: block;
-    }
-    .btn-link-dash {
-      font-size: 12.5px;
-      font-weight: 700;
-      color: var(--text-main);
-      text-decoration: none;
-      padding: 7px 13px;
-      border-radius: 6px;
-      background: var(--ochre);
-      border: 1px solid #b7b064;
-      transition: 0.16s;
-      white-space: nowrap;
-    }
-    .btn-link-dash:hover { background: var(--ochre-strong); }
-
-    /* CONTAINER & EDITORIAL PANEL */
-    .container {
-      width: 100%;
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 22px 16px 48px;
-      flex: 1;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-line);
-      padding: 22px;
-    }
-
-    .panel-heading {
-      display: inline-flex;
-      align-items: center;
+    .editorial-title {
       font-family: 'Lora', Georgia, serif;
       font-size: 20px;
       font-weight: 700;
       color: var(--text-main);
-      padding-bottom: 5px;
-      margin-bottom: 8px;
+      line-height: 1.15;
+    }
+    .editorial-title .accent-word { color: var(--teal-dark); }
+    .editorial-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    /* CONTAINER & PANELS */
+    .container {
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 18px 16px 48px;
+      flex: 1;
+    }
+    .panel-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border-line);
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+    .panel-heading {
+      display: inline-flex;
+      align-items: center;
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--text-main);
+      padding-bottom: 4px;
+      margin-bottom: 14px;
       border-bottom: 1.5px solid var(--teal-dark);
       position: relative;
-      padding-right: 20px;
+      padding-right: 16px;
     }
     .panel-heading::after {
       content: '';
       position: absolute;
       right: -4px;
       bottom: -4.5px;
-      width: 7px;
-      height: 7px;
+      width: 6.5px;
+      height: 6.5px;
       border-radius: 50%;
       border: 1.5px solid var(--teal-dark);
       background: var(--card-bg);
     }
 
-    /* SETUP / LOGIN */
-    .setup-wrap {
-      max-width: 530px;
-      margin: 8px auto;
-    }
-    .setup-header { margin-bottom: 18px; }
-    .setup-header p {
-      font-size: 13.5px;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-    .form-group { margin-bottom: 14px; }
-    .form-label {
-      display: block;
-      font-size: 11.5px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.35px;
-      margin-bottom: 5px;
-      color: var(--text-muted);
-    }
-    .form-control {
-      width: 100%;
-      padding: 10px 13px;
-      border: 1px solid var(--border-line);
-      border-radius: 6px;
-      font-family: inherit;
-      font-size: 14px;
-      color: var(--text-main);
-      background: var(--card-pure);
-      transition: border-color 0.18s, box-shadow 0.18s;
-    }
-    .form-control:focus {
-      outline: none;
-      border-color: var(--teal-dark);
-      box-shadow: 0 0 0 2.5px rgba(62, 91, 97, 0.15);
-    }
-    .form-control:disabled {
-      background: #ecece4;
-      color: var(--text-muted);
-      cursor: not-allowed;
-    }
-    .pin-input {
-      letter-spacing: 6px;
-      font-size: 18px;
-      font-weight: 800;
-      text-align: center;
-    }
-    .pin-hint {
-      margin-top: 6px;
-      font-size: 12px;
-      color: var(--text-main);
-      background: var(--ochre-soft);
-      border: 1px solid #c9c177;
-      padding: 8px 10px;
-      border-radius: 5px;
-    }
-
-    .rules-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 9px;
-      margin: 16px 0 20px;
-    }
-    .rule-item {
-      background: var(--card-pure);
-      border: 1px solid var(--border-soft);
-      border-left: 3.5px solid var(--teal-dark);
-      padding: 9px 11px;
-    }
-    .rule-item:nth-child(even) {
-      border-left-color: #b7ae59;
-    }
-    .rule-item span {
-      display: block;
-      font-size: 10.5px;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      font-weight: 700;
-    }
-    .rule-item strong {
-      font-size: 14.5px;
-      color: var(--text-main);
-      font-weight: 800;
-    }
-
-    /* BUTTONS */
+    /* BUTTONS & FORM CONTROLS */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 7px;
-      padding: 10px 16px;
-      border-radius: 6px;
+      gap: 6px;
+      padding: 9px 14px;
+      border-radius: 5px;
       font-family: inherit;
-      font-size: 13.5px;
+      font-size: 13px;
       font-weight: 700;
       border: 1px solid transparent;
       cursor: pointer;
-      transition: 0.16s;
+      text-decoration: none;
+      transition: 0.15s;
+      white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
     }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn-primary {
@@ -279,417 +167,432 @@
       border-color: #b7b064;
     }
     .btn-success:hover:not(:disabled) { background: var(--ochre-strong); }
+    .btn-danger {
+      background: var(--danger);
+      color: #fff;
+      border-color: var(--danger);
+    }
+    .btn-danger-soft {
+      background: var(--danger-soft);
+      color: var(--danger);
+      border-color: #e6b4ae;
+    }
     .btn-outline {
       background: var(--card-pure);
       color: var(--text-main);
       border-color: var(--border-line);
     }
     .btn-outline:hover:not(:disabled) { background: #efeee6; }
-    .btn-warning-soft {
-      background: var(--ochre-soft);
-      color: #6b6114;
-      border-color: #c9c177;
-    }
-    .btn-warning-soft.active {
-      background: var(--ochre);
-      color: var(--text-main);
-      border-color: #9e9545;
-    }
-    .btn-block { width: 100%; }
+    .btn-xs { padding: 4px 9px; font-size: 11px; border-radius: 4px; }
+    .btn-sm { padding: 6px 11px; font-size: 12px; }
+    .btn-block { width: 100%; padding: 11px 16px; font-size: 13.5px; }
 
+    .form-group { margin-bottom: 13px; }
+    .form-label {
+      display: block;
+      font-size: 11.5px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.35px;
+      margin-bottom: 5px;
+    }
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border-line);
+      border-radius: 5px;
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text-main);
+      background: var(--card-pure);
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--teal-dark);
+      box-shadow: 0 0 0 2px rgba(62, 91, 97, 0.16);
+    }
+    .pin-input {
+      letter-spacing: 6px;
+      font-size: 18px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    /* ALERTS & BANNERS */
     .alert-error {
       background: var(--danger-soft);
       color: var(--danger);
       border: 1px solid #e6b4ae;
       padding: 10px 13px;
-      border-radius: 6px;
+      border-radius: 5px;
       font-size: 13px;
       font-weight: 600;
-      margin-bottom: 14px;
+      margin-bottom: 13px;
+    }
+    .info-banner {
+      background: var(--ochre-soft);
+      color: var(--text-main);
+      border: 1px solid #c9c177;
+      padding: 10px 13px;
+      border-radius: 5px;
+      font-size: 12.5px;
+      margin-bottom: 13px;
+    }
+    .success-banner {
+      background: var(--success-soft);
+      color: var(--success);
+      border: 1px solid #9ecab9;
+      padding: 11px 14px;
+      border-radius: 5px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 13px;
     }
 
-    /* QUIZ WORKSPACE */
-    .quiz-status-bar {
+    /* LOGIN / SETUP CARD */
+    .setup-wrap { max-width: 480px; margin: 16px auto; }
+    .meta-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+    .badge-neutral { background: #ecece4; color: var(--text-main); border: 1px solid var(--border-soft); }
+    .badge-teal { background: var(--teal-soft); color: var(--teal-dark); border: 1px solid #b8cdd1; }
+    .badge-passed { background: var(--success-soft); color: var(--success); border: 1px solid #b6dacd; }
+    .badge-remedial { background: var(--danger-soft); color: var(--danger); border: 1px solid #e6b4ae; }
+    .badge-warn { background: var(--ochre-soft); color: #786e1c; border: 1px solid #cfc776; }
+
+    /* EXAM STATUS BAR */
+    .exam-status-bar {
       background: var(--card-bg);
-      border: 1px solid var(--border-line);
-      padding: 12px 16px;
-      margin-bottom: 16px;
+      border: 1px solid var(--teal-dark);
+      border-left: 4px solid var(--teal-dark);
+      padding: 10px 14px;
+      margin-bottom: 12px;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
     }
-    .student-badges {
+    .exam-meta-left {
+      font-size: 12.5px;
+    }
+    .exam-meta-right {
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
-      gap: 7px;
+      gap: 6px;
+      flex-wrap: wrap;
     }
-    .pill {
-      font-size: 12px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 4px;
+    .timer-pill {
       background: var(--teal-dark);
       color: #fff;
-    }
-    .pill-gray {
-      background: var(--ochre);
-      color: var(--text-main);
-      border: 1px solid #c2ba6d;
-    }
-    .pill-timer {
-      background: var(--ochre-soft);
-      color: var(--text-main);
-      border: 1px solid #c9c177;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 4px;
       font-variant-numeric: tabular-nums;
     }
-    .pill-danger {
-      background: var(--danger-soft);
-      color: var(--danger);
-      border: 1px solid #e6b4ae;
+    .timer-pill.urgent {
+      background: var(--danger);
     }
 
-    .progress-wrap { width: 100%; margin-top: 3px; }
-    .progress-track {
-      width: 100%;
-      height: 6px;
-      background: var(--blue-ice);
-      border-radius: 999px;
-      overflow: hidden;
+    /* QUESTION NAVIGATOR GRID */
+    .nav-strip {
+      background: var(--card-pure);
+      border: 1px solid var(--border-soft);
+      padding: 10px 12px;
+      margin-bottom: 12px;
     }
-    .progress-fill {
-      height: 100%;
-      background: var(--teal-dark);
-      width: 0%;
-      transition: width 0.25s ease;
+    .nav-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 7px;
     }
-
-    .quiz-grid {
-      display: grid;
-      grid-template-columns: 1fr 270px;
-      gap: 18px;
-      align-items: start;
-    }
-
-    /* PASSAGE / STIMULUS */
-    .passage-card {
-      background: var(--bg-cream);
+    .q-nav-btn {
+      min-width: 32px;
+      height: 30px;
+      padding: 0 6px;
+      border-radius: 4px;
       border: 1px solid var(--border-line);
-      padding: 14px 16px;
-      margin-bottom: 16px;
+      background: var(--card-pure);
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.12s;
+    }
+    .q-nav-btn.answered {
+      background: var(--teal-soft);
+      border-color: var(--teal-dark);
+      color: var(--teal-dark);
+    }
+    .q-nav-btn.flagged {
+      border-color: #b79c1d;
+      background: var(--ochre-soft);
+      color: #6c5d11;
+    }
+    .q-nav-btn.current {
+      background: var(--teal-dark);
+      border-color: var(--teal-dark);
+      color: #fff;
+      box-shadow: 0 0 0 2px rgba(62, 91, 97, 0.25);
+    }
+
+    /* PASSAGE & QUESTION CARD */
+    .passage-card {
+      background: #f2f1e8;
+      border: 1px solid var(--border-line);
+      border-left: 4px solid var(--teal-mid);
+      padding: 12px 14px;
+      margin-bottom: 12px;
     }
     .passage-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
-      font-size: 11.5px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 0.45px;
-      color: var(--teal-dark);
+      gap: 8px;
     }
     .passage-body {
-      font-size: 14.5px;
-      color: var(--text-main);
+      margin-top: 9px;
+      padding-top: 9px;
+      border-top: 1px solid var(--border-soft);
+      font-size: 14px;
+      line-height: 1.62;
       white-space: pre-line;
-      height: auto;
-      max-height: none;
-      overflow: visible;
+      max-width: 78ch;
     }
-    .passage-body img, .q-text img, .opt-val img {
-      display: block;
-      width: auto;
-      max-width: 100%;
-      height: auto;
-      max-height: none;
-      margin: 10px auto;
-      border: 1px solid var(--border-soft);
-    }
-    .passage-body audio { width: 100%; margin: 8px 0; }
 
-    /* QUESTION CARD */
-    .q-meta {
+    .question-card {
+      background: var(--card-pure);
+      border: 1px solid var(--border-line);
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+    .q-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 14px;
-      padding-bottom: 10px;
-      border-bottom: 1.5px solid var(--teal-dark);
+      gap: 8px;
+      flex-wrap: wrap;
+      padding-bottom: 9px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid #ecece4;
     }
-    .q-num {
-      font-family: 'Lora', Georgia, serif;
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--teal-dark);
-    }
-    .q-type {
-      font-size: 11px;
-      font-weight: 800;
-      padding: 3px 9px;
-      border-radius: 4px;
-      background: var(--ochre-soft);
-      border: 1px solid #c9c177;
-      color: var(--text-main);
-    }
-    .q-text {
-      font-size: 15.5px;
+    .q-stem {
+      font-size: 15px;
       font-weight: 600;
-      color: var(--text-main);
-      margin-bottom: 16px;
+      line-height: 1.55;
+      margin-bottom: 14px;
       white-space: pre-line;
+      max-width: 78ch;
+    }
+
+    .passage-body img, .q-stem img, .opt-text img, .review-stem img {
+      display: block;
+      max-width: 100%;
+      max-height: 280px;
+      width: auto;
+      height: auto;
+      margin: 8px 0;
+      border: 1px solid var(--border-soft);
+      border-radius: 4px;
+    }
+    .passage-body audio, .q-stem audio {
+      width: 100%;
+      max-width: 440px;
+      height: 36px;
+      margin: 8px 0;
     }
 
     /* OPTIONS */
-    .opt-list {
+    .options-list {
       display: flex;
       flex-direction: column;
-      gap: 9px;
+      gap: 8px;
     }
-    .opt-item {
+    .option-item {
       display: flex;
       align-items: flex-start;
       gap: 11px;
-      padding: 11px 14px;
-      border: 1px solid var(--border-line);
+      padding: 11px 13px;
+      border: 1.5px solid var(--border-soft);
+      background: var(--bg-cream);
       border-radius: 6px;
       cursor: pointer;
-      transition: 0.16s;
-      background: var(--card-pure);
+      transition: 0.14s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
-    .opt-item:hover { border-color: var(--teal-dark); background: #f2f5f5; }
-    .opt-item.selected {
-      border: 1.5px solid var(--teal-dark);
+    .option-item:hover {
+      border-color: var(--teal-mid);
+      background: #f0f4f4;
+    }
+    .option-item.selected {
+      border-color: var(--teal-dark);
       background: var(--teal-soft);
     }
-    .opt-key {
-      width: 27px;
-      height: 27px;
+    .option-key-badge {
+      min-width: 26px;
+      height: 26px;
       border-radius: 5px;
-      background: var(--bg-cream);
-      border: 1px solid var(--border-line);
-      color: var(--text-main);
-      font-weight: 800;
-      font-size: 12.5px;
+      border: 1.5px solid var(--border-line);
+      background: var(--card-pure);
       display: grid;
       place-items: center;
+      font-size: 12px;
+      font-weight: 800;
       flex-shrink: 0;
+      margin-top: 1px;
     }
-    .opt-item.selected .opt-key {
+    .option-item.selected .option-key-badge {
       background: var(--teal-dark);
       border-color: var(--teal-dark);
       color: #fff;
     }
-    .opt-val {
-      font-size: 14.5px;
+    .opt-text {
+      font-size: 14px;
+      line-height: 1.46;
       padding-top: 2px;
       word-break: break-word;
     }
 
-    /* MATRIX TABLE (TWO-TONE EDITORIAL HEADER) */
-    .matrix-wrap {
+    /* MATRIX TABLE */
+    .table-wrap {
+      width: 100%;
       overflow-x: auto;
       border: 1px solid var(--border-line);
       background: var(--card-pure);
     }
-    .matrix-table {
+    table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 13.5px;
+      font-size: 13px;
     }
-    .matrix-table th, .matrix-table td {
-      padding: 10px 12px;
+    th, td {
+      padding: 9px 10px;
       border: 1px solid var(--border-soft);
-    }
-    .matrix-table thead th:first-child {
-      background: var(--ochre);
-      color: var(--text-main);
-      font-weight: 800;
       text-align: left;
+      vertical-align: middle;
     }
-    .matrix-table thead th:not(:first-child) {
+    thead th {
       background: var(--teal-dark);
       color: #fff;
+      font-size: 12px;
       font-weight: 700;
-      text-align: center;
     }
-    .matrix-table td.center { text-align: center; }
-    .matrix-table input[type="radio"] {
-      width: 17px;
-      height: 17px;
+    .matrix-radio-cell {
+      text-align: center;
+      cursor: pointer;
+    }
+    .matrix-radio-cell input[type="radio"] {
+      width: 18px;
+      height: 18px;
       accent-color: var(--teal-dark);
       cursor: pointer;
     }
 
-    /* SHORT ANSWER */
-    .short-answer-input {
-      width: 100%;
-      padding: 12px 14px;
-      font-size: 15px;
-      border: 1px solid var(--border-line);
-      border-radius: 6px;
-      font-family: inherit;
-      background: var(--card-pure);
-    }
-    .short-answer-input:focus {
-      outline: none;
-      border-color: var(--teal-dark);
-      box-shadow: 0 0 0 2.5px rgba(62, 91, 97, 0.15);
-    }
-
-    /* QUIZ FOOTER NAV */
-    .q-actions {
+    /* EXAM FOOTER NAV */
+    .exam-footer-nav {
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 9px;
-      margin-top: 20px;
-      padding-top: 14px;
-      border-top: 1px solid var(--border-soft);
-    }
-
-    /* SIDEBAR GRID */
-    .nav-card { position: sticky; top: 80px; }
-    .nav-title {
-      font-size: 13.5px;
-      font-weight: 800;
-      margin-bottom: 10px;
-      padding-bottom: 5px;
-      border-bottom: 1.5px solid var(--teal-dark);
-    }
-    .q-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 7px;
-      margin-bottom: 14px;
-    }
-    .q-btn-num {
-      aspect-ratio: 1;
-      border-radius: 5px;
-      border: 1px solid var(--border-line);
-      background: var(--card-pure);
-      font-weight: 700;
-      font-size: 12.5px;
-      cursor: pointer;
-      transition: 0.14s;
-    }
-    .q-btn-num.answered {
-      background: var(--success-soft);
-      border-color: var(--success);
-      color: var(--success);
-    }
-    .q-btn-num.flagged {
-      background: var(--ochre);
-      border-color: #9e9545;
-      color: var(--text-main);
-    }
-    .q-btn-num.current {
-      box-shadow: 0 0 0 2px var(--teal-dark);
-      border-color: var(--teal-dark);
-    }
-    .legend {
-      display: flex;
+      gap: 10px;
       flex-wrap: wrap;
-      gap: 9px;
-      font-size: 11px;
-      color: var(--text-muted);
+    }
+
+    /* RESULT SUMMARY */
+    .score-hero {
+      text-align: center;
+      padding: 18px 14px;
+      background: var(--card-pure);
+      border: 1.5px solid var(--teal-dark);
       margin-bottom: 14px;
     }
-    .legend span { display: inline-flex; align-items: center; gap: 4px; }
-    .dot { width: 9px; height: 9px; border-radius: 2px; display: inline-block; }
-
-    /* RESULT SECTION */
-    .result-hero {
-      text-align: center;
-      padding: 24px 16px;
-      border-bottom: 1.5px solid var(--teal-dark);
-      margin-bottom: 20px;
-    }
-    .status-badge {
-      display: inline-block;
-      padding: 5px 15px;
-      border-radius: 4px;
-      font-size: 12.5px;
-      font-weight: 800;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-    }
-    .status-passed { background: var(--success-soft); color: var(--success); border: 1px solid var(--success); }
-    .status-remedial { background: var(--danger-soft); color: var(--danger); border: 1px solid #e6b4ae; }
     .score-big {
       font-family: 'Lora', Georgia, serif;
-      font-size: 48px;
+      font-size: 44px;
       font-weight: 700;
       line-height: 1.1;
-      color: var(--teal-dark);
       margin: 6px 0;
     }
-    .stats-row {
+    .score-big.passed { color: var(--success); }
+    .score-big.remedial { color: var(--danger); }
+
+    .result-stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-      margin: 18px 0;
+      gap: 8px;
+      margin-bottom: 14px;
     }
-    .stat-box {
+    .res-stat-box {
       background: var(--card-pure);
-      border: 1px solid var(--border-line);
-      padding: 11px;
+      border: 1px solid var(--border-soft);
+      padding: 10px;
       text-align: center;
     }
-    .stat-box span { display: block; font-size: 11.5px; color: var(--text-muted); font-weight: 700; }
-    .stat-box strong { font-size: 17px; font-weight: 800; color: var(--text-main); }
-
-    .result-actions {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-    }
-
-    .review-item {
-      border: 1px solid var(--border-line);
-      background: var(--card-pure);
-      padding: 14px;
-      margin-bottom: 11px;
-    }
-    .review-item.correct { border-left: 4px solid var(--success); }
-    .review-item.incorrect { border-left: 4px solid var(--danger); }
-    .review-item.partial { border-left: 4px solid #b5a632; }
-    .review-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12.5px;
+    .res-stat-label {
+      font-size: 10.5px;
       font-weight: 800;
-      margin-bottom: 6px;
+      color: var(--text-muted);
+      text-transform: uppercase;
     }
-    .review-q { font-size: 14px; margin-bottom: 9px; white-space: pre-line; }
-    .review-ans {
-      font-size: 13px;
+    .res-stat-val {
+      font-size: 17px;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .review-card {
+      background: var(--card-pure);
+      border: 1px solid var(--border-soft);
+      border-left: 4px solid var(--border-line);
+      padding: 12px 14px;
+      margin-bottom: 9px;
+    }
+    .review-card.is-correct { border-left-color: var(--success); }
+    .review-card.is-partial { border-left-color: #c2a829; }
+    .review-card.is-incorrect { border-left-color: var(--danger); }
+    .review-stem {
+      font-size: 13.5px;
+      font-weight: 600;
+      margin: 6px 0 8px;
+      white-space: pre-line;
+    }
+    .review-ans-row {
+      font-size: 12.5px;
+      padding: 5px 9px;
+      border-radius: 4px;
       background: var(--bg-cream);
       border: 1px solid var(--border-soft);
-      padding: 9px 11px;
-      display: grid;
-      gap: 4px;
+      margin-bottom: 5px;
     }
-    .review-bahas {
-      margin-top: 8px;
-      font-size: 13px;
-      color: var(--text-main);
+    .review-explanation {
+      margin-top: 6px;
+      font-size: 12.5px;
       background: var(--ochre-soft);
-      border: 1px solid #c9c177;
-      padding: 8px 11px;
+      border: 1px solid #d5ce88;
+      padding: 7px 10px;
+      border-radius: 4px;
     }
 
-    /* LOADING & MODAL */
+    /* MODALS & OVERLAY */
     .overlay {
       position: fixed;
       inset: 0;
-      background: rgba(38, 46, 43, 0.55);
+      background: rgba(38, 46, 43, 0.62);
       backdrop-filter: blur(2px);
       display: grid;
       place-items: center;
@@ -699,40 +602,44 @@
     .modal-box {
       background: var(--card-bg);
       border: 1.5px solid var(--teal-dark);
-      padding: 22px;
-      max-width: 420px;
+      padding: 20px;
+      max-width: 440px;
       width: 100%;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+    }
+    .modal-box.warning-border {
+      border: 2px solid var(--danger);
+      border-top: 6px solid var(--danger);
     }
     .spinner {
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border: 4px solid var(--blue-ice);
       border-top-color: var(--teal-dark);
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
-      margin: 0 auto 12px;
+      margin: 0 auto 10px;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .toast {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: 18px;
+      right: 18px;
       background: var(--teal-dark);
       color: #fff;
-      padding: 11px 16px;
-      border-radius: 6px;
-      font-size: 13px;
+      padding: 10px 15px;
+      border-radius: 5px;
+      font-size: 12.5px;
       font-weight: 600;
       z-index: 70;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.22);
     }
 
-    @media (max-width: 840px) {
-      .quiz-grid { grid-template-columns: 1fr; }
-      .nav-card { position: static; }
-      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    @media (max-width: 640px) {
+      .result-stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .panel-box { padding: 14px; }
+      .question-card { padding: 13px; }
     }
   </style>
 </head>
@@ -744,196 +651,204 @@
       <div class="brand">
         <div class="brand-monogram">NE</div>
         <div>
-          <div class="brand-title" id="appTitle"><span>NEng Eva</span> Student Portal</div>
-          <div class="brand-sub">Online English Evaluation</div>
+          <h1 id="appHeaderTitle" class="editorial-title"><span class="accent-word">NEng Eva</span> Student Portal</h1>
+          <div class="editorial-sub">Online Assessment &amp; Adaptive Practice</div>
         </div>
       </div>
-      <div class="header-right">
-        <a href="dashboard.html" class="btn-link-dash">Teacher Dashboard</a>
-        <div class="dot-matrix-decor" aria-hidden="true">
-          <span></span><span></span><span></span><span></span><span></span>
-          <span></span><span></span><span></span><span></span><span></span>
-        </div>
+      <div>
+        <a href="dashboard.html" class="btn btn-outline btn-sm">Teacher Dashboard</a>
       </div>
     </div>
   </header>
 
   <main class="container">
 
-    <!-- 1. STUDENT LOGIN FORM -->
-    <section id="setupSection" class="setup-wrap">
-      <div class="card">
-        <div class="setup-header">
-          <div class="panel-heading">Student Login</div>
-          <p>Select your class, name, and test package to get started.</p>
-        </div>
+    <!-- 1. STUDENT IDENTITY & TEST SELECTION -->
+    <section id="setupSection" class="setup-wrap hidden">
+      <div class="panel-box">
+        <div class="panel-heading">Start Assessment</div>
 
-        <div id="setupError" class="alert-error hidden"></div>
+        <div id="setupMetaPills" class="meta-pills"></div>
+        <div id="setupErrorBox" class="alert-error hidden"></div>
 
-        <div class="form-group">
-          <label class="form-label" for="selectKelas">Class</label>
-          <select id="selectKelas" class="form-control">
-            <option value="">-- Loading classes... --</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="selectNama">Student Name</label>
-          <select id="selectNama" class="form-control" disabled>
-            <option value="">-- Please select a class first --</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="selectPaket">Test Package</label>
-          <select id="selectPaket" class="form-control">
-            <option value="">-- Loading test packages... --</option>
-          </select>
-        </div>
-
-        <div id="pinGroup" class="form-group hidden">
-          <label class="form-label" for="inputPin">Student PIN (6-Digit Date of Birth)</label>
-          <input
-            type="password"
-            id="inputPin"
-            class="form-control pin-input"
-            inputmode="numeric"
-            maxlength="6"
-            placeholder="••••••"
-            autocomplete="off"
-          />
-          <div class="pin-hint">
-            Enter your 6-digit date of birth in <strong>ddmmyy</strong> format.<br />
-            Example: born on <strong>26 December 2011</strong> &rarr; enter <strong>261211</strong>.
-          </div>
-        </div>
-
-        <div class="rules-grid">
-          <div class="rule-item"><span>Passing Score (KKM)</span><strong id="infoKkm">80</strong></div>
-          <div class="rule-item"><span>Max Attempts</span><strong id="infoAttempts">3x</strong></div>
-          <div class="rule-item"><span>Scoring Method</span><strong id="infoMethod">HIGHEST</strong></div>
-          <div class="rule-item"><span>Time Limit</span><strong id="infoTime">No Limit</strong></div>
-        </div>
-
-        <button id="btnStart" class="btn btn-primary btn-block" disabled>Start Test</button>
-      </div>
-    </section>
-
-    <!-- 2. TEST WORKSPACE -->
-    <section id="quizSection" class="hidden">
-      <div class="quiz-status-bar">
-        <div class="student-badges">
-          <span class="pill" id="badgeStudent">-</span>
-          <span class="pill pill-gray" id="badgePaket">-</span>
-          <span class="pill pill-timer hidden" id="timerBadge">Time Left: <strong id="timerText">00:00</strong></span>
-          <span class="pill pill-danger hidden" id="tabBadge">Tab Switches: <strong id="tabCount">0</strong>x</span>
-        </div>
-        <div style="font-size: 12.5px; font-weight: 800; color: var(--teal-dark);" id="progressText">Answered 0 / 0</div>
-        <div class="progress-wrap">
-          <div class="progress-track"><div class="progress-fill" id="progressBar"></div></div>
-        </div>
-      </div>
-
-      <div class="quiz-grid">
-        <!-- QUESTION COLUMN -->
-        <div class="card">
-          <div id="passageBox" class="passage-card hidden">
-            <div class="passage-head">
-              <span>Reading Passage / Stimulus</span>
-              <button type="button" id="passageToggle" class="btn btn-outline" style="padding: 4px 10px; font-size: 11.5px;">Hide</button>
-            </div>
-            <div id="passageContent" class="passage-body"></div>
+        <form id="startTestForm">
+          <div class="form-group">
+            <label class="form-label" for="selectKelas">Class</label>
+            <select id="selectKelas" class="form-control" required>
+              <option value="">-- Select Your Class --</option>
+            </select>
           </div>
 
-          <div class="q-meta">
-            <span class="q-num" id="qNumberBadge">Question 1</span>
-            <div style="display: flex; align-items: center; gap: 7px; flex-wrap: wrap;">
-              <button type="button" id="btnViewPassageModal" class="btn btn-outline hidden" style="padding: 4px 10px; font-size: 11.5px; border-color: var(--teal-dark); color: var(--teal-dark);">View Passage</button>
-              <span class="q-type" id="qTypeBadge">Multiple Choice</span>
+          <div class="form-group">
+            <label class="form-label" for="selectSiswa">Student Name</label>
+            <select id="selectSiswa" class="form-control" disabled required>
+              <option value="">-- Select Class First --</option>
+            </select>
+          </div>
+
+          <div id="studentPinGroup" class="form-group hidden">
+            <label class="form-label" for="inputStudentPin">Student PIN (6-Digit Birth Date: ddmmyy)</label>
+            <input
+              type="password"
+              id="inputStudentPin"
+              class="form-control pin-input"
+              inputmode="numeric"
+              maxlength="6"
+              placeholder="••••••"
+              autocomplete="off"
+            />
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">
+              Example: 26 December 2011 &rarr; <strong>261211</strong>
             </div>
           </div>
 
-          <div id="questionText" class="q-text"></div>
-          <div id="optionsContainer"></div>
-
-          <div class="q-actions">
-            <button type="button" id="btnPrev" class="btn btn-outline">&larr; Previous</button>
-            <button type="button" id="btnFlag" class="btn btn-warning-soft">Flag for Review</button>
-            <button type="button" id="btnNext" class="btn btn-primary">Next &rarr;</button>
+          <div class="form-group">
+            <label class="form-label" for="selectPaket">Test Package</label>
+            <select id="selectPaket" class="form-control" required>
+              <option value="">-- Select Test Package --</option>
+            </select>
           </div>
-        </div>
 
-        <!-- QUESTION NAVIGATOR SIDEBAR -->
-        <aside class="card nav-card">
-          <div class="nav-title">Question Navigator</div>
-          <div class="legend">
-            <span><i class="dot" style="background:var(--success);"></i> Answered</span>
-            <span><i class="dot" style="background:var(--ochre); border:1px solid #9e9545;"></i> Flagged</span>
-            <span><i class="dot" style="background:#fff; border:1px solid var(--border-line);"></i> Blank</span>
-          </div>
-          <div id="questionGrid" class="q-grid"></div>
-          <button type="button" id="btnSubmitSidebar" class="btn btn-success btn-block">Submit Answers</button>
-        </aside>
+          <button type="submit" id="btnStartTest" class="btn btn-primary btn-block">Start Test</button>
+        </form>
       </div>
     </section>
 
-    <!-- 3. TEST RESULTS -->
+    <!-- 2. ACTIVE EXAM WORKSPACE -->
+    <section id="examSection" class="hidden">
+      <div class="exam-status-bar">
+        <div class="exam-meta-left">
+          <strong id="examStudentLabel">Student</strong>
+          <div id="examPackageLabel" style="font-size: 11.5px; color: var(--text-muted);">Package</div>
+        </div>
+        <div class="exam-meta-right">
+          <span id="examProgressBadge" class="badge badge-teal">0 / 0 Answered</span>
+          <span id="examTabSwitchBadge" class="badge badge-neutral">Tab Switches: 0</span>
+          <span id="examTimerBadge" class="timer-pill">00:00</span>
+        </div>
+      </div>
+
+      <div class="nav-strip">
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11.5px; color: var(--text-muted);">
+          <strong>Question Navigator</strong>
+          <span>Tap a number to jump</span>
+        </div>
+        <div id="questionNavGrid" class="nav-grid"></div>
+      </div>
+
+      <div id="passageContainer" class="passage-card hidden">
+        <div class="passage-head">
+          <span class="badge badge-teal">READING PASSAGE / STIMULUS</span>
+          <button type="button" id="btnTogglePassage" class="btn btn-outline btn-xs">Hide Passage</button>
+        </div>
+        <div id="passageBody" class="passage-body"></div>
+      </div>
+
+      <div class="question-card">
+        <div class="q-card-header">
+          <div style="display: flex; align-items: center; gap: 7px; flex-wrap: wrap;">
+            <span id="currentQBadge" class="badge badge-teal">Question 1</span>
+            <span id="currentQTypeBadge" class="badge badge-neutral">Multiple Choice</span>
+          </div>
+          <button type="button" id="btnFlagQuestion" class="btn btn-outline btn-xs">Flag for Review</button>
+        </div>
+
+        <div id="questionStem" class="q-stem"></div>
+        <div id="questionInputArea"></div>
+      </div>
+
+      <div class="exam-footer-nav">
+        <button type="button" id="btnPrevQ" class="btn btn-outline">&larr; Previous</button>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button type="button" id="btnNextQ" class="btn btn-primary">Next &rarr;</button>
+          <button type="button" id="btnOpenSubmitModal" class="btn btn-success">Submit Answers</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. RESULT & REVIEW SCREEN -->
     <section id="resultSection" class="hidden">
-      <div class="card">
-        <div class="result-hero">
-          <span id="resStatusBadge" class="status-badge status-passed">PASSED</span>
-          <div style="font-size: 13px; color: var(--text-muted); font-weight: 700;">Your Final Score</div>
-          <div id="resFinalScore" class="score-big">0</div>
+      <div class="panel-box">
+        <div class="panel-heading">Assessment Result</div>
 
-          <div class="stats-row">
-            <div class="stat-box"><span>Test Score</span><strong id="resRawScore">0</strong></div>
-            <div class="stat-box"><span>Correct Answers</span><strong id="resCorrect">0 / 0</strong></div>
-            <div class="stat-box"><span>Attempt</span><strong id="resAttempt">1 / 3</strong></div>
-            <div class="stat-box"><span>Passing Score</span><strong id="resKkm">80</strong></div>
+        <div class="score-hero">
+          <div id="resultStudentMeta" style="font-size: 12.5px; color: var(--text-muted); font-weight: 700;"></div>
+          <div id="resultScoreBig" class="score-big">0</div>
+          <div id="resultStatusBadge"></div>
+        </div>
+
+        <div id="resultNoticeArea"></div>
+
+        <div class="result-stats-grid">
+          <div class="res-stat-box">
+            <div class="res-stat-label">Correct</div>
+            <div class="res-stat-val" id="resStatCorrect">0/0</div>
           </div>
-
-          <div class="result-actions">
-            <button type="button" id="btnRetry" class="btn btn-primary hidden">Retake Test</button>
-            <button type="button" id="btnHome" class="btn btn-outline">Back to Login</button>
+          <div class="res-stat-box">
+            <div class="res-stat-label">Passing (KKM)</div>
+            <div class="res-stat-val" id="resStatKkm">80</div>
+          </div>
+          <div class="res-stat-box">
+            <div class="res-stat-label">Attempt</div>
+            <div class="res-stat-val" id="resStatAttempt">#1</div>
+          </div>
+          <div class="res-stat-box">
+            <div class="res-stat-label">Tab Switches</div>
+            <div class="res-stat-val" id="resStatTabs">0</div>
           </div>
         </div>
 
-        <div class="panel-heading" style="font-size: 16px; margin-bottom: 12px;">Answer Review</div>
-        <div id="reviewNotice" class="pin-hint hidden" style="margin-bottom: 14px;"></div>
-        <div id="reviewList"></div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px;">
+          <button type="button" id="btnBackToPortal" class="btn btn-primary">Back to Portal</button>
+          <button type="button" id="btnRetakeTest" class="btn btn-success hidden">Retake / Remedial</button>
+        </div>
+
+        <div class="panel-heading">Answer Review</div>
+        <div id="keyHiddenBanner" class="info-banner hidden">
+          Answer keys and explanations are currently hidden by your teacher.
+        </div>
+        <div id="resultReviewList"></div>
       </div>
     </section>
 
   </main>
 
-  <!-- PASSAGE MODAL -->
-  <div id="passageModal" class="overlay hidden">
-    <div class="modal-box" style="max-width: 860px; width: 100%; max-height: 92vh; overflow-y: auto;">
-      <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 10px; border-bottom: 1.5px solid var(--teal-dark); margin-bottom: 14px; position: sticky; top: -22px; background: var(--card-bg); z-index: 2; padding-top: 4px;">
-        <h3 style="font-family: 'Lora', Georgia, serif; font-size: 16px; font-weight: 700; color: var(--teal-dark);">Reading Passage / Stimulus</h3>
-        <button type="button" id="btnClosePassageModal" class="btn btn-outline" style="padding: 5px 12px; font-size: 12px;">Close</button>
+  <!-- MODAL: TAB-SWITCH WARNING -->
+  <div id="tabWarningModal" class="overlay hidden">
+    <div class="modal-box warning-border">
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <span class="badge badge-remedial" style="font-size: 11.5px;">SECURITY WARNING</span>
+        <span id="tabWarningCountPill" class="badge badge-warn">Violation #1</span>
       </div>
-      <div id="passageModalContent" class="passage-body"></div>
+      <h3 style="font-size: 17px; font-weight: 800; color: var(--danger); margin-bottom: 6px;">
+        Tab Switch / App Exit Detected!
+      </h3>
+      <p id="tabWarningMessage" style="font-size: 13px; color: var(--text-main); margin-bottom: 14px;">
+        You left the assessment window. This activity has been recorded and will be reported to your teacher. Please stay on this page until you submit your test.
+      </p>
+      <button type="button" id="btnAcknowledgeTabWarning" class="btn btn-danger btn-block">
+        I Understand, Return to Test
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL: CONFIRM SUBMIT -->
+  <div id="submitConfirmModal" class="overlay hidden">
+    <div class="modal-box">
+      <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 6px;">Submit Assessment?</h3>
+      <p id="submitConfirmText" style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;"></p>
+      <div style="display: flex; gap: 8px; justify-content: flex-end;">
+        <button type="button" id="btnCancelSubmit" class="btn btn-outline">Cancel</button>
+        <button type="button" id="btnConfirmSubmit" class="btn btn-primary">Yes, Submit Now</button>
+      </div>
     </div>
   </div>
 
   <!-- LOADING OVERLAY -->
   <div id="loadingOverlay" class="overlay">
-    <div class="modal-box" style="max-width: 340px; text-align: center;">
+    <div class="modal-box" style="max-width: 320px; text-align: center;">
       <div class="spinner"></div>
-      <div id="loadingText" style="font-weight: 700; font-size: 14px;">Loading test data...</div>
-    </div>
-  </div>
-
-  <!-- CONFIRMATION MODAL -->
-  <div id="confirmModal" class="overlay hidden">
-    <div class="modal-box">
-      <h3 id="confirmTitle" style="font-family: 'Lora', Georgia, serif; font-size: 18px; font-weight: 700; margin-bottom: 8px;">Submit Your Answers?</h3>
-      <p id="confirmBody" style="font-size: 13.5px; color: var(--text-muted); margin-bottom: 18px;"></p>
-      <div style="display: flex; justify-content: flex-end; gap: 10px;">
-        <button type="button" id="btnConfirmCancel" class="btn btn-outline">Cancel</button>
-        <button type="button" id="btnConfirmOk" class="btn btn-success">Yes, Submit</button>
-      </div>
+      <div id="loadingText" style="font-weight: 700; font-size: 13.5px;">Loading Student Portal...</div>
     </div>
   </div>
 
@@ -946,6 +861,72 @@
     const API_URL = 'https://script.google.com/macros/s/AKfycby1WiRhGdIHsaA6brxkaOVWn4mqS5cV3naYfKZmOJErpRJl0wkTUbSMIUrJLkTzkoPO/exec';
 
     // =========================================================================
+    // SAFARI-SAFE STORAGE & STRING NORMALIZATION HELPERS
+    // =========================================================================
+    function safeGetStorage(key) {
+      try {
+        return window.localStorage.getItem(key);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function safeSetStorage(key, value) {
+      try {
+        window.localStorage.setItem(key, value);
+      } catch (e) {}
+    }
+
+    function safeRemoveStorage(key) {
+      try {
+        window.localStorage.removeItem(key);
+      } catch (e) {}
+    }
+
+    function normalizeApostrophes(str) {
+      return String(str === null || str === undefined ? '' : str)
+        .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035\u0060\u00B4\u02BC\uFF07]/g, "'")
+        .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036\uFF02]/g, '"')
+        .replace(/\u00A0/g, ' ');
+    }
+
+    function escapeHtml(str) {
+      return normalizeApostrophes(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    /**
+     * Merender teks kaya:
+     * - Mengamankan HTML berbahaya sambil tetap merender <b>, <strong>, <u>, <i>, <em>
+     * - Mendukung format [b]...[/b], [u]...[/u], **tebal**, dan __garis bawah__ (tanpa merusak garis isian _____)
+     * - Mendukung [IMG: url] dan [AUDIO: url]
+     */
+    function formatRichMedia(rawText) {
+      let text = escapeHtml(rawText || '');
+
+      // Pulihkan tag <b>, <strong>, <u>, <i>, <em> yang aman
+      text = text
+        .replace(/&lt;(\/?(?:b|strong|u|i|em))&gt;/gi, '<$1>')
+        .replace(/\[b\]([\s\S]*?)\[\/b\]/gi, '<strong>$1</strong>')
+        .replace(/\[u\]([\s\S]*?)\[\/u\]/gi, '<u>$1</u>')
+        .replace(/\[i\]([\s\S]*?)\[\/i\]/gi, '<em>$1</em>')
+        .replace(/\*\*([^\*\n]+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/(^|[^_])__([^_\n](?:[^_\n]|_[^_\n])*?)__(?=[^_]|$)/g, '$1<u>$2</u>');
+
+      // Media stimulus
+      text = text.replace(/\[IMG:\s*(https?:\/\/[^\]]+)\]/gi, '<br><img src="$1" alt="Stimulus Image" loading="lazy"><br>');
+      text = text.replace(/\[AUDIO:\s*(https?:\/\/[^\]]+)\]/gi, '<br><audio controls preload="none" src="$1"></audio><br>');
+      text = text.replace(/(^|\s)(https?:\/\/\S+\.(?:png|jpe?g|gif|webp)(?:\?\S*)?)/gi, '$1<br><img src="$2" alt="Image" loading="lazy"><br>');
+      text = text.replace(/(^|\s)(https?:\/\/\S+\.(?:mp3|wav|ogg|m4a)(?:\?\S*)?)/gi, '$1<br><audio controls preload="none" src="$2"></audio><br>');
+
+      return text;
+    }
+
+    // =========================================================================
     // APPLICATION STATE
     // =========================================================================
     const state = {
@@ -954,32 +935,35 @@
         MAX_ATTEMPTS: 3,
         SCORE_METHOD: 'HIGHEST',
         APP_TITLE: 'NEng Eva — Student Portal',
-        SHOW_KEY: 'ALWAYS',
+        SHOW_KEY: 'HIDE',
         REQUIRE_STUDENT_PIN: 'NO',
         TIME_LIMIT_MIN: 0
       },
       classes: [],
-      packages: [],
-      student: {
-        kelas: '',
-        nama: '',
-        paketId: '',
-        paketName: '',
-        pin: ''
-      },
+      testPackages: [],
+      allTestPackages: [],
+
+      kelas: '',
+      namaSiswa: '',
+      pin: '',
+      paketId: '',
+      paketName: '',
+
       questions: [],
       currentIndex: 0,
       answers: {},
       flagged: {},
       tabSwitches: 0,
-      isSubmitting: false,
+      elapsedSec: 0,
       timerInterval: null,
-      remainingSec: 0
+      examActive: false,
+      submitting: false,
+      lastTabWarnMs: 0
     };
 
     const TYPE_LABELS = {
       PG: 'Multiple Choice',
-      PGK: 'Multiple Response (Select > 1)',
+      PGK: 'Multiple Response',
       BS: 'True / False',
       MENJODOHKAN: 'Matching',
       MATRIKS: 'Matrix / Category',
@@ -989,44 +973,45 @@
     const $ = (id) => document.getElementById(id);
 
     // =========================================================================
-    // API HELPER & UTILITIES
+    // API CALLER (WITH SAFARI DIAGNOSTIC MESSAGE)
     // =========================================================================
     async function callApi(action, ...args) {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action, args })
-      });
+      if (window.location && window.location.protocol === 'file:') {
+        throw new Error('Aplikasi tidak dapat dibuka dari file lokal. Buka menggunakan tautan HTTPS asli di Safari.');
+      }
+
+      let response;
+      try {
+        response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action, args })
+        });
+      } catch (networkErr) {
+        throw new Error(
+          'Gagal terhubung ke server (' + (networkErr && networkErr.message ? networkErr.message : 'Network error') +
+          '). Jika menggunakan Safari di iPhone/iPad/Mac, buka tautan asli langsung di aplikasi Safari dan pastikan pemblokir pelacakan/iklan tidak memblokir script.google.com.'
+        );
+      }
 
       if (!response.ok) {
-        throw new Error('Failed to connect to the server (' + response.status + ').');
+        throw new Error('Server merespons dengan status ' + response.status + '.');
       }
 
       const data = await response.json();
       if (data && data.status === 'error') {
-        throw new Error(data.message || 'An unexpected server error occurred.');
+        throw new Error(data.message || 'Terjadi kesalahan pada server.');
       }
       return data;
     }
 
-    function showLoading(text = 'Loading...') {
-      $('loadingText').textContent = text;
+    function showLoading(msg) {
+      $('loadingText').textContent = msg || 'Loading...';
       $('loadingOverlay').classList.remove('hidden');
     }
 
     function hideLoading() {
       $('loadingOverlay').classList.add('hidden');
-    }
-
-    function showSetupError(msg) {
-      const box = $('setupError');
-      if (!msg) {
-        box.textContent = '';
-        box.classList.add('hidden');
-      } else {
-        box.textContent = msg;
-        box.classList.remove('hidden');
-      }
     }
 
     let toastTimer = null;
@@ -1038,202 +1023,217 @@
       toastTimer = setTimeout(() => el.classList.add('hidden'), 3200);
     }
 
-    function escapeHtml(str) {
-      return String(str ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
-    function formatRichMedia(rawText) {
-      let text = escapeHtml(rawText || '');
-      text = text.replace(/\[IMG:\s*(https?:\/\/[^\]]+)\]/gi, '<br><img src="$1" alt="Stimulus Image" loading="lazy"><br>');
-      text = text.replace(/\[AUDIO:\s*(https?:\/\/[^\]]+)\]/gi, '<br><audio controls src="$1"></audio><br>');
-      text = text.replace(/(^|\s)(https?:\/\/\S+\.(?:png|jpe?g|gif|webp)(?:\?\S*)?)/gi, '$1<br><img src="$2" alt="Image" loading="lazy"><br>');
-      text = text.replace(/(^|\s)(https?:\/\/\S+\.(?:mp3|wav|ogg|m4a)(?:\?\S*)?)/gi, '$1<br><audio controls src="$2"></audio><br>');
-      return text;
-    }
-
-    function isPinRequired() {
-      const flag = String(state.config.REQUIRE_STUDENT_PIN || '').toUpperCase();
-      return flag === 'YES' || flag === 'YA';
-    }
-
-    function draftStorageKey() {
-      return 'neng_eva_draft_' + [state.student.kelas, state.student.nama, state.student.paketId].join('|');
-    }
-
-    function saveDraft() {
+    function playWarningBeep() {
       try {
-        localStorage.setItem(draftStorageKey(), JSON.stringify({
-          answers: state.answers,
-          flagged: state.flagged,
-          currentIndex: state.currentIndex,
-          tabSwitches: state.tabSwitches,
-          savedAt: Date.now()
-        }));
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(660, ctx.currentTime);
+        gain.gain.setValueAtTime(0.12, ctx.currentTime);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.18);
       } catch (e) {}
     }
 
-    function loadDraft() {
-      try {
-        const raw = localStorage.getItem(draftStorageKey());
-        if (!raw) return;
-        const d = JSON.parse(raw);
-        if (d && typeof d.answers === 'object') state.answers = d.answers;
-        if (d && typeof d.flagged === 'object') state.flagged = d.flagged;
-        if (typeof d.currentIndex === 'number') state.currentIndex = d.currentIndex;
-        if (typeof d.tabSwitches === 'number') state.tabSwitches = d.tabSwitches;
-      } catch (e) {}
-    }
-
-    function clearDraft() {
-      try { localStorage.removeItem(draftStorageKey()); } catch (e) {}
-    }
-
     // =========================================================================
-    // INITIALIZATION & STUDENT LOGIN
+    // INITIALIZATION & SETUP FORM
     // =========================================================================
-    async function initApp() {
-      showLoading('Connecting to test server...');
+    async function initPortal() {
+      showLoading('Loading NEng Eva Student Portal...');
       try {
         const res = await callApi('getInitialData');
         state.config = Object.assign(state.config, res.config || {});
         state.classes = res.classes || [];
-        state.packages = res.testPackages || [];
+        state.testPackages = res.testPackages || [];
+        state.allTestPackages = res.allTestPackages || res.testPackages || [];
 
-        $('infoKkm').textContent = state.config.KKM;
-        $('infoAttempts').textContent = state.config.MAX_ATTEMPTS + 'x';
-        $('infoMethod').textContent = state.config.SCORE_METHOD;
-        $('infoTime').textContent = state.config.TIME_LIMIT_MIN > 0
-          ? state.config.TIME_LIMIT_MIN + ' Minutes'
-          : 'No Limit';
-
-        if (isPinRequired()) {
-          $('pinGroup').classList.remove('hidden');
-        } else {
-          $('pinGroup').classList.add('hidden');
+        if (state.config.APP_TITLE) {
+          document.title = state.config.APP_TITLE;
         }
 
-        const selKelas = $('selectKelas');
-        selKelas.innerHTML = '<option value="">-- Select Class --</option>' +
-          state.classes.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
-
-        const selPaket = $('selectPaket');
-        if (state.packages.length === 0) {
-          selPaket.innerHTML = '<option value="">-- No active test packages available --</option>';
-        } else {
-          selPaket.innerHTML = '<option value="">-- Select Test Package --</option>' +
-            state.packages.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`).join('');
-        }
-
-        validateStartForm();
+        renderSetupForm();
+        $('setupSection').classList.remove('hidden');
       } catch (err) {
+        $('setupSection').classList.remove('hidden');
         showSetupError(err.message);
       } finally {
         hideLoading();
       }
+    }
+
+    function showSetupError(msg) {
+      const box = $('setupErrorBox');
+      if (msg) {
+        box.textContent = msg;
+        box.classList.remove('hidden');
+      } else {
+        box.classList.add('hidden');
+      }
+    }
+
+    function renderSetupForm() {
+      const pills = [
+        `<span class="badge badge-teal">Passing Score (KKM): ${state.config.KKM}</span>`,
+        `<span class="badge badge-neutral">Max Attempts: ${state.config.MAX_ATTEMPTS}x</span>`
+      ];
+      if (state.config.TIME_LIMIT_MIN > 0) {
+        pills.push(`<span class="badge badge-warn">Time Limit: ${state.config.TIME_LIMIT_MIN} min</span>`);
+      }
+      $('setupMetaPills').innerHTML = pills.join('');
+
+      $('selectKelas').innerHTML = '<option value="">-- Select Your Class --</option>' +
+        state.classes.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+
+      updatePackageDropdown(false);
+
+      const needPin = String(state.config.REQUIRE_STUDENT_PIN || 'NO').toUpperCase() === 'YES';
+      $('studentPinGroup').classList.toggle('hidden', !needPin);
+      $('inputStudentPin').required = needPin;
+    }
+
+    function updatePackageDropdown(includeInactiveForDummy) {
+      const list = includeInactiveForDummy ? state.allTestPackages : state.testPackages;
+      const prev = $('selectPaket').value;
+      $('selectPaket').innerHTML = '<option value="">-- Select Test Package --</option>' +
+        list.map(p => {
+          const tag = p.status !== 'ACTIVE' ? ' [INACTIVE]' : '';
+          return `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)} (${escapeHtml(p.id)})${tag}</option>`;
+        }).join('');
+      if (prev) $('selectPaket').value = prev;
     }
 
     async function handleClassChange() {
       const kelas = $('selectKelas').value;
-      const selNama = $('selectNama');
+      const siswaSel = $('selectSiswa');
       showSetupError('');
 
       if (!kelas) {
-        selNama.innerHTML = '<option value="">-- Please select a class first --</option>';
-        selNama.disabled = true;
-        validateStartForm();
+        siswaSel.innerHTML = '<option value="">-- Select Class First --</option>';
+        siswaSel.disabled = true;
+        updatePackageDropdown(false);
         return;
       }
 
-      selNama.disabled = true;
-      selNama.innerHTML = '<option value="">-- Loading student list... --</option>';
-      validateStartForm();
+      const isDummyClass = kelas.trim() === '1111';
+      updatePackageDropdown(isDummyClass);
+
+      siswaSel.disabled = true;
+      siswaSel.innerHTML = '<option value="">Loading students...</option>';
 
       try {
         const res = await callApi('getStudentsByClass', kelas);
         const students = res.students || [];
-        if (students.length === 0) {
-          selNama.innerHTML = '<option value="">-- No students found in this class --</option>';
-        } else {
-          selNama.innerHTML = '<option value="">-- Select Your Name --</option>' +
-            students.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
-          selNama.disabled = false;
-        }
+        siswaSel.innerHTML = '<option value="">-- Select Your Name --</option>' +
+          students.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+        siswaSel.disabled = false;
       } catch (err) {
-        selNama.innerHTML = '<option value="">-- Failed to load student list --</option>';
+        siswaSel.innerHTML = '<option value="">-- Failed to Load Students --</option>';
         showSetupError(err.message);
       }
-      validateStartForm();
-    }
-
-    function validateStartForm() {
-      const kelas = $('selectKelas').value;
-      const nama = $('selectNama').value;
-      const paket = $('selectPaket').value;
-      const pinVal = $('inputPin').value.trim();
-
-      const pinOk = !isPinRequired() || /^\d{6}$/.test(pinVal);
-      $('btnStart').disabled = !(kelas && nama && paket && pinOk);
     }
 
     // =========================================================================
-    // START TEST
+    // START EXAM & DRAFT PERSISTENCE
     // =========================================================================
-    async function startQuiz() {
+    function getDraftStorageKey() {
+      return 'neng_eva_draft_' + [state.kelas, state.namaSiswa, state.paketId].join('|').toLowerCase();
+    }
+
+    function saveLocalDraft() {
+      if (!state.examActive) return;
+      safeSetStorage(getDraftStorageKey(), JSON.stringify({
+        answers: state.answers,
+        flagged: state.flagged,
+        tabSwitches: state.tabSwitches,
+        currentIndex: state.currentIndex
+      }));
+    }
+
+    function loadLocalDraft() {
+      const raw = safeGetStorage(getDraftStorageKey());
+      if (!raw) return;
+      try {
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          if (parsed.answers) state.answers = parsed.answers;
+          if (parsed.flagged) state.flagged = parsed.flagged;
+          if (typeof parsed.tabSwitches === 'number') state.tabSwitches = parsed.tabSwitches;
+          if (typeof parsed.currentIndex === 'number') state.currentIndex = parsed.currentIndex;
+        }
+      } catch (e) {}
+    }
+
+    function clearLocalDraft() {
+      safeRemoveStorage(getDraftStorageKey());
+    }
+
+    function resolvePassagesForExam(rawList) {
+      let currentPassage = '';
+      return (rawList || []).map((q, idx) => {
+        const copy = Object.assign({}, q);
+        copy._qKey = copy.noSoal || String(idx + 1);
+        const rawP = normalizeApostrophes(copy.teksBacaan).trim();
+        if (rawP === '-' || rawP.toUpperCase() === 'NONE' || rawP.toUpperCase() === 'NO PASSAGE') {
+          currentPassage = '';
+          copy._passage = '';
+        } else if (rawP !== '') {
+          currentPassage = rawP;
+          copy._passage = currentPassage;
+        } else {
+          copy._passage = currentPassage;
+        }
+        return copy;
+      });
+    }
+
+    async function handleStartTest(e) {
+      e.preventDefault();
       showSetupError('');
-      const kelas = $('selectKelas').value.trim();
-      const nama = $('selectNama').value.trim();
-      const paketId = $('selectPaket').value.trim();
-      const paketObj = state.packages.find(p => p.id === paketId);
-      const pin = $('inputPin').value.trim();
 
-      if (isPinRequired() && !/^\d{6}$/.test(pin)) {
-        showSetupError('PIN must be your 6-digit date of birth (e.g., 26 December 2011 entered as 261211).');
+      const kelas = normalizeApostrophes($('selectKelas').value).trim();
+      const namaSiswa = normalizeApostrophes($('selectSiswa').value).trim();
+      const paketId = normalizeApostrophes($('selectPaket').value).trim();
+      const pin = $('inputStudentPin').value.trim();
+
+      if (!kelas || !namaSiswa || !paketId) {
+        showSetupError('Please select your class, name, and test package.');
         return;
       }
 
-      showLoading('Checking login & loading questions...');
+      showLoading('Preparing your test questions...');
       try {
-        const res = await callApi('getQuestions', paketId, kelas, nama, pin);
-        const questions = res.questions || [];
+        const res = await callApi('getQuestions', paketId, kelas, namaSiswa, pin);
+        const questions = resolvePassagesForExam(res.questions || []);
         if (questions.length === 0) {
-          throw new Error('This test package has no questions.');
+          throw new Error('No questions are available in this test package.');
         }
 
-        state.student = {
-          kelas,
-          nama,
-          paketId,
-          paketName: paketObj ? paketObj.name : paketId,
-          pin
-        };
+        state.kelas = kelas;
+        state.namaSiswa = namaSiswa;
+        state.pin = pin;
+        state.paketId = paketId;
+        const pkgObj = state.allTestPackages.find(p => p.id === paketId);
+        state.paketName = pkgObj ? pkgObj.name : paketId;
+
         state.questions = questions;
-        resolveQuestionPassages(state.questions);
-        state.currentIndex = 0;
         state.answers = {};
         state.flagged = {};
         state.tabSwitches = 0;
-        state.isSubmitting = false;
+        state.currentIndex = 0;
+        state.elapsedSec = Math.max(0, Number(res.elapsedSec) || 0);
+        state.examActive = true;
 
-        loadDraft();
-        if (state.currentIndex >= state.questions.length) state.currentIndex = 0;
+        loadLocalDraft();
+        if (state.currentIndex >= state.questions.length) {
+          state.currentIndex = 0;
+        }
 
-        $('setupSection').classList.add('hidden');
-        $('resultSection').classList.add('hidden');
-        $('quizSection').classList.remove('hidden');
-
-        $('badgeStudent').textContent = `${nama} (${kelas})`;
-        $('badgePaket').textContent = state.student.paketName;
-        updateTabBadge();
-
-        setupTimer(res.elapsedSec || 0);
-        renderNavigationGrid();
-        renderCurrentQuestion();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        enterExamScreen();
       } catch (err) {
         showSetupError(err.message);
       } finally {
@@ -1241,427 +1241,448 @@
       }
     }
 
+    function enterExamScreen() {
+      $('setupSection').classList.add('hidden');
+      $('resultSection').classList.add('hidden');
+      $('examSection').classList.remove('hidden');
+
+      $('examStudentLabel').textContent = `${state.namaSiswa} (${state.kelas})`;
+      $('examPackageLabel').textContent = `${state.paketName} (${state.paketId})`;
+      updateTabSwitchBadge();
+
+      startExamTimer();
+      renderCurrentQuestion();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     // =========================================================================
-    // TIMER & TAB-SWITCH MONITORING
+    // TIMER & TAB-SWITCH WARNING SYSTEM
     // =========================================================================
-    function setupTimer(elapsedSec) {
+    function formatSeconds(sec) {
+      const s = Math.max(0, Math.floor(sec));
+      const hrs = Math.floor(s / 3600);
+      const mins = Math.floor((s % 3600) / 60);
+      const secs = s % 60;
+      const pad = (n) => (n < 10 ? '0' + n : String(n));
+      return hrs > 0 ? `${pad(hrs)}:${pad(mins)}:${pad(secs)}` : `${pad(mins)}:${pad(secs)}`;
+    }
+
+    function startExamTimer() {
       clearInterval(state.timerInterval);
-      const limitMin = Number(state.config.TIME_LIMIT_MIN) || 0;
-      if (limitMin <= 0) {
-        $('timerBadge').classList.add('hidden');
-        return;
-      }
+      const limitSec = (Number(state.config.TIME_LIMIT_MIN) || 0) * 60;
 
-      const totalSec = limitMin * 60;
-      state.remainingSec = Math.max(0, totalSec - (Number(elapsedSec) || 0));
-      $('timerBadge').classList.remove('hidden');
-      updateTimerDisplay();
+      const tick = () => {
+        if (!state.examActive) return;
+        state.elapsedSec++;
+        const badge = $('examTimerBadge');
 
-      state.timerInterval = setInterval(() => {
-        state.remainingSec--;
-        updateTimerDisplay();
-        if (state.remainingSec <= 0) {
-          clearInterval(state.timerInterval);
-          showToast('Time is up! Submitting your answers automatically...');
-          submitQuiz(true);
+        if (limitSec > 0) {
+          const remaining = Math.max(0, limitSec - state.elapsedSec);
+          badge.textContent = 'Time Left: ' + formatSeconds(remaining);
+          badge.classList.toggle('urgent', remaining <= 120);
+          if (remaining === 0 && !state.submitting) {
+            clearInterval(state.timerInterval);
+            showToast('Time is up! Submitting your answers automatically...');
+            executeSubmitAnswers(true);
+          }
+        } else {
+          badge.textContent = formatSeconds(state.elapsedSec);
+          badge.classList.remove('urgent');
         }
-      }, 1000);
+      };
+
+      tick();
+      state.timerInterval = setInterval(tick, 1000);
     }
 
-    function updateTimerDisplay() {
-      const s = Math.max(0, state.remainingSec);
-      const mins = String(Math.floor(s / 60)).padStart(2, '0');
-      const secs = String(s % 60).padStart(2, '0');
-      $('timerText').textContent = `${mins}:${secs}`;
-      if (s <= 60) {
-        $('timerBadge').style.background = '#fbeae8';
-        $('timerBadge').style.color = '#c93b2b';
-      }
+    function updateTabSwitchBadge() {
+      const badge = $('examTabSwitchBadge');
+      badge.textContent = `Tab Switches: ${state.tabSwitches}`;
+      badge.className = state.tabSwitches > 0 ? 'badge badge-warn' : 'badge badge-neutral';
     }
 
-    function updateTabBadge() {
-      if (state.tabSwitches > 0) {
-        $('tabBadge').classList.remove('hidden');
-        $('tabCount').textContent = state.tabSwitches;
-      } else {
-        $('tabBadge').classList.add('hidden');
-      }
+    function registerTabExitViolation() {
+      if (!state.examActive || state.submitting) return;
+      const now = Date.now();
+      if (now - state.lastTabWarnMs < 1500) return;
+      state.lastTabWarnMs = now;
+
+      state.tabSwitches++;
+      updateTabSwitchBadge();
+      saveLocalDraft();
+      playWarningBeep();
+
+      $('tabWarningCountPill').textContent = `Violation #${state.tabSwitches}`;
+      $('tabWarningMessage').textContent =
+        `You left the assessment tab/window (${state.tabSwitches}x recorded). This activity is logged and reported to your teacher. Please stay on this page until you submit your test.`;
+      $('tabWarningModal').classList.remove('hidden');
     }
 
     document.addEventListener('visibilitychange', () => {
-      if (document.hidden && !$('quizSection').classList.contains('hidden') && !state.isSubmitting) {
-        state.tabSwitches++;
-        updateTabBadge();
-        saveDraft();
+      if (document.hidden) {
+        registerTabExitViolation();
       }
     });
 
+    window.addEventListener('blur', () => {
+      registerTabExitViolation();
+    });
+
     // =========================================================================
-    // PASSAGE INHERITANCE, QUESTION RENDERING & ANSWER INTERACTION
+    // QUESTION RENDERING & ANSWER CAPTURE
     // =========================================================================
-    function resolveQuestionPassages(questions) {
-      let activePassage = '';
-      questions.forEach((q) => {
-        const raw = String(q.teksBacaan || '').trim();
-        if (raw === '-' || raw.toUpperCase() === 'NONE' || raw.toUpperCase() === 'NO PASSAGE') {
-          activePassage = '';
-          q._passage = '';
-          q._isNewPassage = false;
-        } else if (raw !== '') {
-          const isSameAsPrev = (raw === activePassage);
-          activePassage = raw;
-          q._passage = activePassage;
-          q._isNewPassage = !isSameAsPrev;
-        } else {
-          q._passage = activePassage;
-          q._isNewPassage = false;
-        }
-      });
+    function isQuestionAnswered(q) {
+      const ans = state.answers[q._qKey];
+      const t = String(q.tipeSoal || 'PG').toUpperCase();
+      if (t === 'PGK') {
+        return Array.isArray(ans) && ans.length > 0;
+      }
+      if (t === 'MATRIKS') {
+        return Array.isArray(ans) && ans.some(v => v && String(v).trim() !== '');
+      }
+      return ans !== undefined && ans !== null && String(ans).trim() !== '';
     }
 
-    function pauseAllPassageAudio() {
-      document.querySelectorAll('#passageContent audio, #passageModalContent audio').forEach(a => {
+    function renderNavigator() {
+      let answeredCount = 0;
+      state.questions.forEach(q => {
+        if (isQuestionAnswered(q)) answeredCount++;
+      });
+
+      $('examProgressBadge').textContent = `${answeredCount} / ${state.questions.length} Answered`;
+
+      $('questionNavGrid').innerHTML = state.questions.map((q, idx) => {
+        const cls = ['q-nav-btn'];
+        if (idx === state.currentIndex) cls.push('current');
+        else if (state.flagged[q._qKey]) cls.push('flagged');
+        else if (isQuestionAnswered(q)) cls.push('answered');
+
+        return `<button type="button" class="${cls.join(' ')}" onclick="jumpToQuestion(${idx})">${escapeHtml(q._qKey)}</button>`;
+      }).join('');
+    }
+
+    function jumpToQuestion(idx) {
+      if (idx < 0 || idx >= state.questions.length) return;
+      pauseExamAudio();
+      state.currentIndex = idx;
+      saveLocalDraft();
+      renderCurrentQuestion();
+    }
+
+    function pauseExamAudio() {
+      document.querySelectorAll('#examSection audio').forEach(a => {
         try { a.pause(); } catch (e) {}
       });
     }
 
-    function questionKey(q, idx) {
-      return q.noSoal || q.rawNoSoal || String(idx + 1);
-    }
-
-    function isQuestionAnswered(q, idx) {
-      const val = state.answers[questionKey(q, idx)];
-      if (Array.isArray(val)) return val.some(v => String(v || '').trim() !== '');
-      return String(val ?? '').trim() !== '';
-    }
-
     function renderCurrentQuestion() {
-      const idx = state.currentIndex;
-      const q = state.questions[idx];
-      const qKey = questionKey(q, idx);
-      const currentAns = state.answers[qKey];
+      const q = state.questions[state.currentIndex];
+      if (!q) return;
 
-      $('qNumberBadge').textContent = `Question ${idx + 1} of ${state.questions.length}`;
-      $('qTypeBadge').textContent = TYPE_LABELS[q.tipeSoal] || q.tipeSoal;
+      renderNavigator();
 
-      pauseAllPassageAudio();
-      const passage = q._passage || '';
-      if (passage) {
-        $('btnViewPassageModal').classList.remove('hidden');
-        $('passageBox').classList.remove('hidden');
-        $('passageContent').innerHTML = formatRichMedia(passage);
-
-        const shouldCollapse = !q._isNewPassage;
-        $('passageContent').classList.toggle('hidden', shouldCollapse);
-        $('passageToggle').textContent = shouldCollapse ? 'Show' : 'Hide';
+      const passageBox = $('passageContainer');
+      if (q._passage) {
+        passageBox.classList.remove('hidden');
+        $('passageBody').innerHTML = formatRichMedia(q._passage);
       } else {
-        $('btnViewPassageModal').classList.add('hidden');
-        $('passageBox').classList.add('hidden');
-        $('passageContent').innerHTML = '';
+        passageBox.classList.add('hidden');
+        $('passageBody').innerHTML = '';
       }
 
-      const container = $('optionsContainer');
-      container.innerHTML = '';
+      const t = String(q.tipeSoal || 'PG').toUpperCase();
+      $('currentQBadge').textContent = `Question ${q._qKey} of ${state.questions.length}`;
+      $('currentQTypeBadge').textContent = TYPE_LABELS[t] || t;
 
-      if (q.tipeSoal === 'MATRIKS') {
-        renderMatrixQuestion(q, qKey, currentAns, container);
-      } else if (q.tipeSoal === 'IS') {
-        $('questionText').innerHTML = formatRichMedia(q.pertanyaan);
-        renderShortAnswer(qKey, currentAns, container);
-      } else if (q.tipeSoal === 'PGK') {
-        $('questionText').innerHTML = formatRichMedia(q.pertanyaan);
-        renderMultipleChoice(q, qKey, currentAns, container, true);
-      } else {
-        $('questionText').innerHTML = formatRichMedia(q.pertanyaan);
-        renderMultipleChoice(q, qKey, currentAns, container, false);
-      }
+      const isFlagged = Boolean(state.flagged[q._qKey]);
+      $('btnFlagQuestion').textContent = isFlagged ? 'Flagged ★' : 'Flag for Review';
+      $('btnFlagQuestion').className = isFlagged ? 'btn btn-success btn-xs' : 'btn btn-outline btn-xs';
 
-      $('btnFlag').classList.toggle('active', !!state.flagged[idx]);
-      $('btnPrev').disabled = idx === 0;
+      const inputArea = $('questionInputArea');
+      const curAns = state.answers[q._qKey];
 
-      if (idx === state.questions.length - 1) {
-        $('btnNext').textContent = 'Finish & Submit';
-        $('btnNext').classList.remove('btn-primary');
-        $('btnNext').classList.add('btn-success');
-      } else {
-        $('btnNext').innerHTML = 'Next &rarr;';
-        $('btnNext').classList.remove('btn-success');
-        $('btnNext').classList.add('btn-primary');
-      }
-
-      updateProgress();
-      updateNavigationGridState();
-    }
-
-    function renderMultipleChoice(q, qKey, currentAns, container, isMulti) {
-      const list = document.createElement('div');
-      list.className = 'opt-list';
-
-      let letters = ['A', 'B', 'C', 'D', 'E'];
-      const opts = Object.assign({}, q.options || {});
-
-      if (q.tipeSoal === 'BS') {
-        letters = ['A', 'B'];
-        if (!opts.A || opts.A === '-') opts.A = 'True';
-        if (!opts.B || opts.B === '-') opts.B = 'False';
-      }
-
-      const selectedSet = isMulti
-        ? (Array.isArray(currentAns) ? currentAns : [])
-        : (currentAns ? [String(currentAns)] : []);
-
-      letters.forEach(letter => {
-        const text = String(opts[letter] || '').trim();
-        if (!text || text === '-') return;
-
-        const isSelected = selectedSet.includes(letter);
-        const item = document.createElement('div');
-        item.className = 'opt-item' + (isSelected ? ' selected' : '');
-        item.innerHTML = `
-          <div class="opt-key">${isMulti ? (isSelected ? '✓' : letter) : letter}</div>
-          <div class="opt-val">${formatRichMedia(text)}</div>
+      if (t === 'MATRIKS') {
+        renderMatrixQuestion(q, curAns, inputArea);
+      } else if (t === 'IS') {
+        $('questionStem').innerHTML = formatRichMedia(q.pertanyaan);
+        inputArea.innerHTML = `
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" for="shortAnswerInput">Your Answer</label>
+            <input type="text" id="shortAnswerInput" class="form-control"
+              placeholder="Type your answer here..."
+              value="${escapeHtml(curAns || '')}"
+              autocomplete="off" />
+          </div>
         `;
-
-        item.addEventListener('click', () => {
-          if (isMulti) {
-            const next = new Set(selectedSet);
-            if (next.has(letter)) next.delete(letter);
-            else next.add(letter);
-            state.answers[qKey] = Array.from(next).sort();
-          } else {
-            state.answers[qKey] = letter;
-          }
-          saveDraft();
-          renderCurrentQuestion();
+        const inp = $('shortAnswerInput');
+        inp.addEventListener('input', () => {
+          state.answers[q._qKey] = inp.value;
+          saveLocalDraft();
+          renderNavigator();
         });
+      } else if (t === 'PGK') {
+        $('questionStem').innerHTML = formatRichMedia(q.pertanyaan);
+        const selectedArr = Array.isArray(curAns) ? curAns : [];
+        const letters = ['A', 'B', 'C', 'D', 'E'].filter(l => q.options && q.options[l] && q.options[l] !== '-');
 
-        list.appendChild(item);
-      });
+        inputArea.innerHTML = `
+          <div style="font-size: 12px; color: var(--teal-dark); font-weight: 700; margin-bottom: 8px;">
+            Select one or more correct options:
+          </div>
+          <div class="options-list">
+            ${letters.map(l => {
+              const checked = selectedArr.indexOf(l) !== -1;
+              return `
+                <div class="option-item ${checked ? 'selected' : ''}" onclick="togglePgkOption('${l}')">
+                  <div class="option-key-badge">${checked ? '✓' : l}</div>
+                  <div class="opt-text">${formatRichMedia(q.options[l])}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      } else {
+        // PG, BS, MENJODOHKAN
+        $('questionStem').innerHTML = formatRichMedia(q.pertanyaan);
+        const opts = Object.assign({}, q.options || {});
+        if (t === 'BS') {
+          if (!opts.A || opts.A === '-') opts.A = 'True';
+          if (!opts.B || opts.B === '-') opts.B = 'False';
+        }
+        const letters = (t === 'BS' ? ['A', 'B'] : ['A', 'B', 'C', 'D', 'E'])
+          .filter(l => opts[l] && opts[l] !== '-');
 
-      container.appendChild(list);
+        inputArea.innerHTML = `
+          <div class="options-list">
+            ${letters.map(l => {
+              const isSel = curAns === l;
+              return `
+                <div class="option-item ${isSel ? 'selected' : ''}" onclick="selectSingleOption('${l}')">
+                  <div class="option-key-badge">${l}</div>
+                  <div class="opt-text">${formatRichMedia(opts[l])}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        `;
+      }
+
+      $('btnPrevQ').disabled = state.currentIndex === 0;
+      const isLast = state.currentIndex === state.questions.length - 1;
+      $('btnNextQ').classList.toggle('hidden', isLast);
     }
 
-    function renderMatrixQuestion(q, qKey, currentAns, container) {
+    function selectSingleOption(letter) {
+      const q = state.questions[state.currentIndex];
+      if (!q) return;
+      state.answers[q._qKey] = letter;
+      saveLocalDraft();
+      renderCurrentQuestion();
+    }
+
+    function togglePgkOption(letter) {
+      const q = state.questions[state.currentIndex];
+      if (!q) return;
+      const cur = Array.isArray(state.answers[q._qKey]) ? state.answers[q._qKey].slice() : [];
+      const pos = cur.indexOf(letter);
+      if (pos === -1) cur.push(letter);
+      else cur.splice(pos, 1);
+      state.answers[q._qKey] = cur;
+      saveLocalDraft();
+      renderCurrentQuestion();
+    }
+
+    function renderMatrixQuestion(q, curAns, container) {
       let raw = String(q.pertanyaan || '');
       let headers = [];
-
       const headerMatch = raw.match(/\[(?:HEADER:\s*)?([^\]]+)\]/i);
       if (headerMatch) {
         headers = headerMatch[1].split('|').map(s => s.trim()).filter(Boolean);
         raw = raw.replace(headerMatch[0], '').trim();
       }
-
       const parts = raw.split(/[\|\n]/).map(s => s.trim()).filter(Boolean);
-      const promptText = parts.length > 1 ? parts[0] : 'Select the correct category for each statement below:';
+      const promptText = parts.length > 1 ? parts[0] : 'Choose the appropriate category for each statement:';
       const statements = parts.length > 1 ? parts.slice(1) : parts;
-
-      $('questionText').innerHTML = formatRichMedia(promptText);
 
       const filledLetters = ['A', 'B', 'C', 'D', 'E'].filter(l => {
         const v = String((q.options && q.options[l]) || '').trim();
         return v !== '' && v !== '-';
       });
-
       const colLabels = filledLetters.length > 0
         ? filledLetters.map(l => q.options[l].trim())
         : (headers.length > 1 ? headers.slice(1) : ['True', 'False']);
-
       const letters = colLabels.map((_, i) => String.fromCharCode(65 + i));
       const firstColTitle = headers.length > 0 ? headers[0] : 'Statement';
 
-      const ansArr = Array.isArray(currentAns) ? currentAns.slice() : new Array(statements.length).fill('');
+      const rowAnswers = Array.isArray(curAns) ? curAns.slice() : [];
+      while (rowAnswers.length < statements.length) rowAnswers.push('');
 
-      const wrap = document.createElement('div');
-      wrap.className = 'matrix-wrap';
+      $('questionStem').innerHTML = formatRichMedia(promptText);
 
-      let thead = `<tr><th>${escapeHtml(firstColTitle)}</th>`;
-      colLabels.forEach(lbl => { thead += `<th>${escapeHtml(lbl)}</th>`; });
-      thead += '</tr>';
-
-      let tbody = '';
-      statements.forEach((stmt, rIdx) => {
-        tbody += `<tr><td>${formatRichMedia(stmt)}</td>`;
-        letters.forEach(letter => {
-          const checked = ansArr[rIdx] === letter ? 'checked' : '';
-          tbody += `<td class="center"><input type="radio" name="mtx_${rIdx}" value="${letter}" ${checked}></td>`;
-        });
-        tbody += '</tr>';
-      });
-
-      wrap.innerHTML = `<table class="matrix-table"><thead>${thead}</thead><tbody>${tbody}</tbody></table>`;
-
-      wrap.querySelectorAll('input[type="radio"]').forEach(radio => {
-        radio.addEventListener('change', (e) => {
-          const rowIndex = Number(e.target.name.replace('mtx_', ''));
-          ansArr[rowIndex] = e.target.value;
-          state.answers[qKey] = ansArr;
-          saveDraft();
-          updateProgress();
-          updateNavigationGridState();
-        });
-      });
-
-      container.appendChild(wrap);
+      container.innerHTML = `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>${escapeHtml(firstColTitle)}</th>
+                ${colLabels.map(lbl => `<th style="text-align:center;">${escapeHtml(lbl)}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${statements.map((stmt, rIdx) => `
+                <tr>
+                  <td>${formatRichMedia(stmt)}</td>
+                  ${letters.map(l => {
+                    const checked = rowAnswers[rIdx] === l;
+                    return `
+                      <td class="matrix-radio-cell" onclick="selectMatrixCell(${rIdx}, '${l}', ${statements.length})">
+                        <input type="radio" name="matrix_${escapeHtml(q._qKey)}_${rIdx}" ${checked ? 'checked' : ''} />
+                      </td>
+                    `;
+                  }).join('')}
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
     }
 
-    function renderShortAnswer(qKey, currentAns, container) {
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.className = 'short-answer-input';
-      input.placeholder = 'Type your answer here...';
-      input.value = String(currentAns ?? '');
-
-      input.addEventListener('input', () => {
-        state.answers[qKey] = input.value;
-        saveDraft();
-        updateProgress();
-        updateNavigationGridState();
-      });
-
-      container.appendChild(input);
+    function selectMatrixCell(rowIdx, letter, totalRows) {
+      const q = state.questions[state.currentIndex];
+      if (!q) return;
+      const arr = Array.isArray(state.answers[q._qKey]) ? state.answers[q._qKey].slice() : [];
+      while (arr.length < totalRows) arr.push('');
+      arr[rowIdx] = letter;
+      state.answers[q._qKey] = arr;
+      saveLocalDraft();
+      renderCurrentQuestion();
     }
 
     // =========================================================================
-    // NAVIGATION & PROGRESS BAR
+    // SUBMIT ANSWERS & RENDER RESULT
     // =========================================================================
-    function renderNavigationGrid() {
-      const grid = $('questionGrid');
-      grid.innerHTML = '';
-      state.questions.forEach((_, idx) => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'q-btn-num';
-        btn.textContent = idx + 1;
-        btn.addEventListener('click', () => {
-          state.currentIndex = idx;
-          saveDraft();
-          renderCurrentQuestion();
-        });
-        grid.appendChild(btn);
+    function openSubmitConfirmation() {
+      let unanswered = 0;
+      state.questions.forEach(q => {
+        if (!isQuestionAnswered(q)) unanswered++;
       });
-      updateNavigationGridState();
+
+      $('submitConfirmText').textContent = unanswered > 0
+        ? `You still have ${unanswered} unanswered question(s). Are you sure you want to submit your answers now?`
+        : 'All questions have been answered. Are you sure you want to submit your assessment now?';
+      $('submitConfirmModal').classList.remove('hidden');
     }
 
-    function updateNavigationGridState() {
-      const buttons = $('questionGrid').children;
-      for (let i = 0; i < buttons.length; i++) {
-        const btn = buttons[i];
-        const q = state.questions[i];
-        btn.classList.toggle('current', i === state.currentIndex);
-        btn.classList.toggle('flagged', !!state.flagged[i]);
-        btn.classList.toggle('answered', !state.flagged[i] && isQuestionAnswered(q, i));
-      }
-    }
-
-    function updateProgress() {
-      const total = state.questions.length;
-      let answered = 0;
-      state.questions.forEach((q, idx) => {
-        if (isQuestionAnswered(q, idx)) answered++;
-      });
-      $('progressText').textContent = `Answered ${answered} / ${total}`;
-      $('progressBar').style.width = total > 0 ? `${Math.round((answered / total) * 100)}%` : '0%';
-      return { answered, total };
-    }
-
-    // =========================================================================
-    // SUBMISSION & RESULTS RENDERING
-    // =========================================================================
-    function askSubmitConfirmation() {
-      const { answered, total } = updateProgress();
-      const unanswered = total - answered;
-      const flaggedCount = Object.values(state.flagged).filter(Boolean).length;
-
-      let msg = `You have answered ${answered} out of ${total} questions.`;
-      if (unanswered > 0) msg += ` ${unanswered} question(s) are still unanswered.`;
-      if (flaggedCount > 0) msg += ` You flagged ${flaggedCount} question(s) for review.`;
-      msg += ' Are you sure you want to submit your answers now?';
-
-      $('confirmTitle').textContent = 'Submit Your Answers?';
-      $('confirmBody').textContent = msg;
-      $('confirmModal').classList.remove('hidden');
-    }
-
-    async function submitQuiz(isAuto = false) {
-      if (state.isSubmitting) return;
-      state.isSubmitting = true;
+    async function executeSubmitAnswers(isAutoTimeout) {
+      if (state.submitting) return;
+      state.submitting = true;
+      state.examActive = false;
       clearInterval(state.timerInterval);
-      $('confirmModal').classList.add('hidden');
-      showLoading(isAuto ? 'Time is up, submitting answers...' : 'Grading & saving your test results...');
+      pauseExamAudio();
+      $('submitConfirmModal').classList.add('hidden');
+      $('tabWarningModal').classList.add('hidden');
 
+      showLoading(isAutoTimeout ? 'Time expired! Grading your answers...' : 'Submitting and grading your answers...');
       try {
-        const payload = {
-          kelas: state.student.kelas,
-          namaSiswa: state.student.nama,
-          paketId: state.student.paketId,
-          pin: state.student.pin,
+        const res = await callApi('submitAnswers', {
+          kelas: state.kelas,
+          namaSiswa: state.namaSiswa,
+          paketId: state.paketId,
           answers: state.answers,
           tabSwitches: state.tabSwitches
-        };
+        });
 
-        const res = await callApi('submitAnswers', payload);
-        clearDraft();
-        renderResult(res);
+        clearLocalDraft();
+        renderResultScreen(res);
       } catch (err) {
-        state.isSubmitting = false;
-        alert('Submission failed: ' + err.message + '\n\nYour answers are still saved in this browser. Please click Submit again.');
+        state.examActive = true;
+        startExamTimer();
+        alert(err.message);
       } finally {
+        state.submitting = false;
         hideLoading();
       }
     }
 
-    function renderResult(res) {
-      $('quizSection').classList.add('hidden');
+    function renderResultScreen(res) {
+      $('examSection').classList.add('hidden');
       $('resultSection').classList.remove('hidden');
 
-      const badge = $('resStatusBadge');
-      badge.textContent = res.isPassed ? 'PASSED' : 'REMEDIAL';
-      badge.className = 'status-badge ' + (res.isPassed ? 'status-passed' : 'status-remedial');
+      $('resultStudentMeta').textContent = `${state.namaSiswa} (${state.kelas}) • ${state.paketName}`;
 
-      $('resFinalScore').textContent = res.finalScore;
-      $('resRawScore').textContent = res.rawScore;
-      $('resCorrect').textContent = `${res.correctCount} / ${res.totalQuestions}`;
-      $('resAttempt').textContent = `${res.attempt} / ${res.maxAttempts}`;
-      $('resKkm').textContent = res.kkm;
+      const scoreEl = $('resultScoreBig');
+      scoreEl.textContent = Number(res.finalScore).toFixed(2);
+      scoreEl.className = 'score-big ' + (res.isPassed ? 'passed' : 'remedial');
 
-      const canRetry = res.attempt < res.maxAttempts && !res.isPassed;
-      $('btnRetry').classList.toggle('hidden', !canRetry);
+      $('resultStatusBadge').innerHTML = res.isPassed
+        ? '<span class="badge badge-passed" style="font-size:12.5px; padding:4px 12px;">PASSED (KKM ACHIEVED)</span>'
+        : '<span class="badge badge-remedial" style="font-size:12.5px; padding:4px 12px;">BELOW KKM (REMEDIAL)</span>';
 
-      const notice = $('reviewNotice');
-      if (!res.showKey) {
-        notice.textContent = 'Answer keys and explanations are hidden based on your teacher\'s settings.';
-        notice.classList.remove('hidden');
-      } else {
-        notice.classList.add('hidden');
+      const notices = [];
+      if (res.remedialCapped) {
+        notices.push(`
+          <div class="info-banner">
+            <strong>Remedial Score Policy:</strong> Your raw score on this remedial attempt was <strong>${Number(res.rawScore).toFixed(2)}</strong>. Because it exceeded the passing threshold, your final score is automatically set to the KKM (<strong>${res.kkm}</strong>). You have passed and do not need to retake this test.
+          </div>
+        `);
+      } else if (res.isPassed) {
+        notices.push(`
+          <div class="success-banner">
+            Congratulations! You have achieved the passing score (KKM: ${res.kkm}). You do not need to retake or take remedial for this package.
+          </div>
+        `);
       }
 
-      const list = $('reviewList');
-      list.innerHTML = (res.details || []).map((d, idx) => {
-        const stUpper = String(d.status || '').toUpperCase();
-        const isCorrect = stUpper === 'CORRECT' || stUpper === 'BENAR';
-        const isPartial = stUpper === 'PARTIAL' || stUpper === 'PARSIAL';
-        const cls = isCorrect ? 'correct' : (isPartial ? 'partial' : 'incorrect');
-        const statusLabel = isCorrect ? 'CORRECT' : (isPartial ? 'PARTIAL' : 'INCORRECT');
+      $('resultNoticeArea').innerHTML = notices.join('');
 
-        const keyLine = res.showKey
-          ? `<div><strong>Correct Answer:</strong> ${escapeHtml(d.keyAns)}</div>`
+      $('resStatCorrect').textContent = `${res.correctCount}/${res.totalQuestions}`;
+      $('resStatKkm').textContent = res.kkm;
+      $('resStatAttempt').textContent = `#${res.attempt} of ${res.maxAttempts}`;
+      $('resStatTabs').textContent = state.tabSwitches;
+
+      // Hanya tampilkan tombol Retake jika BELUM mencapai KKM dan belum melewati batas maksimal percobaan
+      const isDummy = state.kelas.trim() === '1111' || state.namaSiswa.trim().toLowerCase() === 'dummy';
+      const canRetake = isDummy || (!res.isPassed && Number(res.attempt) < Number(res.maxAttempts));
+      $('btnRetakeTest').classList.toggle('hidden', !canRetake);
+
+      const showKey = Boolean(res.showKey);
+      $('keyHiddenBanner').classList.toggle('hidden', showKey);
+
+      const details = res.details || [];
+      $('resultReviewList').innerHTML = details.map(d => {
+        const st = String(d.status || '').toUpperCase();
+        const cardCls = st === 'CORRECT' ? 'is-correct' : (st === 'PARTIAL' ? 'is-partial' : 'is-incorrect');
+        const badgeHtml = st === 'CORRECT'
+          ? '<span class="badge badge-passed">CORRECT</span>'
+          : (st === 'PARTIAL'
+            ? '<span class="badge badge-warn">PARTIAL</span>'
+            : '<span class="badge badge-remedial">INCORRECT</span>');
+
+        const keyRowHtml = showKey && d.keyAns
+          ? `<div class="review-ans-row" style="background:var(--success-soft); border-color:#9ecab9;">
+               <strong>Answer Key:</strong> ${escapeHtml(d.keyAns)}
+             </div>`
           : '';
-        const bahasLine = (res.showKey && d.pembahasan)
-          ? `<div class="review-bahas"><strong>Explanation:</strong> ${formatRichMedia(d.pembahasan)}</div>`
+
+        const expRowHtml = showKey && d.pembahasan
+          ? `<div class="review-explanation">
+               <strong>Explanation:</strong> ${formatRichMedia(d.pembahasan)}
+             </div>`
           : '';
 
         return `
-          <div class="review-item ${cls}">
-            <div class="review-head">
-              <span>Question ${idx + 1} (${escapeHtml(TYPE_LABELS[d.tipeSoal] || d.tipeSoal)})</span>
-              <span>${statusLabel} &bull; Points: ${d.score}</span>
+          <div class="review-card ${cardCls}">
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+              <span class="badge badge-neutral">Question ${escapeHtml(d.noSoal)}</span>
+              ${badgeHtml}
             </div>
-            <div class="review-q">${formatRichMedia(d.pertanyaan)}</div>
-            <div class="review-ans">
-              <div><strong>Your Answer:</strong> ${escapeHtml(d.studentAns)}</div>
-              ${keyLine}
+            <div class="review-stem">${formatRichMedia(d.pertanyaan)}</div>
+            <div class="review-ans-row">
+              <strong>Your Answer:</strong> ${escapeHtml(d.studentAns)}
             </div>
-            ${bahasLine}
+            ${keyRowHtml}
+            ${expRowHtml}
           </div>
         `;
       }).join('');
@@ -1673,88 +1694,49 @@
     // EVENT LISTENERS
     // =========================================================================
     $('selectKelas').addEventListener('change', handleClassChange);
-    $('selectNama').addEventListener('change', validateStartForm);
-    $('selectPaket').addEventListener('change', validateStartForm);
-    $('inputPin').addEventListener('input', (e) => {
-      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 6);
-      validateStartForm();
-    });
-    $('btnStart').addEventListener('click', startQuiz);
+    $('startTestForm').addEventListener('submit', handleStartTest);
 
-    $('passageToggle').addEventListener('click', () => {
-      const isNowHidden = $('passageContent').classList.toggle('hidden');
-      $('passageToggle').textContent = isNowHidden ? 'Show' : 'Hide';
-      if (isNowHidden) pauseAllPassageAudio();
+    $('btnTogglePassage').addEventListener('click', () => {
+      const body = $('passageBody');
+      const isHidden = body.classList.toggle('hidden');
+      $('btnTogglePassage').textContent = isHidden ? 'Show Passage' : 'Hide Passage';
     });
 
-    $('btnViewPassageModal').addEventListener('click', () => {
+    $('btnFlagQuestion').addEventListener('click', () => {
       const q = state.questions[state.currentIndex];
-      if (!q || !q._passage) return;
-      pauseAllPassageAudio();
-      $('passageModalContent').innerHTML = formatRichMedia(q._passage);
-      $('passageModal').classList.remove('hidden');
-    });
-
-    $('btnClosePassageModal').addEventListener('click', () => {
-      pauseAllPassageAudio();
-      $('passageModal').classList.add('hidden');
-    });
-
-    $('passageModal').addEventListener('click', (e) => {
-      if (e.target === $('passageModal')) {
-        pauseAllPassageAudio();
-        $('passageModal').classList.add('hidden');
-      }
-    });
-
-    $('btnPrev').addEventListener('click', () => {
-      if (state.currentIndex > 0) {
-        state.currentIndex--;
-        saveDraft();
-        renderCurrentQuestion();
-      }
-    });
-
-    $('btnNext').addEventListener('click', () => {
-      if (state.currentIndex < state.questions.length - 1) {
-        state.currentIndex++;
-        saveDraft();
-        renderCurrentQuestion();
-      } else {
-        askSubmitConfirmation();
-      }
-    });
-
-    $('btnFlag').addEventListener('click', () => {
-      state.flagged[state.currentIndex] = !state.flagged[state.currentIndex];
-      saveDraft();
+      if (!q) return;
+      state.flagged[q._qKey] = !state.flagged[q._qKey];
+      saveLocalDraft();
       renderCurrentQuestion();
     });
 
-    $('btnSubmitSidebar').addEventListener('click', askSubmitConfirmation);
-    $('btnConfirmCancel').addEventListener('click', () => $('confirmModal').classList.add('hidden'));
-    $('btnConfirmOk').addEventListener('click', () => submitQuiz(false));
+    $('btnPrevQ').addEventListener('click', () => jumpToQuestion(state.currentIndex - 1));
+    $('btnNextQ').addEventListener('click', () => jumpToQuestion(state.currentIndex + 1));
+    $('btnOpenSubmitModal').addEventListener('click', openSubmitConfirmation);
 
-    $('btnRetry').addEventListener('click', () => {
-      clearDraft();
-      startQuiz();
+    $('btnCancelSubmit').addEventListener('click', () => $('submitConfirmModal').classList.add('hidden'));
+    $('btnConfirmSubmit').addEventListener('click', () => executeSubmitAnswers(false));
+
+    $('btnAcknowledgeTabWarning').addEventListener('click', () => {
+      $('tabWarningModal').classList.add('hidden');
     });
 
-    $('btnHome').addEventListener('click', () => {
+    $('btnBackToPortal').addEventListener('click', () => {
       $('resultSection').classList.add('hidden');
       $('setupSection').classList.remove('hidden');
+      showSetupError('');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    window.addEventListener('beforeunload', (e) => {
-      if (!$('quizSection').classList.contains('hidden') && !state.isSubmitting) {
-        e.preventDefault();
-        e.returnValue = '';
-      }
+    $('btnRetakeTest').addEventListener('click', () => {
+      $('resultSection').classList.add('hidden');
+      $('setupSection').classList.remove('hidden');
+      showSetupError('');
+      $('startTestForm').dispatchEvent(new Event('submit', { cancelable: true }));
     });
 
-    // Initialize on page load
-    initApp();
+    // Boot portal
+    initPortal();
   </script>
 </body>
 </html>
