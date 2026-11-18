@@ -40,7 +40,7 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
+      overflow-x: clip;
     }
 
     .hidden { display: none !important; }
@@ -196,6 +196,11 @@
       border-color: var(--border-line);
     }
     .btn-outline:hover:not(:disabled) { background: #efeee6; }
+    .btn-outline.active-toggle {
+      background: var(--teal-dark);
+      color: #fff;
+      border-color: var(--teal-dark);
+    }
     .btn-xs { padding: 4px 8px; font-size: 11px; border-radius: 4px; }
     .btn-sm { padding: 5px 10px; font-size: 11.5px; }
     .btn-block { width: 100%; padding: 10px 14px; font-size: 13px; }
@@ -521,6 +526,7 @@
     .badge-remedial { background: var(--danger-soft); color: var(--danger); border: 1px solid #e6b4ae; }
     .badge-warn { background: var(--ochre-soft); color: #786e1c; border: 1px solid #cfc776; }
     .badge-neutral { background: #ecece4; color: var(--text-main); border: 1px solid var(--border-soft); }
+    .badge-teal { background: var(--teal-soft); color: var(--teal-dark); border: 1px solid #b8cdd1; }
 
     /* DIFFICULTY BAR & ITEM ANALYSIS */
     .diff-bar {
@@ -605,47 +611,249 @@
     .setting-row h4 { font-size: 13px; font-weight: 800; margin-bottom: 3px; }
     .setting-row p { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
 
-    /* PREVIEW & RICH MEDIA */
-    .preview-q {
-      border: 1px solid var(--border-line);
-      padding: 12px;
+    /* COMPACT EDITORIAL PACKAGE PREVIEW & RICH MEDIA */
+    .preview-sticky-bar {
+      position: sticky;
+      top: 58px;
+      z-index: 20;
+      background: var(--card-bg);
+      border: 1px solid var(--teal-dark);
+      border-left: 4px solid var(--teal-dark);
+      padding: 9px 12px;
       margin-bottom: 10px;
-      background: var(--card-pure);
+      box-shadow: 0 4px 12px rgba(38, 46, 43, 0.08);
     }
-    .preview-q.has-issue { border-left: 4px solid var(--danger); }
-    .passage-preview-box {
-      background: var(--bg-cream);
+    .preview-bar-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .preview-title-cluster {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+    .preview-jump-strip {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-top: 7px;
+      padding-top: 7px;
+      border-top: 1px dashed var(--border-soft);
+    }
+    .jump-pill {
+      min-width: 24px;
+      height: 22px;
+      padding: 0 5px;
+      border-radius: 4px;
       border: 1px solid var(--border-line);
-      padding: 11px 13px;
-      margin-bottom: 11px;
-      font-size: 13.5px;
+      background: var(--card-pure);
+      font-family: inherit;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: 0.12s;
+    }
+    .jump-pill:hover {
+      background: var(--teal-dark);
+      color: #fff;
+      border-color: var(--teal-dark);
+    }
+    .jump-pill.has-issue {
+      background: var(--danger-soft);
+      color: var(--danger);
+      border-color: var(--danger);
+    }
+    .jump-pill.has-issue:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .passage-group-card {
+      background: #f2f1e8;
+      border: 1px solid var(--border-line);
+      border-left: 3.5px solid var(--teal-mid);
+      padding: 9px 12px;
+      margin-top: 10px;
+      margin-bottom: 7px;
+    }
+    .passage-group-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .passage-group-body {
+      margin-top: 7px;
+      padding-top: 7px;
+      border-top: 1px solid var(--border-soft);
+      font-size: 13px;
+      line-height: 1.56;
       color: var(--text-main);
       white-space: pre-line;
+      max-width: 84ch;
     }
-    .passage-preview-box img, .stem-preview-box img, .opt-pill img {
-      display: block;
-      max-width: 100%;
-      height: auto;
-      margin: 8px auto;
+
+    .preview-q {
       border: 1px solid var(--border-soft);
+      border-left: 3px solid var(--teal-dark);
+      padding: 9px 12px;
+      margin-bottom: 7px;
+      background: var(--card-pure);
+      scroll-margin-top: 155px;
+      transition: border-color 0.15s;
     }
-    .passage-preview-box audio, .stem-preview-box audio {
-      width: 100%;
-      margin: 8px 0;
+    .preview-q:hover { border-color: var(--border-line); }
+    .preview-q.has-issue { border-left: 4px solid var(--danger); background: #fffcfc; }
+
+    .preview-q-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 6px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #ecece4;
+      font-size: 11.5px;
+    }
+    .preview-q-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--teal-dark);
+      color: #fff;
+      font-weight: 800;
+      font-size: 11px;
+      padding: 1px 7px;
+      border-radius: 3px;
+    }
+    .preview-q-stem {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.46;
+      margin-bottom: 7px;
+      white-space: pre-line;
+      max-width: 84ch;
+    }
+
+    .preview-opts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 5px;
+    }
+    .preview-opts-grid.two-col {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .opt-pill {
-      display: block;
-      padding: 7px 10px;
-      margin-bottom: 6px;
-      font-size: 13px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 5px 9px;
+      font-size: 12.5px;
+      line-height: 1.4;
       border: 1px solid var(--border-soft);
       background: var(--bg-cream);
+      border-radius: 4px;
     }
     .opt-pill.is-key {
       background: var(--success-soft);
       border-color: var(--success);
       color: #1c4a3e;
       font-weight: 700;
+    }
+    .opt-pill-main {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      min-width: 0;
+      word-break: break-word;
+    }
+    .opt-letter-tag {
+      display: inline-grid;
+      place-items: center;
+      min-width: 19px;
+      height: 19px;
+      border-radius: 3px;
+      background: var(--card-pure);
+      border: 1px solid var(--border-line);
+      font-size: 10.5px;
+      font-weight: 800;
+      color: var(--text-main);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .opt-pill.is-key .opt-letter-tag {
+      background: var(--success);
+      border-color: var(--success);
+      color: #fff;
+    }
+    .opt-key-pill {
+      font-size: 10px;
+      font-weight: 800;
+      color: var(--success);
+      background: #ffffff;
+      border: 1px solid #9ecab9;
+      padding: 1px 5px;
+      border-radius: 3px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .preview-explanation {
+      margin-top: 6px;
+      font-size: 12px;
+      line-height: 1.42;
+      color: var(--text-main);
+      background: var(--ochre-soft);
+      border: 1px solid #d5ce88;
+      padding: 5px 9px;
+      border-radius: 4px;
+    }
+    .preview-issue-bar {
+      margin-top: 6px;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--danger);
+      background: var(--danger-soft);
+      border: 1px solid #e6b4ae;
+      padding: 5px 9px;
+      border-radius: 4px;
+    }
+
+    .passage-group-body img, .preview-q-stem img, .opt-pill img,
+    .passage-preview-box img, .stem-preview-box img {
+      display: block;
+      max-width: 100%;
+      max-height: 250px;
+      width: auto;
+      height: auto;
+      margin: 6px 0;
+      border: 1px solid var(--border-soft);
+      border-radius: 4px;
+    }
+    .passage-group-body audio, .preview-q-stem audio,
+    .passage-preview-box audio, .stem-preview-box audio {
+      width: 100%;
+      max-width: 420px;
+      height: 34px;
+      margin: 6px 0;
+    }
+    .passage-preview-box {
+      background: var(--bg-cream);
+      border: 1px solid var(--border-line);
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: var(--text-main);
+      white-space: pre-line;
     }
 
     /* MODAL & OVERLAY */
@@ -703,6 +911,8 @@
       .settings-grid { grid-template-columns: 1fr; }
       .analysis-summary-grid { grid-template-columns: 1fr; }
       .filter-grid { grid-template-columns: 1fr; }
+      .preview-opts-grid.two-col { grid-template-columns: 1fr; }
+      .preview-sticky-bar { position: static; }
     }
   </style>
 </head>
@@ -1095,14 +1305,23 @@
             </table>
           </div>
 
-          <!-- FULL PACKAGE PREVIEW PANEL -->
-          <div id="previewPanel" class="hidden" style="margin-top: 16px; padding-top: 14px; border-top: 1.5px solid var(--teal-dark);">
-            <div class="table-toolbar">
-              <h3 id="previewTitle" style="font-size: 14.5px; font-weight: 800;">Package Preview</h3>
-              <div style="display: flex; gap: 6px;">
-                <button type="button" id="btnRefreshPreview" class="btn btn-outline btn-xs">Reload from Sheet</button>
-                <button type="button" id="btnClosePreview" class="btn btn-danger-soft btn-xs">Close</button>
+          <!-- COMPACT FULL PACKAGE PREVIEW PANEL -->
+          <div id="previewPanel" class="hidden" style="margin-top: 14px; padding-top: 12px; border-top: 1.5px solid var(--teal-dark);">
+            <div class="preview-sticky-bar">
+              <div class="preview-bar-top">
+                <div class="preview-title-cluster">
+                  <h3 id="previewTitle" style="font-size: 14px; font-weight: 800; color: var(--text-main);">Package Preview</h3>
+                  <span id="previewStatsBadges" style="display:inline-flex; gap:5px; flex-wrap:wrap;"></span>
+                </div>
+                <div style="display: flex; gap: 5px; flex-wrap: wrap; align-items: center;">
+                  <button type="button" id="btnTogglePreviewIssues" class="btn btn-outline btn-xs hidden">Issues Only</button>
+                  <button type="button" id="btnToggleAllPassages" class="btn btn-outline btn-xs hidden">Collapse Passages</button>
+                  <button type="button" id="btnToggleAllExplanations" class="btn btn-outline btn-xs active-toggle">Explanations</button>
+                  <button type="button" id="btnRefreshPreview" class="btn btn-outline btn-xs">Reload</button>
+                  <button type="button" id="btnClosePreview" class="btn btn-danger-soft btn-xs">Close</button>
+                </div>
               </div>
+              <div id="previewJumpBar" class="preview-jump-strip hidden"></div>
             </div>
             <div id="previewQuestionsList"></div>
           </div>
@@ -1230,6 +1449,10 @@
       analysisReport: [],
       currentPreviewItemIdx: -1,
       currentPreviewPaketId: '',
+      previewData: null,
+      previewFilterIssuesOnly: false,
+      previewCollapsePassages: false,
+      previewShowExplanations: true,
       activeTab: 'results'
     };
 
@@ -2644,8 +2867,12 @@
           const pickPct = item.count > 0 ? Math.round((pickCount / item.count) * 100) : 0;
           return `
             <div class="opt-pill ${isKey ? 'is-key' : ''}">
-              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
-                <div><strong>${l}.</strong> ${formatRichMedia(val)} ${isKey ? ' &nbsp;[ANSWER KEY ✓]' : ''}</div>
+              <div class="opt-pill-main">
+                <span class="opt-letter-tag">${l}</span>
+                <div>${formatRichMedia(val)}</div>
+              </div>
+              <div style="display:flex; align-items:center; gap:5px; flex-shrink:0;">
+                ${isKey ? '<span class="opt-key-pill">✓ KEY</span>' : ''}
                 <span style="font-size:11px; white-space:nowrap; opacity:0.85;">${pickCount} (${pickPct}%)</span>
               </div>
             </div>
@@ -2654,12 +2881,12 @@
 
         stemAndOptionsHtml = `
           <div class="stem-preview-box" style="font-size:14px; font-weight:700; margin-bottom:10px; white-space:pre-line;">${formatRichMedia(item.rawPertanyaan)}</div>
-          <div>${optHtml}</div>
+          <div class="preview-opts-grid">${optHtml}</div>
         `;
       }
 
       const explanationHtml = item.pembahasan
-        ? `<div style="margin-top:10px; padding:9px 12px; background:var(--ochre-soft); border:1px solid #c9c177; color:var(--text-main); font-size:12.5px;">
+        ? `<div class="preview-explanation" style="margin-top:10px;">
              <strong>Explanation:</strong><br>${formatRichMedia(item.pembahasan)}
            </div>`
         : '';
@@ -2724,7 +2951,7 @@
     }
 
     // =========================================================================
-    // TAB 5: PACKAGE MANAGEMENT & FULL PACKAGE PREVIEW
+    // TAB 5: PACKAGE MANAGEMENT & COMPACT GROUPED PACKAGE PREVIEW
     // =========================================================================
     async function loadPackagesTab() {
       const tbody = $('packagesTableBody');
@@ -2781,73 +3008,295 @@
       }
     }
 
-    async function openPackagePreview(paketId, fresh = false) {
-      dashState.currentPreviewPaketId = paketId;
-      $('previewPanel').classList.remove('hidden');
-      $('previewTitle').textContent = `Loading Preview for Package ${paketId}...`;
-      $('previewQuestionsList').innerHTML = '<div style="color:var(--text-muted); padding:14px;">Fetching questions and answer keys...</div>';
+    function pausePackagePreviewAudio() {
+      document.querySelectorAll('#previewQuestionsList audio').forEach(a => {
+        try { a.pause(); } catch (e) {}
+      });
+    }
 
-      try {
-        const res = await callApi('getPaketPreview', dashState.token, paketId, fresh);
-        const questions = resolveQuestionPassages(res.questions || []);
-        $('previewTitle').textContent = `Package Preview: ${res.paket.name} (${res.paket.id}) — ${questions.length} Question(s)`;
+    function toggleSinglePreviewPassage(groupIdx) {
+      const body = $(`preview-passage-body-${groupIdx}`);
+      const btn = $(`preview-passage-btn-${groupIdx}`);
+      if (!body || !btn) return;
+      const isHidden = body.classList.toggle('hidden');
+      btn.textContent = isHidden ? 'Show Passage' : 'Hide Passage';
+      if (isHidden) {
+        body.querySelectorAll('audio').forEach(a => { try { a.pause(); } catch (e) {} });
+      }
+    }
 
-        if (questions.length === 0) {
-          $('previewQuestionsList').innerHTML = '<p style="color:var(--text-muted);">This test package has no questions.</p>';
-          return;
+    function scrollToPreviewQuestion(origIdx) {
+      const el = $(`preview-q-card-${origIdx}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function buildPreviewMatrixHtml(q) {
+      let raw = String(q.pertanyaan || '');
+      let headers = [];
+      const headerMatch = raw.match(/\[(?:HEADER:\s*)?([^\]]+)\]/i);
+      if (headerMatch) {
+        headers = headerMatch[1].split('|').map(s => s.trim()).filter(Boolean);
+        raw = raw.replace(headerMatch[0], '').trim();
+      }
+      const parts = raw.split(/[\|\n]/).map(s => s.trim()).filter(Boolean);
+      const promptText = parts.length > 1 ? parts[0] : 'Matrix / Category Question';
+      const statements = parts.length > 1 ? parts.slice(1) : parts;
+
+      const filledLetters = ['A', 'B', 'C', 'D', 'E'].filter(l => {
+        const v = String((q.options && q.options[l]) || '').trim();
+        return v !== '' && v !== '-';
+      });
+      const colLabels = filledLetters.length > 0
+        ? filledLetters.map(l => q.options[l].trim())
+        : (headers.length > 1 ? headers.slice(1) : ['True', 'False']);
+      const letters = colLabels.map((_, i) => String.fromCharCode(65 + i));
+      const firstColTitle = headers.length > 0 ? headers[0] : 'Statement';
+      const keySeq = String(q.kunciJawaban || '').replace(/[^A-E,|;]/gi, '').split(/[,|;]/).map(s => s.trim().toUpperCase()).filter(Boolean);
+
+      return `
+        <div class="preview-q-stem">${formatRichMedia(promptText)}</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>${escapeHtml(firstColTitle)}</th>
+                ${colLabels.map(lbl => `<th style="text-align:center;">${escapeHtml(lbl)}</th>`).join('')}
+              </tr>
+            </thead>
+            <tbody>
+              ${statements.map((stmt, rIdx) => `
+                <tr>
+                  <td>${formatRichMedia(stmt)}</td>
+                  ${letters.map(l => {
+                    const isKeyCell = keySeq[rIdx] === l;
+                    return `<td style="text-align:center; ${isKeyCell ? 'background:var(--success-soft); color:var(--success); font-weight:800;' : ''}">${isKeyCell ? '✓' : '—'}</td>`;
+                  }).join('')}
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderPackagePreview() {
+      const data = dashState.previewData;
+      if (!data) return;
+
+      pausePackagePreviewAudio();
+      const allQs = data.questions || [];
+      const paket = data.paket || {};
+      const pkgMeta = dashState.allPackages.find(p => p.id === paket.id);
+      const pkgStatus = (paket.status || (pkgMeta && pkgMeta.status) || '').toUpperCase();
+
+      const indexedQs = allQs.map((q, idx) => ({
+        ...q,
+        _origIdx: idx,
+        _label: String(q.noSoal || (idx + 1)),
+        _hasIssue: (q.issues || []).length > 0
+      }));
+
+      const issueCount = indexedQs.filter(q => q._hasIssue).length;
+      const passageCount = indexedQs.filter(q => Boolean(q._passage)).length;
+
+      if (issueCount === 0) {
+        dashState.previewFilterIssuesOnly = false;
+      }
+
+      $('previewTitle').textContent = `${paket.name || paket.id} (${paket.id})`;
+
+      const statusPill = pkgStatus === 'ACTIVE'
+        ? '<span class="badge badge-passed">ACTIVE</span>'
+        : (pkgStatus ? '<span class="badge badge-remedial">INACTIVE</span>' : '');
+      const countPill = `<span class="badge badge-neutral">${indexedQs.length} Questions</span>`;
+      const healthPill = issueCount > 0
+        ? `<span class="badge badge-remedial">${issueCount} Issue(s)</span>`
+        : '<span class="badge badge-passed">All Valid ✓</span>';
+      $('previewStatsBadges').innerHTML = `${statusPill}${countPill}${healthPill}`;
+
+      const btnIssues = $('btnTogglePreviewIssues');
+      btnIssues.classList.toggle('hidden', issueCount === 0);
+      btnIssues.classList.toggle('active-toggle', dashState.previewFilterIssuesOnly);
+      btnIssues.textContent = dashState.previewFilterIssuesOnly
+        ? `Showing Issues (${issueCount})`
+        : `Issues Only (${issueCount})`;
+
+      const btnPassages = $('btnToggleAllPassages');
+      btnPassages.classList.toggle('hidden', passageCount === 0);
+      btnPassages.textContent = dashState.previewCollapsePassages ? 'Expand Passages' : 'Collapse Passages';
+
+      const btnExp = $('btnToggleAllExplanations');
+      btnExp.classList.toggle('active-toggle', dashState.previewShowExplanations);
+      btnExp.textContent = dashState.previewShowExplanations ? 'Hide Explanations' : 'Show Explanations';
+
+      const displayedQs = dashState.previewFilterIssuesOnly
+        ? indexedQs.filter(q => q._hasIssue)
+        : indexedQs;
+
+      const jumpBar = $('previewJumpBar');
+      if (displayedQs.length > 0) {
+        jumpBar.classList.remove('hidden');
+        jumpBar.innerHTML =
+          '<span style="font-size:10.5px; font-weight:800; color:var(--text-muted); margin-right:3px;">JUMP:</span>' +
+          displayedQs.map(q => `
+            <button type="button" class="jump-pill ${q._hasIssue ? 'has-issue' : ''}"
+              onclick="scrollToPreviewQuestion(${q._origIdx})"
+              title="Jump to Question ${escapeHtml(q._label)}${q._hasIssue ? ' (Has Issue)' : ''}">
+              ${escapeHtml(q._label)}
+            </button>
+          `).join('');
+      } else {
+        jumpBar.classList.add('hidden');
+      }
+
+      if (displayedQs.length === 0) {
+        $('previewQuestionsList').innerHTML = '<div style="padding:14px; text-align:center; color:var(--text-muted); background:var(--card-pure); border:1px solid var(--border-soft);">No questions match the current preview filter.</div>';
+        return;
+      }
+
+      // Group consecutive questions that share the exact same passage
+      const groups = [];
+      let passageCounter = 0;
+      displayedQs.forEach(q => {
+        const pText = String(q._passage || '').trim();
+        const lastGroup = groups[groups.length - 1];
+        if (lastGroup && lastGroup.passage === pText) {
+          lastGroup.items.push(q);
+        } else {
+          if (pText !== '') passageCounter++;
+          groups.push({
+            passage: pText,
+            passageNum: pText !== '' ? passageCounter : 0,
+            items: [q]
+          });
+        }
+      });
+
+      $('previewQuestionsList').innerHTML = groups.map((group, gIdx) => {
+        let passageHeaderHtml = '';
+        if (group.passage) {
+          const firstLbl = group.items[0]._label;
+          const lastLbl = group.items[group.items.length - 1]._label;
+          const rangeText = group.items.length === 1
+            ? `For Question ${escapeHtml(firstLbl)}`
+            : `For Questions ${escapeHtml(firstLbl)}–${escapeHtml(lastLbl)}`;
+          const isCollapsed = dashState.previewCollapsePassages;
+
+          passageHeaderHtml = `
+            <div class="passage-group-card">
+              <div class="passage-group-head">
+                <div style="display:flex; align-items:center; gap:7px; flex-wrap:wrap;">
+                  <span class="badge badge-teal">PASSAGE #${group.passageNum}</span>
+                  <span style="font-size:11.5px; font-weight:800; color:var(--teal-dark);">${rangeText}</span>
+                </div>
+                <button type="button" id="preview-passage-btn-${gIdx}" class="btn btn-outline btn-xs" onclick="toggleSinglePreviewPassage(${gIdx})">
+                  ${isCollapsed ? 'Show Passage' : 'Hide Passage'}
+                </button>
+              </div>
+              <div id="preview-passage-body-${gIdx}" class="passage-group-body ${isCollapsed ? 'hidden' : ''}">${formatRichMedia(group.passage)}</div>
+            </div>
+          `;
         }
 
-        $('previewQuestionsList').innerHTML = questions.map((q, idx) => {
-          const hasIssue = (q.issues || []).length > 0;
+        const cardsHtml = group.items.map(q => {
           const keyLetters = (q.key && q.key.letters) || [];
           const acceptedShort = (q.key && q.key.accepted) || [];
-
-          const passageHtml = q._passage
-            ? `<div class="passage-preview-box" style="margin-top:6px;">
-                 <div style="font-size:10.5px; font-weight:800; color:var(--teal-dark); text-transform:uppercase; margin-bottom:4px;">Reading Passage / Stimulus</div>
-                 <div>${formatRichMedia(q._passage)}</div>
-               </div>`
+          const passageTag = group.passage
+            ? `<span class="badge badge-teal" style="font-size:10px;">Passage #${group.passageNum}</span>`
             : '';
 
-          let optsHtml = '';
-          if (q.tipeSoal === 'IS') {
-            optsHtml = `<div class="opt-pill is-key">Accepted Answer(s): ${escapeHtml(acceptedShort.join(' | ') || q.kunciJawaban)}</div>`;
-          } else if (q.tipeSoal === 'MATRIKS') {
-            optsHtml = `<div class="opt-pill is-key">Matrix Key Sequence: ${escapeHtml(q.kunciJawaban)}</div>`;
+          let bodyContentHtml = '';
+          if (q.tipeSoal === 'MATRIKS') {
+            bodyContentHtml = buildPreviewMatrixHtml(q);
+          } else if (q.tipeSoal === 'IS') {
+            bodyContentHtml = `
+              <div class="preview-q-stem">${formatRichMedia(q.pertanyaan)}</div>
+              <div class="opt-pill is-key">
+                <div class="opt-pill-main">
+                  <span class="opt-letter-tag">✓</span>
+                  <div>Accepted Answer(s): <strong>${escapeHtml(acceptedShort.join('  |  ') || q.kunciJawaban)}</strong></div>
+                </div>
+              </div>
+            `;
           } else {
             const letters = q.tipeSoal === 'BS' ? ['A', 'B'] : ['A', 'B', 'C', 'D', 'E'];
-            optsHtml = letters.map(l => {
-              const val = (q.options && q.options[l]) || (q.tipeSoal === 'BS' ? (l === 'A' ? 'True' : 'False') : '');
-              if (!val || val === '-') return '';
-              const isKey = keyLetters.includes(l);
-              return `<div class="opt-pill ${isKey ? 'is-key' : ''}"><strong>${l}.</strong> ${formatRichMedia(val)} ${isKey ? '✓ (KEY)' : ''}</div>`;
-            }).join('');
+            const validOptions = letters.map(l => {
+              const val = String((q.options && q.options[l]) || (q.tipeSoal === 'BS' ? (l === 'A' ? 'True' : 'False') : '')).trim();
+              return { letter: l, val, isKey: keyLetters.includes(l) };
+            }).filter(o => o.val && o.val !== '-');
+
+            const useTwoCol = validOptions.length >= 2 && validOptions.every(o =>
+              o.val.length <= 68 && !/\[(?:IMG|AUDIO):|https?:\/\/\S+\.(?:png|jpe?g|gif|webp|mp3|wav|ogg|m4a)/i.test(o.val)
+            );
+
+            const optsHtml = validOptions.map(o => `
+              <div class="opt-pill ${o.isKey ? 'is-key' : ''}">
+                <div class="opt-pill-main">
+                  <span class="opt-letter-tag">${o.letter}</span>
+                  <div>${formatRichMedia(o.val)}</div>
+                </div>
+                ${o.isKey ? '<span class="opt-key-pill">✓ KEY</span>' : ''}
+              </div>
+            `).join('');
+
+            bodyContentHtml = `
+              <div class="preview-q-stem">${formatRichMedia(q.pertanyaan)}</div>
+              <div class="preview-opts-grid ${useTwoCol ? 'two-col' : ''}">${optsHtml}</div>
+            `;
           }
 
-          const issueHtml = hasIssue
-            ? `<div class="alert-error" style="margin-top:6px; margin-bottom:0;"><strong>Warning:</strong> ${escapeHtml(q.issues.join(' | '))}</div>`
+          const explanationHtml = (dashState.previewShowExplanations && q.pembahasan)
+            ? `<div class="preview-explanation"><strong>Explanation:</strong> ${formatRichMedia(q.pembahasan)}</div>`
             : '';
 
-          const explanationHtml = q.pembahasan
-            ? `<div style="margin-top:6px; font-size:12px; color:var(--text-main); background:var(--ochre-soft); border:1px solid #c9c177; padding:7px 10px;"><strong>Explanation:</strong> ${formatRichMedia(q.pembahasan)}</div>`
+          const issueHtml = q._hasIssue
+            ? `<div class="preview-issue-bar">⚠ Warning: ${escapeHtml(q.issues.join(' | '))}</div>`
             : '';
 
           return `
-            <div class="preview-q ${hasIssue ? 'has-issue' : ''}">
-              <div style="display:flex; justify-content:space-between; font-size:11.5px; color:var(--text-muted); margin-bottom:5px;">
-                <strong>Question ${escapeHtml(q.noSoal || (idx + 1))} • ${escapeHtml(TYPE_LABELS[q.tipeSoal] || q.tipeSoal)}</strong>
-                <span>Sheet Row ${q.sheetRow}</span>
+            <div id="preview-q-card-${q._origIdx}" class="preview-q ${q._hasIssue ? 'has-issue' : ''}">
+              <div class="preview-q-head">
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                  <span class="preview-q-num">Q${escapeHtml(q._label)}</span>
+                  <span class="badge badge-neutral">${escapeHtml(TYPE_LABELS[q.tipeSoal] || q.tipeSoal)}</span>
+                  ${passageTag}
+                </div>
+                <div style="display:flex; align-items:center; gap:8px; color:var(--text-muted);">
+                  <span>Key: <strong style="color:var(--success);">${escapeHtml(q.kunciJawaban || '-')}</strong></span>
+                  <span>Row ${q.sheetRow}</span>
+                </div>
               </div>
-              ${passageHtml}
-              <div style="font-weight:700; margin-bottom:8px; white-space:pre-line;">${formatRichMedia(q.pertanyaan)}</div>
-              ${optsHtml}
+              ${bodyContentHtml}
               ${explanationHtml}
               ${issueHtml}
             </div>
           `;
         }).join('');
 
-        $('previewPanel').scrollIntoView({ behavior: 'smooth' });
+        return passageHeaderHtml + cardsHtml;
+      }).join('');
+    }
+
+    async function openPackagePreview(paketId, fresh = false) {
+      dashState.currentPreviewPaketId = paketId;
+      $('previewPanel').classList.remove('hidden');
+      $('previewTitle').textContent = `Loading Preview (${paketId})...`;
+      $('previewStatsBadges').innerHTML = '';
+      $('previewJumpBar').classList.add('hidden');
+      $('previewQuestionsList').innerHTML = '<div style="color:var(--text-muted); padding:14px;">Fetching questions and answer keys...</div>';
+
+      try {
+        const res = await callApi('getPaketPreview', dashState.token, paketId, fresh);
+        const questions = resolveQuestionPassages(res.questions || []);
+        dashState.previewData = {
+          paket: res.paket || { id: paketId, name: getPackageName(paketId) },
+          questions
+        };
+        dashState.previewFilterIssuesOnly = false;
+        renderPackagePreview();
+        $('previewPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
       } catch (err) {
         $('previewQuestionsList').innerHTML = `<div class="alert-error">${escapeHtml(err.message)}</div>`;
       }
@@ -3026,10 +3475,26 @@
     $('btnExportAnalysisCsv').addEventListener('click', exportAnalysisCsv);
 
     $('btnReloadPackages').addEventListener('click', loadPackagesTab);
+    $('btnTogglePreviewIssues').addEventListener('click', () => {
+      dashState.previewFilterIssuesOnly = !dashState.previewFilterIssuesOnly;
+      renderPackagePreview();
+    });
+    $('btnToggleAllPassages').addEventListener('click', () => {
+      dashState.previewCollapsePassages = !dashState.previewCollapsePassages;
+      renderPackagePreview();
+    });
+    $('btnToggleAllExplanations').addEventListener('click', () => {
+      dashState.previewShowExplanations = !dashState.previewShowExplanations;
+      renderPackagePreview();
+    });
     $('btnRefreshPreview').addEventListener('click', () => {
       if (dashState.currentPreviewPaketId) openPackagePreview(dashState.currentPreviewPaketId, true);
     });
-    $('btnClosePreview').addEventListener('click', () => $('previewPanel').classList.add('hidden'));
+    $('btnClosePreview').addEventListener('click', () => {
+      pausePackagePreviewAudio();
+      dashState.previewData = null;
+      $('previewPanel').classList.add('hidden');
+    });
 
     $('btnSaveSecurity').addEventListener('click', saveSecuritySettings);
     $('btnRunValidation').addEventListener('click', runBankValidation);
