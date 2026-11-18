@@ -32,6 +32,10 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html {
+      -webkit-text-size-adjust: 100%;
+    }
+
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg-cream);
@@ -170,6 +174,7 @@
       text-decoration: none;
       transition: 0.15s;
       white-space: nowrap;
+      -webkit-tap-highlight-color: transparent;
     }
     .btn:disabled { opacity: 0.5; cursor: not-allowed; }
     .btn-primary {
@@ -219,6 +224,55 @@
       outline: none;
       border-color: var(--teal-dark);
       box-shadow: 0 0 0 2px rgba(62, 91, 97, 0.16);
+    }
+
+    /* TOGGLE SWITCH FOR ANSWER KEY PROTECTION */
+    .toggle-row-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 5px;
+    }
+    .switch-control {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .switch-control input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .switch-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #c8cbc2;
+      border: 1px solid var(--border-line);
+      border-radius: 999px;
+      transition: 0.2s;
+    }
+    .switch-slider::before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 2px;
+      bottom: 2px;
+      background-color: #ffffff;
+      border-radius: 50%;
+      transition: 0.2s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.22);
+    }
+    .switch-control input:checked + .switch-slider {
+      background-color: var(--teal-dark);
+      border-color: var(--teal-dark);
+    }
+    .switch-control input:checked + .switch-slider::before {
+      transform: translateX(22px);
     }
 
     /* LOGIN BOX */
@@ -925,7 +979,7 @@
         <div class="brand-monogram">NE</div>
         <div>
           <h1 class="editorial-title"><span class="accent-word">NEng Eva</span> Dashboard</h1>
-          <div class="editorial-sub">Student Performance Analysis, Item Quality & Security Controls</div>
+          <div class="editorial-sub">Student Performance Analysis, Item Quality &amp; Security Controls</div>
         </div>
       </div>
       <div class="header-right-cluster">
@@ -1098,7 +1152,7 @@
           </button>
           <button type="button" class="tab-btn" data-tab="analysis">Item Analysis</button>
           <button type="button" class="tab-btn" data-tab="packages">Packages</button>
-          <button type="button" class="tab-btn" data-tab="settings">PIN & Validator</button>
+          <button type="button" class="tab-btn" data-tab="settings">PIN &amp; Validator</button>
         </div>
 
         <!-- TAB 1: TEST RESULTS WITH SORT CONTROLS -->
@@ -1327,11 +1381,11 @@
           </div>
         </div>
 
-        <!-- TAB 6: PIN SECURITY & VALIDATOR -->
+        <!-- TAB 6: PIN SECURITY, ANSWER KEY VISIBILITY & VALIDATOR -->
         <div id="tab-settings" class="tab-panel hidden">
           <div class="settings-grid">
             <div style="border: 1px solid var(--border-line); padding: 14px; background: var(--card-bg);">
-              <div class="panel-heading">PIN Security Settings</div>
+              <div class="panel-heading">Security &amp; Student Portal Controls</div>
               <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">
                 Changes are saved directly to the <strong>Config</strong> sheet and apply immediately.
               </p>
@@ -1355,6 +1409,22 @@
                   <option value="YES">YES — Require Teacher PIN</option>
                   <option value="NO">NO — Open Dashboard Without PIN</option>
                 </select>
+              </div>
+
+              <div class="setting-row">
+                <div class="toggle-row-header">
+                  <h4 style="margin-bottom:0;">3. Hide Answer Key in Student Portal</h4>
+                  <label class="switch-control" title="Toggle answer key visibility in Student Portal">
+                    <input type="checkbox" id="settingHideAnswerKey" checked />
+                    <span class="switch-slider"></span>
+                  </label>
+                </div>
+                <p style="margin-bottom:6px;">
+                  Default is <strong>Active (ON)</strong>: answer keys and explanations are hidden from students after submitting a test. Turn OFF to reveal answer keys to students.
+                </p>
+                <div id="hideKeyStatusText" style="font-size: 11.5px; font-weight: 800; color: var(--teal-dark);">
+                  Active (ON) — Answer keys &amp; explanations are HIDDEN from students.
+                </div>
               </div>
 
               <button type="button" id="btnSaveSecurity" class="btn btn-primary btn-block">Save Security Settings</button>
@@ -1425,6 +1495,52 @@
     const SESSION_EXPIRE_MINUTES = 120;
 
     // =========================================================================
+    // SAFARI-SAFE STORAGE & STRING NORMALIZATION HELPERS
+    // =========================================================================
+    function safeGetStorage(key) {
+      try {
+        return window.localStorage.getItem(key);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    function safeSetStorage(key, value) {
+      try {
+        window.localStorage.setItem(key, value);
+      } catch (e) {}
+    }
+
+    function safeRemoveStorage(key) {
+      try {
+        window.localStorage.removeItem(key);
+      } catch (e) {}
+    }
+
+    function normalizeApostrophes(str) {
+      return String(str === null || str === undefined ? '' : str)
+        .replace(/[\u2018\u2019\u201A\u201B\u2032\u2035\u0060\u00B4\u02BC\uFF07]/g, "'")
+        .replace(/[\u201C\u201D\u201E\u201F\u2033\u2036\uFF02]/g, '"')
+        .replace(/\u00A0/g, ' ');
+    }
+
+    function escapeHtml(str) {
+      return normalizeApostrophes(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function escapeJsAttr(str) {
+      return normalizeApostrophes(str)
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '&quot;');
+    }
+
+    // =========================================================================
     // DASHBOARD STATE
     // =========================================================================
     const dashState = {
@@ -1440,6 +1556,7 @@
       security: {
         requireStudentPin: 'NO',
         requireTeacherPin: 'YES',
+        showKey: 'HIDE',
         validPinCount: 0,
         totalStudentCount: 0
       },
@@ -1477,23 +1594,35 @@
     const $ = (id) => document.getElementById(id);
 
     // =========================================================================
-    // API HELPER & UTILITIES
+    // API HELPER & UTILITIES (SAFARI-COMPATIBLE)
     // =========================================================================
     function getClientId() {
-      let cid = localStorage.getItem('neng_eva_client_id');
+      let cid = safeGetStorage('neng_eva_client_id');
       if (!cid) {
         cid = 'dash_' + Math.random().toString(36).substring(2, 12);
-        localStorage.setItem('neng_eva_client_id', cid);
+        safeSetStorage('neng_eva_client_id', cid);
       }
       return cid;
     }
 
     async function callApi(action, ...args) {
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action, args })
-      });
+      if (window.location && window.location.protocol === 'file:') {
+        throw new Error('Aplikasi tidak dapat dibuka dari file lokal. Buka menggunakan tautan HTTPS asli di Safari.');
+      }
+
+      let response;
+      try {
+        response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action, args })
+        });
+      } catch (networkErr) {
+        throw new Error(
+          'Gagal terhubung ke server (' + (networkErr && networkErr.message ? networkErr.message : 'Network error') +
+          '). Jika menggunakan Safari di iPhone/iPad/Mac, buka tautan asli langsung di aplikasi Safari dan pastikan pemblokir pelacakan/iklan tidak memblokir script.google.com.'
+        );
+      }
 
       if (!response.ok) {
         throw new Error('Failed to connect to the server (' + response.status + ').');
@@ -1509,8 +1638,8 @@
       return data;
     }
 
-    function showLoading(text = 'Loading...') {
-      $('loadingText').textContent = text;
+    function showLoading(text) {
+      $('loadingText').textContent = text || 'Loading...';
       $('loadingOverlay').classList.remove('hidden');
     }
 
@@ -1527,36 +1656,36 @@
       toastTimer = setTimeout(() => el.classList.add('hidden'), 3200);
     }
 
-    function escapeHtml(str) {
-      return String(str ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
-    function escapeJsAttr(str) {
-      return String(str ?? '')
-        .replace(/\\/g, '\\\\')
-        .replace(/'/g, "\\'")
-        .replace(/"/g, '&quot;');
-    }
-
     function stripMediaTags(text) {
-      return String(text || '')
+      return normalizeApostrophes(text || '')
         .replace(/\[IMG:\s*[^\]]+\]/gi, '[Image]')
         .replace(/\[AUDIO:\s*[^\]]+\]/gi, '[Audio]')
         .replace(/\[(?:HEADER:\s*)?[^\]]+\]/gi, '')
+        .replace(/<\/?(?:b|strong|u|i|em)>/gi, '')
+        .replace(/\[\/?(?:b|u|i)\]/gi, '')
+        .replace(/\*\*([^\*\n]+?)\*\*/g, '$1')
+        .replace(/(^|[^_])__([^_\n](?:[^_\n]|_[^_\n])*?)__(?=[^_]|$)/g, '$1$2')
         .trim();
     }
 
     function formatRichMedia(rawText) {
       let text = escapeHtml(rawText || '');
+
+      // Restore safe bold/underline/italic markup from Google Sheets RichText or manual tags
+      text = text
+        .replace(/&lt;(\/?(?:b|strong|u|i|em))&gt;/gi, '<$1>')
+        .replace(/\[b\]([\s\S]*?)\[\/b\]/gi, '<strong>$1</strong>')
+        .replace(/\[u\]([\s\S]*?)\[\/u\]/gi, '<u>$1</u>')
+        .replace(/\[i\]([\s\S]*?)\[\/i\]/gi, '<em>$1</em>')
+        .replace(/\*\*([^\*\n]+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/(^|[^_])__([^_\n](?:[^_\n]|_[^_\n])*?)__(?=[^_]|$)/g, '$1<u>$2</u>');
+
+      // Media tags
       text = text.replace(/\[IMG:\s*(https?:\/\/[^\]]+)\]/gi, '<br><img src="$1" alt="Stimulus Image" loading="lazy"><br>');
-      text = text.replace(/\[AUDIO:\s*(https?:\/\/[^\]]+)\]/gi, '<br><audio controls src="$1"></audio><br>');
+      text = text.replace(/\[AUDIO:\s*(https?:\/\/[^\]]+)\]/gi, '<br><audio controls preload="none" src="$1"></audio><br>');
       text = text.replace(/(^|\s)(https?:\/\/\S+\.(?:png|jpe?g|gif|webp)(?:\?\S*)?)/gi, '$1<br><img src="$2" alt="Image" loading="lazy"><br>');
-      text = text.replace(/(^|\s)(https?:\/\/\S+\.(?:mp3|wav|ogg|m4a)(?:\?\S*)?)/gi, '$1<br><audio controls src="$2"></audio><br>');
+      text = text.replace(/(^|\s)(https?:\/\/\S+\.(?:mp3|wav|ogg|m4a)(?:\?\S*)?)/gi, '$1<br><audio controls preload="none" src="$2"></audio><br>');
+
       return text;
     }
 
@@ -1564,7 +1693,7 @@
       let activePassage = '';
       return (questions || []).map((q) => {
         const copy = Object.assign({}, q);
-        const raw = String(copy.teksBacaan || '').trim();
+        const raw = normalizeApostrophes(copy.teksBacaan).trim();
         if (raw === '-' || raw.toUpperCase() === 'NONE' || raw.toUpperCase() === 'NO PASSAGE') {
           activePassage = '';
           copy._passage = '';
@@ -1608,23 +1737,23 @@
       showLoading('Checking dashboard access...');
       try {
         const authRes = await callApi('checkDashboardAuthMode');
-        dashState.requirePin = !!authRes.requirePin;
+        dashState.requirePin = Boolean(authRes.requirePin);
 
         if (!dashState.requirePin && authRes.token) {
           dashState.token = authRes.token;
-          localStorage.setItem('neng_eva_teacher_token', authRes.token);
+          safeSetStorage('neng_eva_teacher_token', authRes.token);
           await enterWorkspace();
           return;
         }
 
-        const savedToken = localStorage.getItem('neng_eva_teacher_token');
+        const savedToken = safeGetStorage('neng_eva_teacher_token');
         if (savedToken) {
           dashState.token = savedToken;
           try {
             await enterWorkspace();
             return;
           } catch (e) {
-            localStorage.removeItem('neng_eva_teacher_token');
+            safeRemoveStorage('neng_eva_teacher_token');
             dashState.token = '';
           }
         }
@@ -1637,7 +1766,7 @@
       }
     }
 
-    function showLoginView(errMsg = '') {
+    function showLoginView(errMsg) {
       $('dashboardSection').classList.add('hidden');
       $('btnToggleCharts').classList.add('hidden');
       $('btnRefresh').classList.add('hidden');
@@ -1654,7 +1783,7 @@
     }
 
     function handleSessionExpired() {
-      localStorage.removeItem('neng_eva_teacher_token');
+      safeRemoveStorage('neng_eva_teacher_token');
       dashState.token = '';
       showLoginView('Your session has expired. Please log in again.');
     }
@@ -1669,7 +1798,7 @@
       try {
         const res = await callApi('teacherLogin', pin, getClientId());
         dashState.token = res.token;
-        localStorage.setItem('neng_eva_teacher_token', res.token);
+        safeSetStorage('neng_eva_teacher_token', res.token);
         $('inputTeacherPin').value = '';
         await enterWorkspace();
       } catch (err) {
@@ -1684,7 +1813,7 @@
       try {
         if (dashState.token) await callApi('teacherLogout', dashState.token);
       } catch (e) {}
-      localStorage.removeItem('neng_eva_teacher_token');
+      safeRemoveStorage('neng_eva_teacher_token');
       dashState.token = '';
       showLoginView('You have logged out of NEng Eva Dashboard.');
     }
@@ -1696,7 +1825,7 @@
       $('btnRefresh').classList.remove('hidden');
       $('btnLogout').classList.toggle('hidden', !dashState.requirePin);
 
-      const chartsHidden = localStorage.getItem('neng_eva_hide_charts') === '1';
+      const chartsHidden = safeGetStorage('neng_eva_hide_charts') === '1';
       $('chartsRowSection').classList.toggle('hidden', chartsHidden);
       $('btnToggleCharts').textContent = chartsHidden ? 'Show Charts' : 'Hide Charts';
 
@@ -1823,14 +1952,14 @@
     function applyFiltersAndRender() {
       const paketFilter = $('filterPaket').value;
       const kelasFilter = $('filterKelas').value;
-      const searchFilter = $('filterSearch').value.trim().toLowerCase();
+      const searchFilter = normalizeApostrophes($('filterSearch').value).trim().toLowerCase();
       const statusFilter = $('filterStatus').value;
       const attemptMode = $('filterAttemptMode').value;
 
       let rows = dashState.rawRows.filter(r => {
         if (paketFilter && r.paketId !== paketFilter) return false;
         if (kelasFilter && r.kelas !== kelasFilter) return false;
-        if (searchFilter && !r.namaSiswa.toLowerCase().includes(searchFilter)) return false;
+        if (searchFilter && normalizeApostrophes(r.namaSiswa).toLowerCase().indexOf(searchFilter) === -1) return false;
         if (statusFilter && r.status !== statusFilter) return false;
         return true;
       });
@@ -2307,11 +2436,15 @@
         grouped[cls].forEach((n, i) => { text += `${i + 1}. ${n}\n`; });
       });
 
-      navigator.clipboard.writeText(text).then(() => {
-        showToast('Student list copied to clipboard.');
-      }).catch(() => {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast('Student list copied to clipboard.');
+        }).catch(() => {
+          alert(text);
+        });
+      } else {
         alert(text);
-      });
+      }
     }
 
     // =========================================================================
@@ -2409,11 +2542,11 @@
     // =========================================================================
     function getExpectedKeyLetters(q) {
       const t = String(q.tipeSoal || '').toUpperCase();
-      const k = String(q.kunciJawaban || '').trim().toUpperCase();
+      const k = normalizeApostrophes(q.kunciJawaban).trim().toUpperCase();
       if (!k) return [];
       if (t === 'BS') {
-        if (['A', 'TRUE', 'BENAR', '1', 'T'].includes(k)) return ['A'];
-        if (['B', 'FALSE', 'SALAH', '0', 'F'].includes(k)) return ['B'];
+        if (['A', 'TRUE', 'BENAR', '1', 'T'].indexOf(k) !== -1) return ['A'];
+        if (['B', 'FALSE', 'SALAH', '0', 'F'].indexOf(k) !== -1) return ['B'];
         return [];
       }
       if (t === 'PGK') {
@@ -2516,7 +2649,7 @@
           }
 
           if (t === 'IS') {
-            const rawAns = String(det.studentAns || '').trim() || '(Unanswered)';
+            const rawAns = normalizeApostrophes(det.studentAns).trim() || '(Unanswered)';
             const normKey = rawAns.toLowerCase();
             const cur = shortAnsMap.get(normKey) || { text: rawAns, count: 0, correct: det.score >= 1 };
             cur.count++;
@@ -2564,17 +2697,17 @@
         let hasDominantDistractor = false;
         const activeLetters = t === 'BS'
           ? ['A', 'B']
-          : ((optionCounts.E > 0 || keyLetters.includes('E') || (q.options && q.options.E && q.options.E !== '-'))
+          : ((optionCounts.E > 0 || keyLetters.indexOf('E') !== -1 || (q.options && q.options.E && q.options.E !== '-'))
               ? ['A', 'B', 'C', 'D', 'E']
               : ['A', 'B', 'C', 'D']);
 
-        if (count > 0 && ['PG', 'PGK', 'BS', 'MENJODOHKAN'].includes(t)) {
+        if (count > 0 && ['PG', 'PGK', 'BS', 'MENJODOHKAN'].indexOf(t) !== -1) {
           const minKeyCount = keyLetters.length > 0
-            ? Math.min(...keyLetters.map(k => optionCounts[k] || 0))
+            ? Math.min.apply(null, keyLetters.map(k => optionCounts[k] || 0))
             : 0;
 
           activeLetters.forEach(l => {
-            if (!keyLetters.includes(l)) {
+            if (keyLetters.indexOf(l) === -1) {
               const pctOpt = (optionCounts[l] / count) * 100;
               if (count >= 5 && pctOpt < 5) hasDeadDistractor = true;
               if (t !== 'PGK' && keyLetters.length > 0 && optionCounts[l] > minKeyCount) {
@@ -2723,13 +2856,13 @@
         </div>`;
       } else {
         const minKeyCount = item.keyLetters.length > 0
-          ? Math.min(...item.keyLetters.map(k => item.optionCounts[k] || 0))
+          ? Math.min.apply(null, item.keyLetters.map(k => item.optionCounts[k] || 0))
           : 0;
 
         const cards = item.activeLetters.map(l => {
           const cnt = item.optionCounts[l] || 0;
           const pct = Math.round((cnt / item.count) * 100);
-          const isKey = item.keyLetters.includes(l);
+          const isKey = item.keyLetters.indexOf(l) !== -1;
           const isDominant = !isKey && item.tipeSoal !== 'PGK' && item.keyLetters.length > 0 && cnt > minKeyCount;
           const isDead = !isKey && item.count >= 5 && pct < 5;
 
@@ -2828,7 +2961,7 @@
               <thead>
                 <tr>
                   <th>${escapeHtml(firstColTitle)}</th>
-                  ${colLabels.map(lbl => `<th style="text-align:center;">${escapeHtml(lbl)}</th>`).join('')}
+                  ${colLabels.map(lbl => `<th style="text-align:center;">${formatRichMedia(lbl)}</th>`).join('')}
                 </tr>
               </thead>
               <tbody>
@@ -2862,7 +2995,7 @@
         const optHtml = letters.map(l => {
           const val = String(opts[l] || '').trim();
           if (!val || val === '-') return '';
-          const isKey = item.keyLetters.includes(l);
+          const isKey = item.keyLetters.indexOf(l) !== -1;
           const pickCount = item.optionCounts[l] || 0;
           const pickPct = item.count > 0 ? Math.round((pickCount / item.count) * 100) : 0;
           return `
@@ -2924,7 +3057,7 @@
         'Opt_A', 'Opt_B', 'Opt_C', 'Opt_D', 'Opt_E', 'Unanswered',
         'Status', 'Analysis_Note'
       ];
-      const escCsv = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
+      const escCsv = (val) => `"${String(val === null || val === undefined ? '' : val).replace(/"/g, '""')}"`;
 
       const lines = [headers.join(',')];
       list.forEach(it => {
@@ -3062,7 +3195,7 @@
             <thead>
               <tr>
                 <th>${escapeHtml(firstColTitle)}</th>
-                ${colLabels.map(lbl => `<th style="text-align:center;">${escapeHtml(lbl)}</th>`).join('')}
+                ${colLabels.map(lbl => `<th style="text-align:center;">${formatRichMedia(lbl)}</th>`).join('')}
               </tr>
             </thead>
             <tbody>
@@ -3156,7 +3289,6 @@
         return;
       }
 
-      // Group consecutive questions that share the exact same passage
       const groups = [];
       let passageCounter = 0;
       displayedQs.forEach(q => {
@@ -3224,11 +3356,11 @@
             const letters = q.tipeSoal === 'BS' ? ['A', 'B'] : ['A', 'B', 'C', 'D', 'E'];
             const validOptions = letters.map(l => {
               const val = String((q.options && q.options[l]) || (q.tipeSoal === 'BS' ? (l === 'A' ? 'True' : 'False') : '')).trim();
-              return { letter: l, val, isKey: keyLetters.includes(l) };
+              return { letter: l, val, isKey: keyLetters.indexOf(l) !== -1 };
             }).filter(o => o.val && o.val !== '-');
 
             const useTwoCol = validOptions.length >= 2 && validOptions.every(o =>
-              o.val.length <= 68 && !/\[(?:IMG|AUDIO):|https?:\/\/\S+\.(?:png|jpe?g|gif|webp|mp3|wav|ogg|m4a)/i.test(o.val)
+              stripMediaTags(o.val).length <= 68 && !/\[(?:IMG|AUDIO):|https?:\/\/\S+\.(?:png|jpe?g|gif|webp|mp3|wav|ogg|m4a)/i.test(o.val)
             );
 
             const optsHtml = validOptions.map(o => `
@@ -3279,7 +3411,7 @@
       }).join('');
     }
 
-    async function openPackagePreview(paketId, fresh = false) {
+    async function openPackagePreview(paketId, fresh) {
       dashState.currentPreviewPaketId = paketId;
       $('previewPanel').classList.remove('hidden');
       $('previewTitle').textContent = `Loading Preview (${paketId})...`;
@@ -3288,7 +3420,7 @@
       $('previewQuestionsList').innerHTML = '<div style="color:var(--text-muted); padding:14px;">Fetching questions and answer keys...</div>';
 
       try {
-        const res = await callApi('getPaketPreview', dashState.token, paketId, fresh);
+        const res = await callApi('getPaketPreview', dashState.token, paketId, Boolean(fresh));
         const questions = resolveQuestionPassages(res.questions || []);
         dashState.previewData = {
           paket: res.paket || { id: paketId, name: getPackageName(paketId) },
@@ -3303,30 +3435,48 @@
     }
 
     // =========================================================================
-    // TAB 6: PIN SECURITY & QUESTION BANK VALIDATOR
+    // TAB 6: PIN SECURITY, ANSWER KEY TOGGLE & QUESTION BANK VALIDATOR
     // =========================================================================
+    function updateHideKeyToggleLabel() {
+      const isHiddenFromStudents = $('settingHideAnswerKey').checked;
+      const statusEl = $('hideKeyStatusText');
+      if (isHiddenFromStudents) {
+        statusEl.style.color = 'var(--teal-dark)';
+        statusEl.innerHTML = 'Active (ON) &mdash; Answer keys &amp; explanations are <strong>HIDDEN</strong> from students.';
+      } else {
+        statusEl.style.color = 'var(--danger)';
+        statusEl.innerHTML = 'Off (OFF) &mdash; Answer keys &amp; explanations are <strong>SHOWN</strong> to students after submission.';
+      }
+    }
+
     function syncSecurityUI() {
       $('settingStudentPin').value = dashState.security.requireStudentPin === 'YES' ? 'YES' : 'NO';
       $('settingTeacherPin').value = dashState.security.requireTeacherPin === 'NO' ? 'NO' : 'YES';
       $('pinCoverageBadge').textContent =
         `Valid 6-digit birth-date PIN coverage: ${dashState.security.validPinCount} of ${dashState.security.totalStudentCount} student(s) in Data_Siswa.`;
+
+      const showKeyMode = String(dashState.security.showKey || 'HIDE').trim().toUpperCase();
+      $('settingHideAnswerKey').checked = (showKeyMode !== 'SHOW' && showKeyMode !== 'ALWAYS' && showKeyMode !== 'YES');
+      updateHideKeyToggleLabel();
     }
 
     async function saveSecuritySettings() {
       const reqStudent = $('settingStudentPin').value;
       const reqTeacher = $('settingTeacherPin').value;
+      const showKeyMode = $('settingHideAnswerKey').checked ? 'HIDE' : 'SHOW';
 
       showLoading('Saving security settings...');
       try {
-        const res = await callApi('updateSecuritySettings', dashState.token, reqStudent, reqTeacher);
+        const res = await callApi('updateSecuritySettings', dashState.token, reqStudent, reqTeacher, showKeyMode);
         dashState.security.requireStudentPin = res.settings.REQUIRE_STUDENT_PIN;
         dashState.security.requireTeacherPin = res.settings.REQUIRE_TEACHER_PIN;
+        dashState.security.showKey = res.settings.SHOW_KEY;
         if (res.pinCoverage) {
           dashState.security.validPinCount = res.pinCoverage.valid;
           dashState.security.totalStudentCount = res.pinCoverage.total;
         }
         syncSecurityUI();
-        showToast('PIN security settings saved.');
+        showToast('Security & student portal settings saved.');
       } catch (err) {
         alert(err.message);
       } finally {
@@ -3371,7 +3521,7 @@
         'Status', 'Duration_Min', 'Tab_Switches'
       ];
 
-      const escCsv = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
+      const escCsv = (val) => `"${String(val === null || val === undefined ? '' : val).replace(/"/g, '""')}"`;
 
       const lines = [headers.join(',')];
       rows.forEach(r => {
@@ -3417,9 +3567,7 @@
     $('btnToggleCharts').addEventListener('click', () => {
       const isNowHidden = $('chartsRowSection').classList.toggle('hidden');
       $('btnToggleCharts').textContent = isNowHidden ? 'Show Charts' : 'Hide Charts';
-      try {
-        localStorage.setItem('neng_eva_hide_charts', isNowHidden ? '1' : '0');
-      } catch (e) {}
+      safeSetStorage('neng_eva_hide_charts', isNowHidden ? '1' : '0');
     });
 
     $('loginForm').addEventListener('submit', handleLoginSubmit);
@@ -3456,7 +3604,7 @@
           dashState.sortDir = dashState.sortDir === 'asc' ? 'desc' : 'asc';
         } else {
           dashState.sortField = field;
-          dashState.sortDir = ['name', 'kelas', 'paketId', 'durasi'].includes(field) ? 'asc' : 'desc';
+          dashState.sortDir = ['name', 'kelas', 'paketId', 'durasi'].indexOf(field) !== -1 ? 'asc' : 'desc';
         }
         applyFiltersAndRender();
       });
@@ -3496,6 +3644,7 @@
       $('previewPanel').classList.add('hidden');
     });
 
+    $('settingHideAnswerKey').addEventListener('change', updateHideKeyToggleLabel);
     $('btnSaveSecurity').addEventListener('click', saveSecuritySettings);
     $('btnRunValidation').addEventListener('click', runBankValidation);
 
