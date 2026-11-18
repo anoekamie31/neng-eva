@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard Guru — NEng Eva</title>
+  <title>Instructor Dashboard — NEng Eva</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -51,7 +51,7 @@
       z-index: 30;
     }
     .topbar-inner {
-      max-width: 1280px;
+      max-width: 1320px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -79,7 +79,7 @@
     /* CONTAINER & CARDS */
     .container {
       width: 100%;
-      max-width: 1280px;
+      max-width: 1320px;
       margin: 0 auto;
       padding: 22px 16px 56px;
       flex: 1;
@@ -291,15 +291,15 @@
       font-weight: 800;
       white-space: nowrap;
     }
-    .badge-lulus { background: var(--success-soft); color: var(--success); }
-    .badge-remedi { background: var(--danger-soft); color: var(--danger); }
+    .badge-passed { background: var(--success-soft); color: var(--success); }
+    .badge-remedial { background: var(--danger-soft); color: var(--danger); }
     .badge-warn { background: var(--warning-soft); color: var(--warning); }
     .badge-neutral { background: #f1f5f9; color: #475569; }
     .badge-primary { background: var(--primary-soft); color: var(--primary); }
 
-    /* PROGRESS BAR DIFFICULTY */
+    /* DIFFICULTY BAR & ITEM ANALYSIS */
     .diff-bar {
-      width: 90px;
+      width: 84px;
       height: 8px;
       background: #e2e8f0;
       border-radius: 999px;
@@ -309,7 +309,7 @@
       margin-right: 6px;
     }
     .diff-fill { height: 100%; background: var(--primary); }
-    /* ANALISIS BUTIR LANJUTAN */
+
     .analysis-summary-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -341,7 +341,7 @@
     }
     .distractor-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
       gap: 10px;
       margin-top: 10px;
     }
@@ -373,9 +373,6 @@
     }
     .dist-box.is-key .dist-bar-fill { background: var(--success); }
     .dist-box.is-danger .dist-bar-fill { background: var(--danger); }
-    @media (max-width: 768px) {
-      .analysis-summary-grid { grid-template-columns: 1fr; }
-    }
 
     /* SETTINGS GRID */
     .settings-grid {
@@ -393,7 +390,7 @@
     .setting-row h4 { font-size: 14px; font-weight: 800; margin-bottom: 4px; }
     .setting-row p { font-size: 12.5px; color: var(--muted); margin-bottom: 10px; }
 
-    /* PREVIEW ITEM */
+    /* PREVIEW & RICH MEDIA */
     .preview-q {
       border: 1px solid var(--border);
       border-radius: 11px;
@@ -402,19 +399,41 @@
       background: #fff;
     }
     .preview-q.has-issue { border-left: 4px solid var(--danger); }
+    .passage-preview-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 13px 15px;
+      margin-bottom: 14px;
+      font-size: 14px;
+      color: #1e293b;
+      white-space: pre-line;
+    }
+    .passage-preview-box img, .stem-preview-box img, .opt-pill img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin: 8px auto;
+      border: 1px solid var(--border);
+    }
+    .passage-preview-box audio, .stem-preview-box audio {
+      width: 100%;
+      margin: 8px 0;
+    }
     .opt-pill {
-      display: inline-block;
-      padding: 4px 10px;
-      margin: 3px 5px 3px 0;
-      border-radius: 7px;
-      font-size: 12.5px;
+      display: block;
+      padding: 9px 12px;
+      margin-bottom: 7px;
+      border-radius: 9px;
+      font-size: 13.5px;
       border: 1px solid var(--border);
       background: #f8fafc;
     }
     .opt-pill.is-key {
       background: var(--success-soft);
       border-color: #6ee7b7;
-      color: var(--success);
+      color: #065f46;
       font-weight: 700;
     }
 
@@ -433,9 +452,9 @@
       background: #fff;
       border-radius: 16px;
       padding: 22px;
-      max-width: 680px;
+      max-width: 780px;
       width: 100%;
-      max-height: 88vh;
+      max-height: 90vh;
       overflow-y: auto;
       box-shadow: 0 20px 45px rgba(0, 0, 0, 0.22);
     }
@@ -468,6 +487,7 @@
       .filter-grid { grid-template-columns: repeat(2, 1fr); }
       .kpi-grid { grid-template-columns: repeat(2, 1fr); }
       .settings-grid { grid-template-columns: 1fr; }
+      .analysis-summary-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -479,33 +499,33 @@
       <div class="brand">
         <div class="brand-logo">NE</div>
         <div>
-          <div class="brand-title">Dashboard Guru — NEng Eva</div>
-          <div class="brand-sub">Monitoring Hasil, Analisis Soal & Pengaturan PIN</div>
+          <div class="brand-title">Instructor Dashboard — NEng Eva</div>
+          <div class="brand-sub">Assessment Monitoring, Item Psychometrics & Security Settings</div>
         </div>
       </div>
       <div class="top-actions">
-        <button type="button" id="btnRefresh" class="btn btn-outline hidden">Muat Ulang Data</button>
-        <a href="index.html" class="btn btn-outline">Halaman Siswa</a>
-        <button type="button" id="btnLogout" class="btn btn-danger-soft hidden">Keluar</button>
+        <button type="button" id="btnRefresh" class="btn btn-outline hidden">Refresh Data</button>
+        <a href="index.html" class="btn btn-outline">Candidate Portal</a>
+        <button type="button" id="btnLogout" class="btn btn-danger-soft hidden">Sign Out</button>
       </div>
     </div>
   </header>
 
   <main class="container">
 
-    <!-- 1. LOGIN GURU -->
+    <!-- 1. INSTRUCTOR LOGIN -->
     <section id="loginSection" class="login-wrap hidden">
       <div class="card">
-        <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">Akses Dashboard Guru</h2>
+        <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">Instructor Dashboard Access</h2>
         <p style="font-size: 13.5px; color: var(--muted); margin-bottom: 18px;">
-          Masukkan PIN Guru untuk membuka rekap nilai dan pengaturan evaluasi.
+          Enter your Instructor PIN to access assessment records, psychometric analysis, and system configuration.
         </p>
 
         <div id="loginError" class="alert-error hidden"></div>
 
         <form id="loginForm">
           <div style="margin-bottom: 16px;">
-            <label class="filter-label" for="inputTeacherPin">PIN Guru</label>
+            <label class="filter-label" for="inputTeacherPin">Instructor PIN</label>
             <input
               type="password"
               id="inputTeacherPin"
@@ -515,222 +535,222 @@
               required
             />
           </div>
-          <button type="submit" id="btnTeacherLogin" class="btn btn-primary btn-block">Masuk ke Dashboard</button>
+          <button type="submit" id="btnTeacherLogin" class="btn btn-primary btn-block">Sign In to Dashboard</button>
         </form>
       </div>
     </section>
 
-    <!-- 2. WORKSPACE DASHBOARD -->
+    <!-- 2. DASHBOARD WORKSPACE -->
     <section id="dashboardSection" class="hidden">
 
-      <!-- FILTER GLOBAL -->
+      <!-- GLOBAL FILTERS -->
       <div class="card">
         <div class="filter-grid">
           <div>
-            <label class="filter-label" for="filterPaket">Paket Evaluasi</label>
+            <label class="filter-label" for="filterPaket">Assessment Package</label>
             <select id="filterPaket" class="form-control">
-              <option value="">Semua Paket</option>
+              <option value="">All Packages</option>
             </select>
           </div>
           <div>
-            <label class="filter-label" for="filterKelas">Kelas</label>
+            <label class="filter-label" for="filterKelas">Class</label>
             <select id="filterKelas" class="form-control">
-              <option value="">Semua Kelas</option>
+              <option value="">All Classes</option>
             </select>
           </div>
           <div>
-            <label class="filter-label" for="filterDays">Rentang Waktu</label>
+            <label class="filter-label" for="filterDays">Time Range</label>
             <select id="filterDays" class="form-control">
-              <option value="0">Semua Waktu</option>
-              <option value="1">24 Jam Terakhir</option>
-              <option value="7">7 Hari Terakhir</option>
-              <option value="30">30 Hari Terakhir</option>
+              <option value="0">All Time</option>
+              <option value="1">Last 24 Hours</option>
+              <option value="7">Last 7 Days</option>
+              <option value="30">Last 30 Days</option>
             </select>
           </div>
           <div>
-            <label class="filter-label" for="filterSearch">Cari Nama Siswa</label>
-            <input type="text" id="filterSearch" class="form-control" placeholder="Ketik nama siswa..." />
+            <label class="filter-label" for="filterSearch">Search Student Name</label>
+            <input type="text" id="filterSearch" class="form-control" placeholder="Type student name..." />
           </div>
           <div>
-            <button type="button" id="btnExportCsv" class="btn btn-success btn-block">Export CSV</button>
+            <button type="button" id="btnExportCsv" class="btn btn-success btn-block">Export Results (CSV)</button>
           </div>
         </div>
       </div>
 
-      <!-- KPI RINGKASAN -->
+      <!-- KPI SUMMARY CARDS -->
       <div class="kpi-grid">
         <div class="kpi-card">
-          <div class="kpi-title">Total Pengerjaan</div>
+          <div class="kpi-title">Total Submissions</div>
           <div class="kpi-value" id="kpiTotalAttempts">0</div>
-          <div class="kpi-sub">Sesi terkumpul</div>
+          <div class="kpi-sub">Recorded attempts</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-title">Siswa Sudah Mengerjakan</div>
+          <div class="kpi-title">Students Completed</div>
           <div class="kpi-value" id="kpiUniqueDone">0</div>
-          <div class="kpi-sub" id="kpiTotalStudentsSub">Dari 0 terdaftar</div>
+          <div class="kpi-sub" id="kpiTotalStudentsSub">Out of 0 registered</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-title">Belum Mengerjakan</div>
+          <div class="kpi-title">Pending Completion</div>
           <div class="kpi-value" style="color: var(--warning);" id="kpiNotDone">0</div>
-          <div class="kpi-sub" id="kpiMissingSub">Pilih paket untuk rincian</div>
+          <div class="kpi-sub" id="kpiMissingSub">Select package for details</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-title">Rata-Rata Skor Akhir</div>
+          <div class="kpi-title">Mean Final Score</div>
           <div class="kpi-value" style="color: var(--primary);" id="kpiAvgScore">0</div>
-          <div class="kpi-sub">Skala 0 – 100</div>
+          <div class="kpi-sub">Scale 0 – 100</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-title">Ketuntasan (Lulus KKM)</div>
+          <div class="kpi-title">Passing Rate</div>
           <div class="kpi-value" style="color: var(--success);" id="kpiPassRate">0%</div>
-          <div class="kpi-sub" id="kpiKkmInfo">Target KKM: 80</div>
+          <div class="kpi-sub" id="kpiKkmInfo">Passing Score: 80</div>
         </div>
       </div>
 
-      <!-- NAVIGASI TAB -->
+      <!-- NAVIGATION TABS -->
       <div class="tabs-bar">
-        <button type="button" class="tab-btn active" data-tab="results">Hasil Evaluasi</button>
+        <button type="button" class="tab-btn active" data-tab="results">Assessment Results</button>
         <button type="button" class="tab-btn" data-tab="missing">
-          Belum Mengerjakan <span class="tab-badge tab-badge-warn" id="badgeMissingCount">0</span>
+          Pending Students <span class="tab-badge tab-badge-warn" id="badgeMissingCount">0</span>
         </button>
         <button type="button" class="tab-btn" data-tab="active">
-          Sedang Mengerjakan <span class="tab-badge tab-badge-live" id="badgeActiveCount">0</span>
+          Active Sessions <span class="tab-badge tab-badge-live" id="badgeActiveCount">0</span>
         </button>
-        <button type="button" class="tab-btn" data-tab="analysis">Analisis Butir Soal</button>
-        <button type="button" class="tab-btn" data-tab="packages">Kelola & Pratinjau Paket</button>
-        <button type="button" class="tab-btn" data-tab="settings">Pengaturan PIN & Validator</button>
+        <button type="button" class="tab-btn" data-tab="analysis">Item Analysis</button>
+        <button type="button" class="tab-btn" data-tab="packages">Package Management & Preview</button>
+        <button type="button" class="tab-btn" data-tab="settings">PIN Security & Validator</button>
       </div>
 
-      <!-- TAB 1: HASIL EVALUASI -->
+      <!-- TAB 1: ASSESSMENT RESULTS -->
       <div id="tab-results" class="card tab-panel">
         <div class="table-toolbar">
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
             <select id="filterStatus" class="form-control" style="width: auto;">
-              <option value="">Semua Status</option>
-              <option value="LULUS">LULUS KKM</option>
-              <option value="REMEDI">REMEDI</option>
+              <option value="">All Statuses</option>
+              <option value="PASSED">PASSED</option>
+              <option value="REMEDIAL">REMEDIAL</option>
             </select>
             <select id="filterAttemptMode" class="form-control" style="width: auto;">
-              <option value="ALL">Tampilkan Semua Percobaan</option>
-              <option value="LATEST">Hanya Percobaan Terakhir per Siswa</option>
+              <option value="ALL">Show All Attempts</option>
+              <option value="LATEST">Latest Attempt per Student Only</option>
             </select>
           </div>
-          <div style="font-size: 13px; color: var(--muted); font-weight: 600;" id="resultsCountLabel">0 data ditampilkan</div>
+          <div style="font-size: 13px; color: var(--muted); font-weight: 600;" id="resultsCountLabel">0 records displayed</div>
         </div>
 
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Waktu</th>
-                <th>Kelas</th>
-                <th>Nama Siswa</th>
-                <th>Paket</th>
-                <th>Ke-</th>
-                <th>Benar</th>
-                <th>Mentah</th>
-                <th>Skor Akhir</th>
+                <th>Timestamp</th>
+                <th>Class</th>
+                <th>Student Name</th>
+                <th>Package</th>
+                <th>Attempt</th>
+                <th>Correct</th>
+                <th>Raw</th>
+                <th>Final Score</th>
                 <th>Status</th>
-                <th>Durasi</th>
-                <th>Tab</th>
-                <th>Aksi</th>
+                <th>Duration</th>
+                <th>Tabs</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody id="resultsTableBody">
-              <tr><td colspan="12" style="text-align:center; color:var(--muted); padding:24px;">Memuat data hasil...</td></tr>
+              <tr><td colspan="12" style="text-align:center; color:var(--muted); padding:24px;">Loading assessment records...</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- TAB 2: SISWA BELUM MENGERJAKAN -->
+      <!-- TAB 2: PENDING STUDENTS -->
       <div id="tab-missing" class="card tab-panel hidden">
         <div class="table-toolbar">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-            <label class="filter-label" style="margin:0;">Cek Paket:</label>
+            <label class="filter-label" style="margin:0;">Inspect Package:</label>
             <select id="missingPaketSelect" class="form-control" style="width: auto; min-width: 220px;">
-              <option value="">-- Pilih Paket Evaluasi --</option>
+              <option value="">-- Select Assessment Package --</option>
             </select>
           </div>
-          <button type="button" id="btnCopyMissing" class="btn btn-outline">Salin Daftar (Format WA)</button>
+          <button type="button" id="btnCopyMissing" class="btn btn-outline">Copy Roster (WhatsApp Format)</button>
         </div>
 
         <div id="missingNotice" class="info-banner">
-          Pilih salah satu <strong>Paket Evaluasi</strong> di atas (atau pada filter utama) untuk melihat daftar siswa yang belum mengumpulkan jawaban pada paket tersebut.
+          Select an <strong>Assessment Package</strong> above (or in the primary filter bar) to list registered students who have not yet submitted responses for that package.
         </div>
 
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th style="width: 60px;">No</th>
-                <th>Kelas</th>
-                <th>Nama Siswa</th>
-                <th>Paket Evaluasi</th>
+                <th style="width: 60px;">No.</th>
+                <th>Class</th>
+                <th>Student Name</th>
+                <th>Assessment Package</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody id="missingTableBody">
-              <tr><td colspan="5" style="text-align:center; color:var(--muted); padding:24px;">Silakan pilih paket evaluasi terlebih dahulu.</td></tr>
+              <tr><td colspan="5" style="text-align:center; color:var(--muted); padding:24px;">Please select an assessment package first.</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- TAB 3: SEDANG MENGERJAKAN (LIVE SESSIONS) -->
+      <!-- TAB 3: ACTIVE SESSIONS -->
       <div id="tab-active" class="card tab-panel hidden">
         <div class="table-toolbar">
           <div style="font-size: 13.5px; color: var(--muted);">
-            Menampilkan siswa yang telah membuka soal namun belum menekan tombol kumpulkan.
+            Displays candidates who have opened an assessment package and are currently in progress.
           </div>
-          <button type="button" id="btnRefreshActive" class="btn btn-outline">Segarkan Sesi Aktif</button>
+          <button type="button" id="btnRefreshActive" class="btn btn-outline">Refresh Active Sessions</button>
         </div>
 
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Kelas</th>
-                <th>Nama Siswa</th>
-                <th>ID Paket</th>
-                <th>Waktu Berjalan</th>
+                <th>Class</th>
+                <th>Student Name</th>
+                <th>Package ID</th>
+                <th>Elapsed Time</th>
               </tr>
             </thead>
             <tbody id="activeSessionsBody">
-              <tr><td colspan="4" style="text-align:center; color:var(--muted); padding:24px;">Tidak ada siswa yang sedang mengerjakan saat ini.</td></tr>
+              <tr><td colspan="4" style="text-align:center; color:var(--muted); padding:24px;">No candidates are currently taking an assessment.</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- TAB 4: ANALISIS BUTIR SOAL -->
+      <!-- TAB 4: ITEM ANALYSIS (WITH ITEM PREVIEW & PSYCHOMETRICS) -->
       <div id="tab-analysis" class="card tab-panel hidden">
         <div class="table-toolbar">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-            <label class="filter-label" style="margin:0;">Basis Data:</label>
+            <label class="filter-label" style="margin:0;">Calculation Basis:</label>
             <select id="analysisAttemptBasis" class="form-control" style="width: auto;">
-              <option value="FIRST">Percobaan Ke-1 Saja (Murni)</option>
-              <option value="LATEST">Percobaan Terakhir per Siswa</option>
-              <option value="ALL">Semua Percobaan</option>
+              <option value="FIRST">First Attempt Only (Unbiased Baseline)</option>
+              <option value="LATEST">Latest Attempt per Student</option>
+              <option value="ALL">All Attempts</option>
             </select>
           </div>
-          <button type="button" id="btnExportAnalysisCsv" class="btn btn-outline">Export CSV Analisis Butir</button>
+          <button type="button" id="btnExportAnalysisCsv" class="btn btn-outline">Export Item Analysis (CSV)</button>
         </div>
 
         <div id="analysisNotice" class="info-banner">
-          Pilih satu <strong>Paket Evaluasi</strong> pada filter di atas untuk melihat analisis tingkat kesukaran, daya pembeda (D), sebaran pengecoh, dan rekomendasi butir soal.
+          Select a specific <strong>Assessment Package</strong> in the primary filter bar above to inspect item difficulty (P), discrimination index (D), distractor distribution, and full item previews.
         </div>
 
         <div id="analysisSummaryGrid" class="analysis-summary-grid hidden">
           <div class="analysis-sum-card" style="border-left: 4px solid var(--success);">
-            <span>Layak Simpan</span>
+            <span>Retain Item (Valid)</span>
             <strong id="sumLayakCount" style="color: var(--success);">0</strong>
           </div>
           <div class="analysis-sum-card" style="border-left: 4px solid var(--warning);">
-            <span>Perlu Revisi (Kesukaran / Pengecoh)</span>
+            <span>Revise (Difficulty / Distractors)</span>
             <strong id="sumRevisiCount" style="color: var(--warning);">0</strong>
           </div>
           <div class="analysis-sum-card" style="border-left: 4px solid var(--danger);">
-            <span>Cek Kunci / Indikasi Ambigu</span>
+            <span>Verify Key / Ambiguous</span>
             <strong id="sumKunciCount" style="color: var(--danger);">0</strong>
           </div>
         </div>
@@ -739,109 +759,108 @@
           <table>
             <thead>
               <tr>
-                <th>No</th>
-                <th>Tipe & Kunci</th>
-                <th>Cuplikan Pertanyaan</th>
-                <th>Penjawab</th>
-                <th>Kesukaran (P)</th>
-                <th>Daya Pembeda (D)</th>
-                <th>Rekomendasi Status</th>
-                <th>Sebaran Jawaban</th>
+                <th>Item</th>
+                <th>Type & Key</th>
+                <th>Question Stem</th>
+                <th>N</th>
+                <th>Difficulty (P)</th>
+                <th>Discrimination (D)</th>
+                <th>Recommendation</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody id="analysisTableBody">
-              <tr><td colspan="8" style="text-align:center; color:var(--muted); padding:24px;">Pilih paket evaluasi terlebih dahulu.</td></tr>
+              <tr><td colspan="8" style="text-align:center; color:var(--muted); padding:24px;">Please select an assessment package first.</td></tr>
             </tbody>
           </table>
         </div>
       </div>
-      
 
-      <!-- TAB 5: KELOLA & PRATINJAU PAKET -->
+      <!-- TAB 5: PACKAGE MANAGEMENT & PREVIEW -->
       <div id="tab-packages" class="card tab-panel hidden">
         <div class="table-toolbar">
           <div style="font-size: 13.5px; color: var(--muted);">
-            Aktifkan atau nonaktifkan paket soal untuk siswa, serta pratinjau kunci jawaban dan cek kelengkapan soal.
+            Activate or deactivate assessment packages for candidates, preview full answer keys, and verify item completeness.
           </div>
-          <button type="button" id="btnReloadPackages" class="btn btn-outline">Segarkan Daftar Paket</button>
+          <button type="button" id="btnReloadPackages" class="btn btn-outline">Refresh Package List</button>
         </div>
 
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>ID Paket</th>
-                <th>Nama Paket</th>
-                <th>Jumlah Soal</th>
-                <th>Total Pengerjaan</th>
+                <th>Package ID</th>
+                <th>Package Title</th>
+                <th>Total Items</th>
+                <th>Submissions</th>
                 <th>Status</th>
-                <th>Aksi</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody id="packagesTableBody">
-              <tr><td colspan="6" style="text-align:center; color:var(--muted); padding:24px;">Memuat daftar paket...</td></tr>
+              <tr><td colspan="6" style="text-align:center; color:var(--muted); padding:24px;">Loading package list...</td></tr>
             </tbody>
           </table>
         </div>
 
-        <!-- PANEL PRATINJAU SOAL -->
+        <!-- FULL PACKAGE PREVIEW PANEL -->
         <div id="previewPanel" class="hidden" style="margin-top: 22px; padding-top: 18px; border-top: 2px solid var(--border);">
           <div class="table-toolbar">
-            <h3 id="previewTitle" style="font-size: 16px; font-weight: 800;">Pratinjau Paket</h3>
+            <h3 id="previewTitle" style="font-size: 16px; font-weight: 800;">Package Preview</h3>
             <div style="display: flex; gap: 8px;">
-              <button type="button" id="btnRefreshPreview" class="btn btn-outline btn-sm">Muat Ulang dari Sheet</button>
-              <button type="button" id="btnClosePreview" class="btn btn-danger-soft btn-sm">Tutup Pratinjau</button>
+              <button type="button" id="btnRefreshPreview" class="btn btn-outline btn-sm">Reload from Sheet</button>
+              <button type="button" id="btnClosePreview" class="btn btn-danger-soft btn-sm">Close Preview</button>
             </div>
           </div>
           <div id="previewQuestionsList"></div>
         </div>
       </div>
 
-      <!-- TAB 6: PENGATURAN PIN & VALIDATOR -->
+      <!-- TAB 6: PIN SECURITY & VALIDATOR -->
       <div id="tab-settings" class="tab-panel hidden">
         <div class="settings-grid">
-          <!-- PENGATURAN PIN SISWA & GURU -->
+          <!-- PIN ACCESS CONTROLS -->
           <div class="card" style="margin-bottom: 0;">
-            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 6px;">Pengaturan Keamanan PIN</h3>
+            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 6px;">PIN Access & Security Settings</h3>
             <p style="font-size: 13px; color: var(--muted); margin-bottom: 14px;">
-              Perubahan langsung disimpan ke tab <strong>Config</strong> di Spreadsheet dan otomatis berlaku bagi seluruh perangkat.
+              Changes are saved directly to the <strong>Config</strong> sheet and apply immediately across all devices.
             </p>
 
             <div class="setting-row">
-              <h4>1. PIN Login Siswa (Tanggal Lahir 6 Digit)</h4>
-              <p>Jika diaktifkan (<strong>YA</strong>), siswa wajib memasukkan 6 digit tanggal lahir (contoh: <code>26 Desember 2011</code> &rarr; <code>261211</code>).</p>
+              <h4>1. Candidate Login PIN (6-Digit Date of Birth)</h4>
+              <p>When enabled (<strong>YES</strong>), candidates must enter their 6-digit birth date (e.g., <code>26 December 2011</code> &rarr; <code>261211</code>).</p>
               <select id="settingStudentPin" class="form-control">
-                <option value="YA">YA — Wajibkan PIN Tanggal Lahir Siswa</option>
-                <option value="TIDAK">TIDAK — Tanpa PIN Siswa (Langsung Masuk)</option>
+                <option value="YES">YES — Require Candidate Birth-Date PIN</option>
+                <option value="NO">NO — Disable Candidate PIN (Direct Entry)</option>
               </select>
               <div style="margin-top: 8px; font-size: 12px; font-weight: 700; color: var(--primary);" id="pinCoverageBadge">
-                Memeriksa data tanggal lahir siswa...
+                Checking candidate birth-date coverage...
               </div>
             </div>
 
             <div class="setting-row">
-              <h4>2. PIN Akses Dashboard Guru</h4>
-              <p>Jika dinonaktifkan (<strong>TIDAK</strong>), halaman Dashboard Guru dapat langsung dibuka tanpa meminta PIN.</p>
+              <h4>2. Instructor Dashboard PIN</h4>
+              <p>When disabled (<strong>NO</strong>), the Instructor Dashboard opens immediately without requesting a PIN.</p>
               <select id="settingTeacherPin" class="form-control">
-                <option value="YA">YA — Kunci Dashboard dengan PIN Guru</option>
-                <option value="TIDAK">TIDAK — Buka Dashboard Tanpa PIN</option>
+                <option value="YES">YES — Protect Dashboard with Instructor PIN</option>
+                <option value="NO">NO — Open Dashboard Without PIN</option>
               </select>
             </div>
 
-            <button type="button" id="btnSaveSecurity" class="btn btn-primary btn-block">Simpan Pengaturan PIN</button>
+            <button type="button" id="btnSaveSecurity" class="btn btn-primary btn-block">Save Security Settings</button>
           </div>
 
-          <!-- VALIDATOR BANK SOAL -->
+          <!-- QUESTION BANK VALIDATOR -->
           <div class="card" style="margin-bottom: 0;">
-            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 6px;">Validator Bank Soal</h3>
+            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 6px;">Question Bank Validator</h3>
             <p style="font-size: 13px; color: var(--muted); margin-bottom: 14px;">
-              Periksa otomatis jika ada nomor soal ganda, kunci jawaban kosong, atau opsi yang belum terisi di tab <strong>Bank_Soal</strong>.
+              Automatically audit <strong>Bank_Soal</strong> for duplicate item numbers, missing answer keys, or unpopulated options.
             </p>
             <button type="button" id="btnRunValidation" class="btn btn-outline btn-block" style="margin-bottom: 14px;">
-              Jalankan Pemeriksaan Bank Soal
+              Run Question Bank Audit
             </button>
             <div id="validationResultList" style="font-size: 13px; color: var(--muted);">
-              Klik tombol di atas untuk memeriksa seluruh paket soal.
+              Click the button above to audit all assessment packages.
             </div>
           </div>
         </div>
@@ -850,17 +869,31 @@
     </section>
   </main>
 
-  <!-- MODAL DETAIL JAWABAN SISWA -->
+  <!-- MODAL: STUDENT RESPONSE DETAILS -->
   <div id="detailModal" class="overlay hidden">
     <div class="modal-box">
       <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 12px;">
         <div>
-          <h3 id="detailModalTitle" style="font-size: 17px; font-weight: 800;">Detail Jawaban Siswa</h3>
+          <h3 id="detailModalTitle" style="font-size: 17px; font-weight: 800;">Candidate Response Details</h3>
           <div id="detailModalMeta" style="font-size: 12.5px; color: var(--muted);"></div>
         </div>
-        <button type="button" id="btnCloseDetailModal" class="btn btn-outline btn-sm">Tutup</button>
+        <button type="button" id="btnCloseDetailModal" class="btn btn-outline btn-sm">Close</button>
       </div>
       <div id="detailModalBody"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: ITEM PREVIEW IN ITEM ANALYSIS -->
+  <div id="itemPreviewModal" class="overlay hidden">
+    <div class="modal-box" style="max-width: 840px;">
+      <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 14px;">
+        <div>
+          <h3 id="itemPreviewTitle" style="font-size: 17px; font-weight: 800;">Item Preview</h3>
+          <div id="itemPreviewMeta" style="font-size: 12.5px; color: var(--muted); margin-top: 2px;"></div>
+        </div>
+        <button type="button" id="btnCloseItemPreviewModal" class="btn btn-outline btn-sm">Close</button>
+      </div>
+      <div id="itemPreviewBody"></div>
     </div>
   </div>
 
@@ -868,60 +901,69 @@
   <div id="loadingOverlay" class="overlay">
     <div class="modal-box" style="max-width: 340px; text-align: center;">
       <div class="spinner"></div>
-      <div id="loadingText" style="font-weight: 700; font-size: 14px;">Memuat Dashboard Guru...</div>
+      <div id="loadingText" style="font-weight: 700; font-size: 14px;">Loading Instructor Dashboard...</div>
     </div>
   </div>
 
   <div id="toastBox" class="toast hidden"></div>
 
-<script>
+  <script>
     // =========================================================================
-    // KONFIGURASI API GOOGLE APPS SCRIPT (GANTI DENGAN URL DEPLOYMENT ANDA)
+    // GOOGLE APPS SCRIPT API CONFIGURATION (REPLACE WITH YOUR DEPLOYMENT URL)
     // =========================================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycby1WiRhGdIHsaA6brxkaOVWn4mqS5cV3naYfKZmOJErpRJl0wkTUbSMIUrJLkTzkoPO/exec';
 
     // =========================================================================
-    // STATE DASHBOARD
+    // DASHBOARD STATE
     // =========================================================================
     const dashState = {
-      token: sessionStorage.getItem('neng_eva_teacher_token') || '',
-      requireTeacherPin: true,
+      token: '',
+      requirePin: true,
       rawRows: [],
       filteredRows: [],
       bankSoal: {},
-      kkm: 80,
       studentsByClass: {},
       allPackages: [],
+      kkm: 80,
       security: {
-        requireStudentPin: 'TIDAK',
-        requireTeacherPin: 'YA',
+        requireStudentPin: 'NO',
+        requireTeacherPin: 'YES',
         validPinCount: 0,
         totalStudentCount: 0
       },
-      activeSessions: [],
       missingList: [],
       analysisReport: [],
+      currentPreviewItemIdx: -1,
       currentPreviewPaketId: '',
-      currentTab: 'results'
+      activeTab: 'results'
+    };
+
+    const TYPE_LABELS = {
+      PG: 'Multiple Choice',
+      PGK: 'Multiple Response',
+      BS: 'True / False',
+      MENJODOHKAN: 'Matching',
+      MATRIKS: 'Matrix / Category',
+      IS: 'Short Answer'
     };
 
     const $ = (id) => document.getElementById(id);
 
+    // =========================================================================
+    // API HELPER & UTILITIES
+    // =========================================================================
     function getClientId() {
       let cid = localStorage.getItem('neng_eva_client_id');
       if (!cid) {
-        cid = 'dev_' + Math.random().toString(36).substring(2, 12);
+        cid = 'dash_' + Math.random().toString(36).substring(2, 12);
         localStorage.setItem('neng_eva_client_id', cid);
       }
       return cid;
     }
 
-    // =========================================================================
-    // HELPER API & UTILITAS
-    // =========================================================================
     async function callApi(action, ...args) {
-      if (!API_URL || API_URL === 'URL_WEB_APP_APPS_SCRIPT_ANDA') {
-        throw new Error('API_URL belum diisi pada dashboard.html. Silakan masukkan URL Web App Apps Script Anda.');
+      if (!API_URL || API_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL') {
+        throw new Error('API_URL has not been configured in dashboard.html. Please insert your Apps Script Web App URL.');
       }
 
       const response = await fetch(API_URL, {
@@ -931,30 +973,20 @@
       });
 
       if (!response.ok) {
-        throw new Error('Gagal terhubung ke server (' + response.status + ')');
+        throw new Error('Failed to connect to the server (' + response.status + ').');
       }
 
       const data = await response.json();
       if (data && data.status === 'error') {
         if (data.code === 'UNAUTHORIZED') {
-          handleUnauthorized(data.message);
+          handleSessionExpired();
         }
-        throw new Error(data.message || 'Terjadi kesalahan pada server.');
+        throw new Error(data.message || 'An unexpected server error occurred.');
       }
       return data;
     }
 
-    function handleUnauthorized(msg) {
-      dashState.token = '';
-      sessionStorage.removeItem('neng_eva_teacher_token');
-      $('dashboardSection').classList.add('hidden');
-      $('btnRefresh').classList.add('hidden');
-      $('btnLogout').classList.add('hidden');
-      $('loginSection').classList.remove('hidden');
-      showLoginError(msg || 'Sesi berakhir. Silakan masukkan PIN Guru kembali.');
-    }
-
-    function showLoading(text = 'Memuat...') {
+    function showLoading(text = 'Loading...') {
       $('loadingText').textContent = text;
       $('loadingOverlay').classList.remove('hidden');
     }
@@ -963,24 +995,13 @@
       $('loadingOverlay').classList.add('hidden');
     }
 
-    function showLoginError(msg) {
-      const box = $('loginError');
-      if (!msg) {
-        box.textContent = '';
-        box.classList.add('hidden');
-      } else {
-        box.textContent = msg;
-        box.classList.remove('hidden');
-      }
-    }
-
     let toastTimer = null;
     function showToast(msg) {
       const el = $('toastBox');
       el.textContent = msg;
       el.classList.remove('hidden');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => el.classList.add('hidden'), 3200);
+      toastTimer = setTimeout(() => el.classList.add('hidden'), 3400);
     }
 
     function escapeHtml(str) {
@@ -994,115 +1015,163 @@
 
     function stripMediaTags(text) {
       return String(text || '')
-        .replace(/\[(?:IMG|AUDIO|HEADER):[^\]]+\]/gi, ' ')
-        .replace(/https?:\/\/\S+/gi, '[Media]')
-        .replace(/\s+/g, ' ')
+        .replace(/\[IMG:\s*[^\]]+\]/gi, '[Image]')
+        .replace(/\[AUDIO:\s*[^\]]+\]/gi, '[Audio]')
+        .replace(/\[(?:HEADER:\s*)?[^\]]+\]/gi, '')
         .trim();
     }
 
+    function formatRichMedia(rawText) {
+      let text = escapeHtml(rawText || '');
+      text = text.replace(/\[IMG:\s*(https?:\/\/[^\]]+)\]/gi, '<br><img src="$1" alt="Stimulus Image" loading="lazy"><br>');
+      text = text.replace(/\[AUDIO:\s*(https?:\/\/[^\]]+)\]/gi, '<br><audio controls src="$1"></audio><br>');
+      text = text.replace(/(^|\s)(https?:\/\/\S+\.(?:png|jpe?g|gif|webp)(?:\?\S*)?)/gi, '$1<br><img src="$2" alt="Image" loading="lazy"><br>');
+      text = text.replace(/(^|\s)(https?:\/\/\S+\.(?:mp3|wav|ogg|m4a)(?:\?\S*)?)/gi, '$1<br><audio controls src="$2"></audio><br>');
+      return text;
+    }
+
+    function resolveQuestionPassages(questions) {
+      let activePassage = '';
+      return (questions || []).map((q) => {
+        const copy = Object.assign({}, q);
+        const raw = String(copy.teksBacaan || '').trim();
+        if (raw === '-' || raw.toUpperCase() === 'NONE' || raw.toUpperCase() === 'NO PASSAGE') {
+          activePassage = '';
+          copy._passage = '';
+        } else if (raw !== '') {
+          activePassage = raw;
+          copy._passage = activePassage;
+        } else {
+          copy._passage = activePassage;
+        }
+        return copy;
+      });
+    }
+
+    function getPackageName(paketId) {
+      const found = dashState.allPackages.find(p => p.id === paketId);
+      return found ? found.name : paketId;
+    }
+
     // =========================================================================
-    // INISIALISASI & AUTENTIKASI GURU
+    // AUTHENTICATION & SESSION LIFECYCLE
     // =========================================================================
     async function initDashboard() {
-      showLoading('Memeriksa akses Dashboard Guru...');
+      showLoading('Checking dashboard access configuration...');
       try {
-        const mode = await callApi('checkDashboardAuthMode');
-        dashState.requireTeacherPin = mode.requirePin !== false;
+        const authRes = await callApi('checkDashboardAuthMode');
+        dashState.requirePin = !!authRes.requirePin;
 
-        if (!mode.requirePin && mode.token) {
-          dashState.token = mode.token;
-          sessionStorage.setItem('neng_eva_teacher_token', mode.token);
-          await enterDashboard();
+        if (!dashState.requirePin && authRes.token) {
+          dashState.token = authRes.token;
+          localStorage.setItem('neng_eva_teacher_token', authRes.token);
+          await enterWorkspace();
           return;
         }
 
-        if (dashState.token) {
+        const savedToken = localStorage.getItem('neng_eva_teacher_token');
+        if (savedToken) {
+          dashState.token = savedToken;
           try {
-            await enterDashboard();
+            await enterWorkspace();
             return;
           } catch (e) {
-            // Token lama kedaluwarsa, tampilkan form login
+            localStorage.removeItem('neng_eva_teacher_token');
+            dashState.token = '';
           }
         }
 
-        $('loginSection').classList.remove('hidden');
-        $('dashboardSection').classList.add('hidden');
+        showLoginView();
       } catch (err) {
-        $('loginSection').classList.remove('hidden');
-        showLoginError(err.message);
+        showLoginView(err.message);
       } finally {
         hideLoading();
       }
     }
 
-    async function handleTeacherLogin(e) {
+    function showLoginView(errMsg = '') {
+      $('dashboardSection').classList.add('hidden');
+      $('btnRefresh').classList.add('hidden');
+      $('btnLogout').classList.add('hidden');
+      $('loginSection').classList.remove('hidden');
+
+      const errBox = $('loginError');
+      if (errMsg) {
+        errBox.textContent = errMsg;
+        errBox.classList.remove('hidden');
+      } else {
+        errBox.classList.add('hidden');
+      }
+    }
+
+    function handleSessionExpired() {
+      localStorage.removeItem('neng_eva_teacher_token');
+      dashState.token = '';
+      showLoginView('Your instructor session has expired. Please sign in again.');
+    }
+
+    async function handleLoginSubmit(e) {
       e.preventDefault();
-      showLoginError('');
       const pin = $('inputTeacherPin').value.trim();
       if (!pin) return;
 
-      showLoading('Memverifikasi PIN Guru...');
+      $('loginError').classList.add('hidden');
+      showLoading('Verifying Instructor PIN...');
       try {
         const res = await callApi('teacherLogin', pin, getClientId());
         dashState.token = res.token;
-        sessionStorage.setItem('neng_eva_teacher_token', res.token);
+        localStorage.setItem('neng_eva_teacher_token', res.token);
         $('inputTeacherPin').value = '';
-        await enterDashboard();
+        await enterWorkspace();
       } catch (err) {
-        showLoginError(err.message);
+        $('loginError').textContent = err.message;
+        $('loginError').classList.remove('hidden');
       } finally {
         hideLoading();
       }
     }
 
     async function handleLogout() {
-      const tok = dashState.token;
-      dashState.token = '';
-      sessionStorage.removeItem('neng_eva_teacher_token');
       try {
-        if (tok) await callApi('teacherLogout', tok);
-      } catch (e) { /* abaikan */ }
-      location.reload();
+        if (dashState.token) await callApi('teacherLogout', dashState.token);
+      } catch (e) { /* ignore */ }
+      localStorage.removeItem('neng_eva_teacher_token');
+      dashState.token = '';
+      showLoginView('You have signed out of the Instructor Dashboard.');
     }
 
-    async function enterDashboard() {
+    async function enterWorkspace() {
       $('loginSection').classList.add('hidden');
       $('dashboardSection').classList.remove('hidden');
       $('btnRefresh').classList.remove('hidden');
-      $('btnLogout').classList.toggle('hidden', !dashState.requireTeacherPin);
+      $('btnLogout').classList.toggle('hidden', !dashState.requirePin);
+
       await loadAllDashboardData();
     }
 
     // =========================================================================
-    // MUAT DATA UTAMA DASHBOARD
+    // DATA LOADING & FILTER POPULATION
     // =========================================================================
     async function loadAllDashboardData() {
-      showLoading('Memuat rekap hasil & data siswa...');
+      showLoading('Loading assessment records & item psychometrics...');
       try {
-        const sinceDays = parseInt($('filterDays').value, 10) || 0;
+        const sinceDays = Number($('filterDays').value) || 0;
         const [dashRes, activeRes] = await Promise.all([
           callApi('getDashboardData', dashState.token, { sinceDays }),
-          callApi('getActiveSessions', dashState.token)
+          callApi('getActiveSessions', dashState.token).catch(() => ({ sessions: [] }))
         ]);
 
         dashState.rawRows = dashRes.data || [];
         dashState.bankSoal = dashRes.bankSoal || {};
-        dashState.kkm = Number(dashRes.kkm) || 80;
         dashState.studentsByClass = dashRes.studentsByClass || {};
         dashState.allPackages = dashRes.allPackages || [];
+        dashState.kkm = Number(dashRes.kkm) || 80;
         dashState.security = Object.assign(dashState.security, dashRes.security || {});
-        dashState.activeSessions = activeRes.sessions || [];
 
         populateFilterDropdowns();
         syncSecurityUI();
+        renderActiveSessions(activeRes.sessions || []);
         applyFiltersAndRender();
-        renderActiveSessions();
-
-        if (dashState.currentTab === 'packages') {
-          await loadPackagesManagement();
-        }
-      } catch (err) {
-        showToast('Gagal memuat data: ' + err.message);
       } finally {
         hideLoading();
       }
@@ -1113,41 +1182,24 @@
       const prevKelas = $('filterKelas').value;
       const prevMissingPaket = $('missingPaketSelect').value;
 
-      // Dropdown Paket Utama & Dropdown Cek Belum Mengerjakan
-      const pkgOptions = dashState.allPackages.map(p => {
-        const statusTag = p.status === 'NONAKTIF' ? ' [Nonaktif]' : '';
-        return `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}${statusTag}</option>`;
-      }).join('');
+      const paketOptions = dashState.allPackages.map(p =>
+        `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)} (${escapeHtml(p.id)})</option>`
+      ).join('');
 
-      $('filterPaket').innerHTML = '<option value="">Semua Paket</option>' + pkgOptions;
-      $('missingPaketSelect').innerHTML = '<option value="">-- Pilih Paket Evaluasi --</option>' + pkgOptions;
+      $('filterPaket').innerHTML = '<option value="">All Packages</option>' + paketOptions;
+      if (prevPaket) $('filterPaket').value = prevPaket;
 
-      if (prevPaket && dashState.allPackages.some(p => p.id === prevPaket)) {
-        $('filterPaket').value = prevPaket;
+      $('missingPaketSelect').innerHTML = '<option value="">-- Select Assessment Package --</option>' + paketOptions;
+      if (prevMissingPaket || prevPaket) {
+        $('missingPaketSelect').value = prevPaket || prevMissingPaket;
       }
 
-      // Sinkronkan pilihan paket untuk tab Belum Mengerjakan
-      const targetMissing = prevPaket || prevMissingPaket || (dashState.allPackages[0] ? dashState.allPackages[0].id : '');
-      if (targetMissing && dashState.allPackages.some(p => p.id === targetMissing)) {
-        $('missingPaketSelect').value = targetMissing;
-      }
-
-      // Dropdown Kelas (gabungan dari Data_Siswa dan Hasil_Evaluasi)
-      const classSet = new Set(Object.keys(dashState.studentsByClass));
-      dashState.rawRows.forEach(r => { if (r.kelas) classSet.add(r.kelas); });
-      const classes = Array.from(classSet).sort();
-
-      $('filterKelas').innerHTML = '<option value="">Semua Kelas</option>' +
+      const classes = Object.keys(dashState.studentsByClass).sort();
+      $('filterKelas').innerHTML = '<option value="">All Classes</option>' +
         classes.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
-
-      if (prevKelas && classes.includes(prevKelas)) {
-        $('filterKelas').value = prevKelas;
-      }
+      if (prevKelas) $('filterKelas').value = prevKelas;
     }
 
-    // =========================================================================
-    // FILTER, KPI & RENDER TABEL HASIL
-    // =========================================================================
     function applyFiltersAndRender() {
       const paketFilter = $('filterPaket').value;
       const kelasFilter = $('filterKelas').value;
@@ -1155,174 +1207,226 @@
       const statusFilter = $('filterStatus').value;
       const attemptMode = $('filterAttemptMode').value;
 
-      // Filter dasar (Paket, Kelas, Nama)
-      let baseRows = dashState.rawRows.filter(r => {
+      let rows = dashState.rawRows.filter(r => {
         if (paketFilter && r.paketId !== paketFilter) return false;
         if (kelasFilter && r.kelas !== kelasFilter) return false;
         if (searchFilter && !r.namaSiswa.toLowerCase().includes(searchFilter)) return false;
+        if (statusFilter && r.status !== statusFilter) return false;
         return true;
       });
 
-      // Mode Percobaan Terakhir per siswa + paket
       if (attemptMode === 'LATEST') {
         const latestMap = new Map();
-        baseRows.forEach(r => {
+        rows.forEach(r => {
           const key = `${r.kelas}|${r.namaSiswa}|${r.paketId}`;
           const existing = latestMap.get(key);
-          if (!existing || r.percobaanKe >= existing.percobaanKe) {
+          if (!existing || r.percobaanKe > existing.percobaanKe) {
             latestMap.set(key, r);
           }
         });
-        baseRows = Array.from(latestMap.values());
+        rows = Array.from(latestMap.values());
       }
 
-      // Filter Status (LULUS / REMEDI)
-      const displayRows = statusFilter
-        ? baseRows.filter(r => r.status === statusFilter)
-        : baseRows;
+      dashState.filteredRows = rows;
 
-      // Urutkan terbaru di atas
-      dashState.filteredRows = displayRows.slice().sort((a, b) => b.id - a.id);
-
-      updateKpiCards(baseRows);
-      renderResultsTable(dashState.filteredRows);
+      updateKpis(rows, paketFilter, kelasFilter);
+      renderResultsTable(rows);
       renderMissingStudents();
       renderItemAnalysis();
     }
 
-    function updateKpiCards(rows) {
-      const kelasFilter = $('filterKelas').value;
-
-      // Hitung total siswa terdaftar pada kelas terpilih (atau seluruh kelas)
-      let registeredTotal = 0;
-      Object.keys(dashState.studentsByClass).forEach(kls => {
-        if (!kelasFilter || kls === kelasFilter) {
-          registeredTotal += (dashState.studentsByClass[kls] || []).length;
-        }
-      });
-
-      // Siswa unik yang sudah mengerjakan pada filter saat ini
-      const uniqueDoneSet = new Set(rows.map(r => `${r.kelas}|${r.namaSiswa}`));
-
-      // Skor unik per siswa+paket (ambil skor akhir tertinggi/terakhir per siswa-paket)
-      const studentBestMap = new Map();
-      rows.forEach(r => {
-        const k = `${r.kelas}|${r.namaSiswa}|${r.paketId}`;
-        const prev = studentBestMap.get(k);
-        if (!prev || r.skorAkhir > prev.skorAkhir) {
-          studentBestMap.set(k, r);
-        }
-      });
-      const uniqueSubmissions = Array.from(studentBestMap.values());
-
-      const avgScore = uniqueSubmissions.length > 0
-        ? Math.round(uniqueSubmissions.reduce((acc, r) => acc + r.skorAkhir, 0) / uniqueSubmissions.length)
-        : 0;
-
-      const passedCount = uniqueSubmissions.filter(r => r.skorAkhir >= dashState.kkm).length;
-      const passRate = uniqueSubmissions.length > 0
-        ? Math.round((passedCount / uniqueSubmissions.length) * 100)
-        : 0;
-
+    // =========================================================================
+    // KPI CALCULATIONS
+    // =========================================================================
+    function updateKpis(rows, paketFilter, kelasFilter) {
       $('kpiTotalAttempts').textContent = rows.length;
-      $('kpiUniqueDone').textContent = uniqueDoneSet.size;
-      $('kpiTotalStudentsSub').textContent = `Dari ${registeredTotal} siswa terdaftar`;
-      $('kpiAvgScore').textContent = avgScore;
-      $('kpiPassRate').textContent = `${passRate}%`;
-      $('kpiKkmInfo').textContent = `Target KKM: ${dashState.kkm} (${passedCount}/${uniqueSubmissions.length} tuntas)`;
+      $('kpiKkmInfo').textContent = `Passing Score: ${dashState.kkm}`;
+
+      const targetClasses = kelasFilter ? [kelasFilter] : Object.keys(dashState.studentsByClass);
+      let totalRoster = 0;
+      targetClasses.forEach(c => {
+        totalRoster += (dashState.studentsByClass[c] || []).length;
+      });
+      $('kpiTotalStudentsSub').textContent = `Out of ${totalRoster} registered`;
+
+      const studentBest = new Map();
+      rows.forEach(r => {
+        const key = `${r.kelas}|${r.namaSiswa}`;
+        const prev = studentBest.get(key);
+        if (!prev || r.skorAkhir > prev.skorAkhir) {
+          studentBest.set(key, r);
+        }
+      });
+
+      const uniqueDone = studentBest.size;
+      $('kpiUniqueDone').textContent = uniqueDone;
+
+      if (paketFilter) {
+        const notDone = Math.max(0, totalRoster - uniqueDone);
+        $('kpiNotDone').textContent = notDone;
+        $('kpiMissingSub').textContent = `Package ${paketFilter}`;
+      } else {
+        $('kpiNotDone').textContent = '-';
+        $('kpiMissingSub').textContent = 'Select package for details';
+      }
+
+      if (uniqueDone > 0) {
+        let sumScore = 0;
+        let passedCount = 0;
+        studentBest.forEach(s => {
+          sumScore += Number(s.skorAkhir) || 0;
+          if (s.skorAkhir >= dashState.kkm || s.status === 'PASSED') passedCount++;
+        });
+        $('kpiAvgScore').textContent = Math.round((sumScore / uniqueDone) * 10) / 10;
+        $('kpiPassRate').textContent = Math.round((passedCount / uniqueDone) * 100) + '%';
+      } else {
+        $('kpiAvgScore').textContent = '0';
+        $('kpiPassRate').textContent = '0%';
+      }
     }
 
+    // =========================================================================
+    // TAB 1: ASSESSMENT RESULTS TABLE & ATTEMPT DETAIL MODAL
+    // =========================================================================
     function renderResultsTable(rows) {
-      $('resultsCountLabel').textContent = `${rows.length} data ditampilkan`;
       const tbody = $('resultsTableBody');
+      $('resultsCountLabel').textContent = `${rows.length} record(s) displayed`;
 
       if (rows.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; color:var(--muted); padding:24px;">Tidak ada data hasil evaluasi yang sesuai filter.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; color:var(--muted); padding:24px;">No assessment records match the selected filters.</td></tr>';
         return;
       }
 
-      tbody.innerHTML = rows.map(r => {
-        const isLulus = r.status === 'LULUS' || r.skorAkhir >= dashState.kkm;
-        const badgeCls = isLulus ? 'badge-lulus' : 'badge-remedi';
-        const durasiTxt = r.durasi !== '' ? `${r.durasi} mnt` : '-';
-        const tabHtml = r.pindahTab > 0
+      tbody.innerHTML = rows.slice().reverse().map(r => {
+        const isPassed = r.status === 'PASSED';
+        const statusBadge = isPassed
+          ? '<span class="badge badge-passed">PASSED</span>'
+          : '<span class="badge badge-remedial">REMEDIAL</span>';
+        const durasiText = r.durasi !== '' ? `${r.durasi} min` : '-';
+        const tabBadge = r.pindahTab > 0
           ? `<span class="badge badge-warn">${r.pindahTab}x</span>`
           : '<span style="color:var(--muted);">0</span>';
 
         return `
           <tr>
-            <td style="white-space:nowrap; font-size:12.5px;">${escapeHtml(r.timestamp)}</td>
+            <td style="white-space:nowrap; font-size:12.5px; color:var(--muted);">${escapeHtml(r.timestamp)}</td>
             <td><strong>${escapeHtml(r.kelas)}</strong></td>
             <td>${escapeHtml(r.namaSiswa)}</td>
             <td><span class="badge badge-neutral">${escapeHtml(r.paketId)}</span></td>
-            <td>${r.percobaanKe}</td>
+            <td>#${r.percobaanKe}</td>
             <td>${r.jumlahBenar} / ${r.totalSoal}</td>
             <td>${r.skorMentah}</td>
             <td><strong style="font-size:15px;">${r.skorAkhir}</strong></td>
-            <td><span class="badge ${badgeCls}">${escapeHtml(r.status)}</span></td>
-            <td>${escapeHtml(durasiTxt)}</td>
-            <td>${tabHtml}</td>
+            <td>${statusBadge}</td>
+            <td>${durasiText}</td>
+            <td>${tabBadge}</td>
             <td>
-              <button type="button" class="btn btn-outline btn-sm" onclick="openAttemptDetail(${r.id})">Rincian</button>
+              <button type="button" class="btn btn-outline btn-sm" onclick="openAttemptDetail(${r.id})">Inspect</button>
             </td>
           </tr>
         `;
       }).join('');
     }
 
+    async function openAttemptDetail(rowId) {
+      const row = dashState.rawRows.find(r => r.id === rowId);
+      if (!row) return;
+
+      $('detailModalTitle').textContent = `${row.namaSiswa} (${row.kelas})`;
+      $('detailModalMeta').textContent = `Package: ${getPackageName(row.paketId)} • Attempt #${row.percobaanKe} • Final Score: ${row.skorAkhir} (${row.status})`;
+      $('detailModalBody').innerHTML = '<div style="text-align:center; padding:24px; color:var(--muted);">Loading item-level grading breakdown...</div>';
+      $('detailModal').classList.remove('hidden');
+
+      try {
+        const res = await callApi('getAttemptDetail', dashState.token, rowId);
+        const details = res.details || [];
+        if (details.length === 0) {
+          $('detailModalBody').innerHTML = '<p style="color:var(--muted);">Item-level grading details are unavailable for this submission.</p>';
+          return;
+        }
+
+        $('detailModalBody').innerHTML = `
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Type</th>
+                  <th>Student Response</th>
+                  <th>Answer Key</th>
+                  <th>Points</th>
+                  <th>Result</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${details.map(d => {
+                  const st = String(d.status || '').toUpperCase();
+                  const isOk = st === 'CORRECT';
+                  const isPart = st === 'PARTIAL';
+                  const badge = isOk
+                    ? '<span class="badge badge-passed">CORRECT</span>'
+                    : (isPart ? '<span class="badge badge-warn">PARTIAL</span>' : '<span class="badge badge-remedial">INCORRECT</span>');
+                  return `
+                    <tr>
+                      <td><strong>${escapeHtml(d.noSoal)}</strong></td>
+                      <td>${escapeHtml(d.tipeSoal)}</td>
+                      <td>${escapeHtml(d.studentAns)}</td>
+                      <td><strong>${escapeHtml(d.keyAns)}</strong></td>
+                      <td>${d.score}</td>
+                      <td>${badge}</td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      } catch (err) {
+        $('detailModalBody').innerHTML = `<div class="alert-error">${escapeHtml(err.message)}</div>`;
+      }
+    }
+
     // =========================================================================
-    // TAB 2: SISWA BELUM MENGERJAKAN
+    // TAB 2: PENDING STUDENTS
     // =========================================================================
     function renderMissingStudents() {
-      const targetPaketId = $('missingPaketSelect').value;
+      const paketId = $('missingPaketSelect').value || $('filterPaket').value;
       const kelasFilter = $('filterKelas').value;
-      const searchFilter = $('filterSearch').value.trim().toLowerCase();
       const tbody = $('missingTableBody');
+      const notice = $('missingNotice');
 
-      if (!targetPaketId) {
+      if (!paketId) {
         dashState.missingList = [];
         $('badgeMissingCount').textContent = '0';
-        $('kpiNotDone').textContent = '-';
-        $('kpiMissingSub').textContent = 'Pilih paket untuk menghitung';
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--muted); padding:24px;">Silakan pilih paket evaluasi pada dropdown di atas.</td></tr>';
+        notice.classList.remove('hidden');
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--muted); padding:24px;">Please select an assessment package first.</td></tr>';
         return;
       }
 
-      const pkgObj = dashState.allPackages.find(p => p.id === targetPaketId);
-      const pkgLabel = pkgObj ? pkgObj.name : targetPaketId;
-
-      // Kumpulkan daftar siswa yang SUDAH mengumpulkan pada paket tersebut
+      notice.classList.add('hidden');
       const doneSet = new Set();
       dashState.rawRows.forEach(r => {
-        if (r.paketId === targetPaketId) {
-          doneSet.add(`${r.kelas.trim()}|${r.namaSiswa.trim()}`);
+        if (r.paketId === paketId) {
+          doneSet.add(`${r.kelas}|${r.namaSiswa}`);
         }
       });
 
       const missing = [];
-      let totalTargetStudents = 0;
-
-      Object.keys(dashState.studentsByClass).sort().forEach(kelas => {
-        if (kelasFilter && kelas !== kelasFilter) return;
-        const students = dashState.studentsByClass[kelas] || [];
+      const classes = kelasFilter ? [kelasFilter] : Object.keys(dashState.studentsByClass).sort();
+      classes.forEach(cls => {
+        const students = dashState.studentsByClass[cls] || [];
         students.forEach(nama => {
-          totalTargetStudents++;
-          const key = `${kelas.trim()}|${nama.trim()}`;
-          if (!doneSet.has(key)) {
-            if (!searchFilter || nama.toLowerCase().includes(searchFilter)) {
-              missing.push({ kelas, nama, paketId: targetPaketId, paketName: pkgLabel });
-            }
+          if (!doneSet.has(`${cls}|${nama}`)) {
+            missing.push({ kelas: cls, namaSiswa: nama, paketId });
           }
         });
       });
 
       dashState.missingList = missing;
       $('badgeMissingCount').textContent = missing.length;
-      $('kpiNotDone').textContent = missing.length;
-      $('kpiMissingSub').textContent = `Paket: ${targetPaketId} (${totalTargetStudents - missing.length}/${totalTargetStudents} selesai)`;
 
       if (missing.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--success); font-weight:700; padding:24px;">Seluruh siswa pada filter ini sudah mengerjakan paket ${escapeHtml(pkgLabel)}!</td></tr>`;
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--success); font-weight:700; padding:24px;">All registered students in the selected class(es) have completed this assessment package!</td></tr>';
         return;
       }
 
@@ -1330,75 +1434,73 @@
         <tr>
           <td>${idx + 1}</td>
           <td><strong>${escapeHtml(m.kelas)}</strong></td>
-          <td>${escapeHtml(m.nama)}</td>
-          <td>${escapeHtml(m.paketName)}</td>
-          <td><span class="badge badge-warn">Belum Mengerjakan</span></td>
+          <td>${escapeHtml(m.namaSiswa)}</td>
+          <td><span class="badge badge-neutral">${escapeHtml(m.paketId)}</span></td>
+          <td><span class="badge badge-warn">Pending</span></td>
         </tr>
       `).join('');
     }
 
-    function copyMissingListToClipboard() {
+    function copyMissingToClipboard() {
       if (dashState.missingList.length === 0) {
-        showToast('Tidak ada data siswa belum mengerjakan untuk disalin.');
+        showToast('There are no pending students to copy.');
         return;
       }
+      const paketId = $('missingPaketSelect').value || $('filterPaket').value;
+      const paketName = getPackageName(paketId);
 
-      const pkgName = dashState.missingList[0].paketName;
       const grouped = {};
-      dashState.missingList.forEach(item => {
-        if (!grouped[item.kelas]) grouped[item.kelas] = [];
-        grouped[item.kelas].push(item.nama);
+      dashState.missingList.forEach(m => {
+        if (!grouped[m.kelas]) grouped[m.kelas] = [];
+        grouped[m.kelas].push(m.namaSiswa);
       });
 
-      let text = `*DAFTAR SISWA BELUM MENGERJAKAN*\nPaket: ${pkgName}\nTotal: ${dashState.missingList.length} siswa\n`;
-      Object.keys(grouped).forEach(kls => {
-        text += `\n*Kelas ${kls}:*\n`;
-        grouped[kls].forEach((nama, i) => {
-          text += `${i + 1}. ${nama}\n`;
-        });
+      let text = `*PENDING ASSESSMENT COMPLETION*\nPackage: ${paketName} (${paketId})\n`;
+      Object.keys(grouped).forEach(cls => {
+        text += `\n*Class ${cls}* (${grouped[cls].length} student(s)):\n`;
+        grouped[cls].forEach((n, i) => { text += `${i + 1}. ${n}\n`; });
       });
 
-      navigator.clipboard.writeText(text.trim())
-        .then(() => showToast('Daftar berhasil disalin! Siap ditempel ke WhatsApp.'))
-        .catch(() => showToast('Gagal menyalin otomatis. Izinkan akses clipboard browser.'));
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Pending student roster copied to clipboard.');
+      }).catch(() => {
+        alert(text);
+      });
     }
 
     // =========================================================================
-    // TAB 3: SEDANG MENGERJAKAN (LIVE SESSIONS)
+    // TAB 3: ACTIVE SESSIONS
     // =========================================================================
-    function renderActiveSessions() {
-      const list = dashState.activeSessions || [];
-      $('badgeActiveCount').textContent = list.length;
-      const tbody = $('activeSessionsBody');
-
-      if (list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--muted); padding:24px;">Tidak ada siswa yang sedang mengerjakan saat ini.</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = list.map(s => `
-        <tr>
-          <td><strong>${escapeHtml(s.kelas)}</strong></td>
-          <td>${escapeHtml(s.namaSiswa)}</td>
-          <td><span class="badge badge-primary">${escapeHtml(s.paketId)}</span></td>
-          <td>${s.menit} menit yang lalu</td>
-        </tr>
-      `).join('');
-    }
-
     async function refreshActiveSessionsOnly() {
       try {
         const res = await callApi('getActiveSessions', dashState.token);
-        dashState.activeSessions = res.sessions || [];
-        renderActiveSessions();
-        showToast('Sesi aktif diperbarui.');
+        renderActiveSessions(res.sessions || []);
+        showToast('Active sessions refreshed.');
       } catch (err) {
         showToast(err.message);
       }
     }
 
+    function renderActiveSessions(sessions) {
+      $('badgeActiveCount').textContent = sessions.length;
+      const tbody = $('activeSessionsBody');
+      if (sessions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--muted); padding:24px;">No candidates are currently taking an assessment.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = sessions.map(s => `
+        <tr>
+          <td><strong>${escapeHtml(s.kelas)}</strong></td>
+          <td>${escapeHtml(s.namaSiswa)}</td>
+          <td><span class="badge badge-neutral">${escapeHtml(s.paketId)}</span></td>
+          <td><span class="badge badge-passed">${s.menit} min elapsed</span></td>
+        </tr>
+      `).join('');
+    }
+
     // =========================================================================
-    // TAB 4: ANALISIS BUTIR SOAL (KESUKARAN, DAYA PEMBEDA & SEBARAN PENGECOH)
+    // TAB 4: ITEM ANALYSIS (DIFFICULTY, DISCRIMINATION, DISTRACTORS & ITEM PREVIEW)
     // =========================================================================
     function getExpectedKeyLetters(q) {
       const t = String(q.tipeSoal || '').toUpperCase();
@@ -1431,21 +1533,20 @@
         dashState.analysisReport = [];
         notice.classList.remove('hidden');
         summaryGrid.classList.add('hidden');
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--muted); padding:24px;">Pilih satu paket evaluasi pada filter utama di atas untuk melihat analisis butir soal.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--muted); padding:24px;">Please select a specific assessment package in the primary filter bar above.</td></tr>';
         return;
       }
 
       notice.classList.add('hidden');
-      const questions = dashState.bankSoal[paketId] || [];
+      const rawQuestions = dashState.bankSoal[paketId] || [];
+      const questions = resolveQuestionPassages(rawQuestions);
 
-      // Filter baris sesuai paket & kelas terpilih
       let pool = dashState.rawRows.filter(r => {
         if (r.paketId !== paketId) return false;
         if (kelasFilter && r.kelas !== kelasFilter) return false;
         return true;
       });
 
-      // Terapkan basis percobaan (Ke-1 / Terakhir / Semua)
       if (basis === 'FIRST') {
         const firstMap = new Map();
         pool.forEach(r => {
@@ -1467,11 +1568,11 @@
       if (questions.length === 0) {
         dashState.analysisReport = [];
         summaryGrid.classList.add('hidden');
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--muted); padding:24px;">Belum ada data butir soal untuk paket ini.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--muted); padding:24px;">No items were found for this assessment package.</td></tr>';
         return;
       }
 
-      // Siapkan kelompok Atas (27%) & Bawah (27%) berdasarkan skor total untuk Daya Pembeda (D)
+      // Upper 27% and Lower 27% groups for Discrimination Index (D)
       const sortedPool = pool.slice().sort((a, b) => (b.skorMentah - a.skorMentah) || (b.jumlahBenar - a.jumlahBenar));
       const nTotal = sortedPool.length;
       const canCalcD = nTotal >= 4;
@@ -1511,7 +1612,7 @@
           }
 
           if (t === 'IS') {
-            const rawAns = String(det.studentAns || '').trim() || '(Kosong)';
+            const rawAns = String(det.studentAns || '').trim() || '(Unanswered)';
             const normKey = rawAns.toLowerCase();
             const cur = shortAnsMap.get(normKey) || { text: rawAns, count: 0, correct: det.score >= 1 };
             cur.count++;
@@ -1535,34 +1636,36 @@
           }
         });
 
-        // 1. Tingkat Kesukaran (P)
+        // 1. Difficulty Index (P)
         const pIndex = count > 0 ? (totalScore / count) : 0;
         const pPct = Math.round(pIndex * 100);
-        let diffLabel = 'Belum Ada Data';
+        let diffLabel = 'No Data';
         if (count > 0) {
-          if (pPct >= 70) diffLabel = 'Mudah';
-          else if (pPct >= 30) diffLabel = 'Sedang';
-          else diffLabel = 'Sukar';
+          if (pPct >= 70) diffLabel = 'Easy';
+          else if (pPct >= 30) diffLabel = 'Moderate';
+          else diffLabel = 'Difficult';
         }
 
-        // 2. Daya Pembeda (D)
+        // 2. Discrimination Index (D)
         let dVal = null;
         let dLabel = 'N < 4';
         if (canCalcD && upperN > 0 && lowerN > 0) {
           dVal = Math.round(((upperSum / upperN) - (lowerSum / lowerN)) * 100) / 100;
-          if (dVal >= 0.40) dLabel = 'Sangat Baik';
-          else if (dVal >= 0.30) dLabel = 'Baik';
-          else if (dVal >= 0.20) dLabel = 'Cukup';
-          else if (dVal >= 0) dLabel = 'Lemah';
-          else dLabel = 'Negatif!';
+          if (dVal >= 0.40) dLabel = 'Excellent';
+          else if (dVal >= 0.30) dLabel = 'Good';
+          else if (dVal >= 0.20) dLabel = 'Marginal';
+          else if (dVal >= 0) dLabel = 'Poor';
+          else dLabel = 'Negative!';
         }
 
-        // 3. Evaluasi Pengecoh
+        // 3. Distractor Analysis
         let hasDeadDistractor = false;
         let hasDominantDistractor = false;
         const activeLetters = t === 'BS'
           ? ['A', 'B']
-          : ((optionCounts.E > 0 || keyLetters.includes('E')) ? ['A', 'B', 'C', 'D', 'E'] : ['A', 'B', 'C', 'D']);
+          : ((optionCounts.E > 0 || keyLetters.includes('E') || (q.options && q.options.E && q.options.E !== '-'))
+              ? ['A', 'B', 'C', 'D', 'E']
+              : ['A', 'B', 'C', 'D']);
 
         if (count > 0 && ['PG', 'PGK', 'BS', 'MENJODOHKAN'].includes(t)) {
           const minKeyCount = keyLetters.length > 0
@@ -1580,52 +1683,69 @@
           });
         }
 
-        // 4. Matriks Keputusan Status
+        // 4. Decision Matrix
         let statusCode = 'EMPTY';
-        let statusText = 'Belum Ada Data';
+        let statusText = 'No Data';
         let badgeCls = 'badge-neutral';
-        let note = 'Belum ada peserta yang mengerjakan soal ini pada filter terpilih.';
+        let note = 'No candidate responses recorded under the current filter criteria.';
 
         if (count > 0) {
           if ((dVal !== null && dVal < 0) || hasDominantDistractor) {
             statusCode = 'CHECK_KEY';
-            statusText = 'Cek Kunci / Ambigu';
-            badgeCls = 'badge-remedi';
+            statusText = 'Verify Key / Ambiguous';
+            badgeCls = 'badge-remedial';
             countKunci++;
             note = dVal !== null && dVal < 0
-              ? `Daya pembeda negatif (${dVal.toFixed(2)}): kelompok bawah lebih banyak menjawab benar daripada kelompok atas. Periksa kemungkinan salah kunci.`
-              : 'Salah satu opsi pengecoh dipilih lebih banyak daripada kunci jawaban. Periksa kejelasan soal atau kunci jawaban.';
+              ? `Negative discrimination (D = ${dVal.toFixed(2)}): lower-scoring candidates answered this item correctly more often than upper-scoring candidates. Verify the answer key.`
+              : 'A distractor option was selected more frequently than the keyed answer. Review item clarity and the answer key.';
           } else if ((pPct > 85 || pPct < 20) && (dVal === null || dVal >= 0.20)) {
             statusCode = 'REV_DIFF';
-            statusText = 'Revisi Kesukaran';
+            statusText = 'Revise Difficulty';
             badgeCls = 'badge-warn';
             countRevisi++;
             note = pPct > 85
-              ? `Soal terlalu mudah (${pPct}% benar). Tingkatkan level kognitif pertanyaan.`
-              : `Soal terlalu sukar (${pPct}% benar). Periksa kembali keterbacaan stimulus/opsi.`;
+              ? `Item is overly easy (${pPct}% correct). Consider increasing cognitive demand.`
+              : `Item is overly difficult (${pPct}% correct). Review stimulus clarity and option wording.`;
           } else if ((dVal !== null && dVal < 0.20) || hasDeadDistractor) {
             statusCode = 'REV_DIST';
-            statusText = 'Revisi Pengecoh';
+            statusText = 'Revise Distractors';
             badgeCls = 'badge-warn';
             countRevisi++;
             note = (dVal !== null && dVal < 0.20)
-              ? `Daya pembeda lemah (D = ${dVal.toFixed(2)}). Soal kurang mampu membedakan siswa paham dan belum paham.`
-              : 'Terdapat opsi pengecoh mati (dipilih < 5% siswa). Ganti pengecoh agar lebih mengecoh secara logis.';
+              ? `Low discrimination index (D = ${dVal.toFixed(2)}). Item poorly differentiates high and low achievers.`
+              : 'Contains non-functioning distractor(s) selected by < 5% of candidates. Replace implausible distractors.';
           } else {
             statusCode = 'GOOD';
-            statusText = 'Layak Simpan';
-            badgeCls = 'badge-lulus';
+            statusText = 'Retain Item';
+            badgeCls = 'badge-passed';
             countLayak++;
-            note = 'Tingkat kesukaran, daya pembeda, dan sebaran jawaban berada pada rentang yang baik.';
+            note = 'Item difficulty, discrimination index, and distractor distribution fall within acceptable psychometric thresholds.';
           }
         }
 
         report.push({
-          idx, qNo, tipeSoal: t, kunciJawaban: q.kunciJawaban,
+          idx,
+          qNo,
+          tipeSoal: t,
+          kunciJawaban: q.kunciJawaban,
+          rawPertanyaan: q.pertanyaan,
           pertanyaan: stripMediaTags(q.pertanyaan),
-          count, pPct, diffLabel, dVal, dLabel,
-          statusCode, statusText, badgeCls, note,
-          keyLetters, activeLetters, optionCounts,
+          passage: q._passage || '',
+          options: q.options || {},
+          pembahasan: q.pembahasan || '',
+          sheetRow: q.sheetRow || '',
+          count,
+          pPct,
+          diffLabel,
+          dVal,
+          dLabel,
+          statusCode,
+          statusText,
+          badgeCls,
+          note,
+          keyLetters,
+          activeLetters,
+          optionCounts,
           shortAnswers: Array.from(shortAnsMap.values()).sort((a, b) => b.count - a.count),
           matrixStats
         });
@@ -1633,13 +1753,11 @@
 
       dashState.analysisReport = report;
 
-      // Perbarui Kartu Ringkasan
       summaryGrid.classList.remove('hidden');
-      $('sumLayakCount').textContent = `${countLayak} soal`;
-      $('sumRevisiCount').textContent = `${countRevisi} soal`;
-      $('sumKunciCount').textContent = `${countKunci} soal`;
+      $('sumLayakCount').textContent = `${countLayak} item(s)`;
+      $('sumRevisiCount').textContent = `${countRevisi} item(s)`;
+      $('sumKunciCount').textContent = `${countKunci} item(s)`;
 
-      // Render Baris Tabel + Baris Laci Detail
       tbody.innerHTML = report.map(item => {
         const dDisplay = item.dVal === null
           ? `<span style="color:var(--muted); font-size:12px;">${item.dLabel}</span>`
@@ -1650,9 +1768,9 @@
             <td><strong>${escapeHtml(item.qNo)}</strong></td>
             <td>
               <span class="badge badge-neutral">${escapeHtml(item.tipeSoal)}</span>
-              <div style="font-size:12px; margin-top:3px;">Kunci: <strong>${escapeHtml(item.kunciJawaban)}</strong></div>
+              <div style="font-size:12px; margin-top:3px;">Key: <strong>${escapeHtml(item.kunciJawaban)}</strong></div>
             </td>
-            <td style="max-width: 320px;">${escapeHtml(item.pertanyaan.substring(0, 110))}</td>
+            <td style="max-width: 300px;">${escapeHtml(item.pertanyaan.substring(0, 105))}</td>
             <td>${item.count}</td>
             <td>
               <div class="diff-bar"><div class="diff-fill" style="width:${item.pPct}%;"></div></div>
@@ -1660,8 +1778,11 @@
             </td>
             <td>${dDisplay}</td>
             <td><span class="badge ${item.badgeCls}">${item.statusText}</span></td>
-            <td>
-              <button type="button" class="btn btn-outline btn-sm" onclick="toggleAnalysisDetail(${item.idx})">Lihat Sebaran</button>
+            <td style="white-space: nowrap;">
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="openItemPreviewModal(${item.idx})">Preview</button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="toggleAnalysisDetail(${item.idx})">Distribution</button>
+              </div>
             </td>
           </tr>
           <tr id="analysis-detail-${item.idx}" class="detail-drawer-row hidden">
@@ -1681,24 +1802,24 @@
         const topList = item.shortAnswers.slice(0, 10).map(sa => {
           const pct = Math.round((sa.count / item.count) * 100);
           const tag = sa.correct
-            ? '<span class="badge badge-lulus">Dinilai Benar</span>'
-            : '<span class="badge badge-remedi">Dinilai Salah</span>';
+            ? '<span class="badge badge-passed">Graded Correct</span>'
+            : '<span class="badge badge-remedial">Graded Incorrect</span>';
           return `<div class="dist-box ${sa.correct ? 'is-key' : ''}">
             <div style="display:flex; justify-content:space-between; gap:6px; align-items:center;">
               <strong>"${escapeHtml(sa.text)}"</strong>
               ${tag}
             </div>
-            <div style="font-size:12px; color:var(--muted); margin-top:4px;">${sa.count} siswa (${pct}%)</div>
+            <div style="font-size:12px; color:var(--muted); margin-top:4px;">${sa.count} candidate(s) (${pct}%)</div>
           </div>`;
         }).join('');
-        bodyHtml = `<div style="font-size:12.5px; font-weight:700; margin-top:8px;">Variasi Jawaban Siswa (Top 10):</div>
+        bodyHtml = `<div style="font-size:12.5px; font-weight:700; margin-top:8px;">Candidate Response Variations (Top 10):</div>
           <div class="distractor-grid">${topList}</div>`;
       } else if (item.tipeSoal === 'MATRIKS') {
         const m = item.matrixStats;
         bodyHtml = `<div class="distractor-grid">
-          <div class="dist-box is-key"><strong>Skor Penuh (Semua Baris Benar)</strong><div>${m.penuh} siswa (${Math.round(m.penuh / item.count * 100)}%)</div></div>
-          <div class="dist-box"><strong>Skor Parsial (Sebagian Benar)</strong><div>${m.parsial} siswa (${Math.round(m.parsial / item.count * 100)}%)</div></div>
-          <div class="dist-box is-danger"><strong>Salah Semua Baris</strong><div>${m.salah} siswa (${Math.round(m.salah / item.count * 100)}%)</div></div>
+          <div class="dist-box is-key"><strong>Full Credit (All Rows Correct)</strong><div>${m.penuh} candidate(s) (${Math.round(m.penuh / item.count * 100)}%)</div></div>
+          <div class="dist-box"><strong>Partial Credit</strong><div>${m.parsial} candidate(s) (${Math.round(m.parsial / item.count * 100)}%)</div></div>
+          <div class="dist-box is-danger"><strong>Zero Credit (All Rows Incorrect)</strong><div>${m.salah} candidate(s) (${Math.round(m.salah / item.count * 100)}%)</div></div>
         </div>`;
       } else {
         const minKeyCount = item.keyLetters.length > 0
@@ -1712,13 +1833,13 @@
           const isDominant = !isKey && item.tipeSoal !== 'PGK' && item.keyLetters.length > 0 && cnt > minKeyCount;
           const isDead = !isKey && item.count >= 5 && pct < 5;
 
-          let subNote = isKey ? 'Kunci Jawaban' : 'Pengecoh';
-          if (isDominant) subNote = 'Pengecoh Lebih Dominan dari Kunci!';
-          else if (isDead) subNote = 'Pengecoh Mati (<5%)';
+          let subNote = isKey ? 'Answer Key' : 'Distractor';
+          if (isDominant) subNote = 'Distractor Exceeds Key!';
+          else if (isDead) subNote = 'Non-Functioning (<5%)';
 
           return `<div class="dist-box ${isKey ? 'is-key' : (isDominant ? 'is-danger' : '')}">
             <div style="display:flex; justify-content:space-between; font-size:13px;">
-              <strong>Opsi ${l} ${isKey ? '✓' : ''}</strong>
+              <strong>Option ${l} ${isKey ? '✓' : ''}</strong>
               <span><strong>${cnt}</strong> (${pct}%)</span>
             </div>
             <div class="dist-bar-track"><div class="dist-bar-fill" style="width:${pct}%;"></div></div>
@@ -1728,7 +1849,7 @@
 
         const kosongPct = Math.round((item.optionCounts.KOSONG / item.count) * 100);
         const kosongCard = item.optionCounts.KOSONG > 0
-          ? `<div class="dist-box"><div style="display:flex; justify-content:space-between; font-size:13px;"><strong>Tidak Dijawab</strong><span><strong>${item.optionCounts.KOSONG}</strong> (${kosongPct}%)</span></div><div class="dist-bar-track"><div class="dist-bar-fill" style="width:${kosongPct}%;"></div></div><div style="font-size:11.5px; color:var(--muted);">Kosong</div></div>`
+          ? `<div class="dist-box"><div style="display:flex; justify-content:space-between; font-size:13px;"><strong>Unanswered</strong><span><strong>${item.optionCounts.KOSONG}</strong> (${kosongPct}%)</span></div><div class="dist-bar-track"><div class="dist-bar-fill" style="width:${kosongPct}%;"></div></div><div style="font-size:11.5px; color:var(--muted);">Blank</div></div>`
           : '';
 
         bodyHtml = `<div class="distractor-grid">${cards}${kosongCard}</div>`;
@@ -1736,7 +1857,7 @@
 
       return `
         <div style="font-size:13px; margin-bottom:6px;">
-          <strong>Catatan Analisis:</strong> ${escapeHtml(item.note)}
+          <strong>Diagnostic Note:</strong> ${escapeHtml(item.note)}
         </div>
         ${bodyHtml}
       `;
@@ -1747,19 +1868,161 @@
       if (row) row.classList.toggle('hidden');
     }
 
+    // =========================================================================
+    // ITEM PREVIEW MODAL INSIDE ITEM ANALYSIS
+    // =========================================================================
+    function pauseItemPreviewAudio() {
+      document.querySelectorAll('#itemPreviewBody audio').forEach(a => {
+        try { a.pause(); } catch (e) {}
+      });
+    }
+
+    function openItemPreviewModal(idx) {
+      const report = dashState.analysisReport || [];
+      if (idx < 0 || idx >= report.length) return;
+      dashState.currentPreviewItemIdx = idx;
+      pauseItemPreviewAudio();
+
+      const item = report[idx];
+      const paketId = $('filterPaket').value || '';
+      const typeLabel = TYPE_LABELS[item.tipeSoal] || item.tipeSoal;
+
+      $('itemPreviewTitle').textContent = `Item ${item.qNo} Preview (${typeLabel})`;
+      $('itemPreviewMeta').textContent = `Package: ${getPackageName(paketId)} (${paketId}) • Sheet Row: ${item.sheetRow || '-'} • Respondents: ${item.count}`;
+
+      // 1. Reading Passage / Stimulus
+      const passageHtml = item.passage
+        ? `<div class="passage-preview-box">
+             <div style="font-size:11.5px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:6px;">Reading Passage / Stimulus</div>
+             <div>${formatRichMedia(item.passage)}</div>
+           </div>`
+        : '';
+
+      // 2. Question Stem & Options / Matrix / Short Answer
+      let stemAndOptionsHtml = '';
+      if (item.tipeSoal === 'MATRIKS') {
+        let raw = String(item.rawPertanyaan || '');
+        let headers = [];
+        const headerMatch = raw.match(/\[(?:HEADER:\s*)?([^\]]+)\]/i);
+        if (headerMatch) {
+          headers = headerMatch[1].split('|').map(s => s.trim()).filter(Boolean);
+          raw = raw.replace(headerMatch[0], '').trim();
+        }
+        const parts = raw.split(/[\|\n]/).map(s => s.trim()).filter(Boolean);
+        const promptText = parts.length > 1 ? parts[0] : 'Matrix / Category Item';
+        const statements = parts.length > 1 ? parts.slice(1) : parts;
+
+        const filledLetters = ['A', 'B', 'C', 'D', 'E'].filter(l => {
+          const v = String((item.options && item.options[l]) || '').trim();
+          return v !== '' && v !== '-';
+        });
+        const colLabels = filledLetters.length > 0
+          ? filledLetters.map(l => item.options[l].trim())
+          : (headers.length > 1 ? headers.slice(1) : ['True', 'False']);
+        const letters = colLabels.map((_, i) => String.fromCharCode(65 + i));
+        const firstColTitle = headers.length > 0 ? headers[0] : 'Statement';
+        const keySeq = String(item.kunciJawaban || '').replace(/[^A-E,|;]/gi, '').split(/[,|;]/).map(s => s.trim().toUpperCase()).filter(Boolean);
+
+        stemAndOptionsHtml = `
+          <div class="stem-preview-box" style="font-size:15px; font-weight:700; margin-bottom:12px; white-space:pre-line;">${formatRichMedia(promptText)}</div>
+          <div class="table-wrap" style="margin-bottom:12px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>${escapeHtml(firstColTitle)}</th>
+                  ${colLabels.map(lbl => `<th style="text-align:center;">${escapeHtml(lbl)}</th>`).join('')}
+                </tr>
+              </thead>
+              <tbody>
+                ${statements.map((stmt, rIdx) => `
+                  <tr>
+                    <td>${formatRichMedia(stmt)}</td>
+                    ${letters.map(l => {
+                      const isKeyCell = keySeq[rIdx] === l;
+                      return `<td style="text-align:center; ${isKeyCell ? 'background:var(--success-soft); color:var(--success); font-weight:800;' : ''}">${isKeyCell ? '✓ Key' : '—'}</td>`;
+                    }).join('')}
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      } else if (item.tipeSoal === 'IS') {
+        const accepted = String(item.kunciJawaban || '').split('|').map(s => s.trim()).filter(Boolean);
+        stemAndOptionsHtml = `
+          <div class="stem-preview-box" style="font-size:15px; font-weight:700; margin-bottom:12px; white-space:pre-line;">${formatRichMedia(item.rawPertanyaan)}</div>
+          <div class="opt-pill is-key">Accepted Answer Key(s): ${escapeHtml(accepted.join('  |  '))}</div>
+        `;
+      } else {
+        const letters = item.tipeSoal === 'BS' ? ['A', 'B'] : ['A', 'B', 'C', 'D', 'E'];
+        const opts = Object.assign({}, item.options || {});
+        if (item.tipeSoal === 'BS') {
+          if (!opts.A || opts.A === '-') opts.A = 'True';
+          if (!opts.B || opts.B === '-') opts.B = 'False';
+        }
+
+        const optHtml = letters.map(l => {
+          const val = String(opts[l] || '').trim();
+          if (!val || val === '-') return '';
+          const isKey = item.keyLetters.includes(l);
+          const pickCount = item.optionCounts[l] || 0;
+          const pickPct = item.count > 0 ? Math.round((pickCount / item.count) * 100) : 0;
+          return `
+            <div class="opt-pill ${isKey ? 'is-key' : ''}">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px;">
+                <div><strong>${l}.</strong> ${formatRichMedia(val)} ${isKey ? ' &nbsp;[ANSWER KEY ✓]' : ''}</div>
+                <span style="font-size:12px; white-space:nowrap; opacity:0.85;">${pickCount} (${pickPct}%)</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        stemAndOptionsHtml = `
+          <div class="stem-preview-box" style="font-size:15px; font-weight:700; margin-bottom:12px; white-space:pre-line;">${formatRichMedia(item.rawPertanyaan)}</div>
+          <div>${optHtml}</div>
+        `;
+      }
+
+      // 3. Explanation (if available)
+      const explanationHtml = item.pembahasan
+        ? `<div style="margin-top:12px; padding:11px 14px; border-radius:10px; background:var(--primary-soft); color:#1e1b4b; font-size:13.5px;">
+             <strong>Explanation / Rationale:</strong><br>${formatRichMedia(item.pembahasan)}
+           </div>`
+        : '';
+
+      // 4. Psychometric Summary & Prev/Next Item Controls
+      const dText = item.dVal === null ? item.dLabel : `${item.dVal.toFixed(2)} (${item.dLabel})`;
+      const navFooterHtml = `
+        <div style="margin-top:16px; padding:12px 14px; border-radius:10px; background:#f8fafc; border:1px solid var(--border); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px;">
+          <div style="font-size:12.5px;">
+            <strong>Difficulty (P):</strong> ${item.pPct}% (${item.diffLabel}) &nbsp;|&nbsp;
+            <strong>Discrimination (D):</strong> ${dText} &nbsp;|&nbsp;
+            <span class="badge ${item.badgeCls}">${item.statusText}</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="btn btn-outline btn-sm" ${idx === 0 ? 'disabled' : ''} onclick="openItemPreviewModal(${idx - 1})">&larr; Previous Item</button>
+            <button type="button" class="btn btn-outline btn-sm" ${idx >= report.length - 1 ? 'disabled' : ''} onclick="openItemPreviewModal(${idx + 1})">Next Item &rarr;</button>
+          </div>
+        </div>
+      `;
+
+      $('itemPreviewBody').innerHTML = passageHtml + stemAndOptionsHtml + explanationHtml + navFooterHtml;
+      $('itemPreviewModal').classList.remove('hidden');
+    }
+
     function exportAnalysisCsv() {
       const list = dashState.analysisReport || [];
       if (list.length === 0) {
-        showToast('Pilih paket evaluasi terlebih dahulu sebelum mengekspor analisis butir.');
+        showToast('Please select an assessment package before exporting Item Analysis.');
         return;
       }
 
       const headers = [
-        'No_Soal', 'Tipe', 'Kunci', 'Pertanyaan', 'Penjawab',
-        'Tingkat_Kesukaran_Persen', 'Kategori_Kesukaran',
-        'Daya_Pembeda_D', 'Kategori_Daya_Pembeda',
-        'Pilih_A', 'Pilih_B', 'Pilih_C', 'Pilih_D', 'Pilih_E', 'Kosong',
-        'Rekomendasi_Status', 'Catatan_Analisis'
+        'Item_No', 'Item_Type', 'Answer_Key', 'Question_Stem', 'Respondents_N',
+        'Difficulty_P_Pct', 'Difficulty_Category',
+        'Discrimination_D', 'Discrimination_Category',
+        'Opt_A', 'Opt_B', 'Opt_C', 'Opt_D', 'Opt_E', 'Unanswered',
+        'Recommendation', 'Diagnostic_Note'
       ];
       const escCsv = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
 
@@ -1774,151 +2037,166 @@
         ].map(escCsv).join(','));
       });
 
-      const paketId = $('filterPaket').value || 'Paket';
+      const paketId = $('filterPaket').value || 'Package';
       const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Analisis_Butir_${paketId}_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.download = `Item_Analysis_${paketId}_${new Date().toISOString().slice(0, 10)}.csv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      showToast('Laporan Analisis Butir (CSV) berhasil diunduh.');
+      showToast('Item Analysis report (CSV) exported successfully.');
     }
 
     // =========================================================================
-    // TAB 5: KELOLA & PRATINJAU PAKET
+    // TAB 5: PACKAGE MANAGEMENT & FULL PACKAGE PREVIEW
     // =========================================================================
-    async function loadPackagesManagement() {
+    async function loadPackagesTab() {
       const tbody = $('packagesTableBody');
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--muted); padding:24px;">Memuat daftar paket...</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--muted); padding:24px;">Loading package inventory...</td></tr>';
 
       try {
         const res = await callApi('getPaketManagementData', dashState.token);
-        const list = res.packages || [];
-
-        if (list.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--muted); padding:24px;">Belum ada paket soal pada tab Bank_Soal.</td></tr>';
+        const pkgs = res.packages || [];
+        if (pkgs.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--muted); padding:24px;">No assessment packages were found in Bank_Soal.</td></tr>';
           return;
         }
 
-        tbody.innerHTML = list.map(p => {
-          const isAktif = p.status === 'AKTIF';
-          const badge = isAktif
-            ? '<span class="badge badge-lulus">AKTIF</span>'
-            : '<span class="badge badge-neutral">NONAKTIF</span>';
-          const nextStatus = isAktif ? 'NONAKTIF' : 'AKTIF';
-          const toggleLabel = isAktif ? 'Nonaktifkan' : 'Aktifkan';
-          const toggleCls = isAktif ? 'btn-danger-soft' : 'btn-success';
+        tbody.innerHTML = pkgs.map(p => {
+          const isAktif = p.status === 'ACTIVE';
+          const statusBadge = isAktif
+            ? '<span class="badge badge-passed">ACTIVE</span>'
+            : '<span class="badge badge-remedial">INACTIVE</span>';
+          const toggleTarget = isAktif ? 'INACTIVE' : 'ACTIVE';
+          const toggleLabel = isAktif ? 'Deactivate' : 'Activate';
 
           return `
             <tr>
               <td><strong>${escapeHtml(p.id)}</strong></td>
               <td>${escapeHtml(p.name)}</td>
-              <td>${p.jumlahSoal} butir</td>
-              <td>${p.jumlahPengerjaan} sesi</td>
-              <td>${badge}</td>
-              <td style="display:flex; gap:6px; flex-wrap:wrap;">
-                <button type="button" class="btn btn-outline btn-sm" onclick="openPreview('${escapeHtml(p.id)}', false)">Pratinjau Soal</button>
-                <button type="button" class="btn ${toggleCls} btn-sm" onclick="togglePackage('${escapeHtml(p.id)}', '${nextStatus}')">${toggleLabel}</button>
+              <td>${p.jumlahSoal} items</td>
+              <td>${p.jumlahPengerjaan}x</td>
+              <td>${statusBadge}</td>
+              <td>
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                  <button type="button" class="btn btn-outline btn-sm" onclick="openPackagePreview('${escapeHtml(p.id)}', false)">Preview Package</button>
+                  <button type="button" class="btn ${isAktif ? 'btn-danger-soft' : 'btn-success'} btn-sm" onclick="handleTogglePackage('${escapeHtml(p.id)}', '${toggleTarget}')">${toggleLabel}</button>
+                </div>
               </td>
             </tr>
           `;
         }).join('');
       } catch (err) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--danger); padding:24px;">${escapeHtml(err.message)}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="color:var(--danger); padding:18px;">${escapeHtml(err.message)}</td></tr>`;
       }
     }
 
-    async function togglePackage(paketId, newStatus) {
-      showLoading(`Mengubah status paket ${paketId}...`);
+    async function handleTogglePackage(paketId, newStatus) {
+      showLoading(`Updating package ${paketId} status to ${newStatus}...`);
       try {
         const res = await callApi('togglePaketStatus', dashState.token, paketId, newStatus);
-        showToast(res.message || 'Status paket diperbarui.');
-        await loadPackagesManagement();
+        showToast(res.message || 'Package status updated.');
+        await loadPackagesTab();
+        await loadAllDashboardData();
       } catch (err) {
-        showToast(err.message);
+        alert(err.message);
       } finally {
         hideLoading();
       }
     }
 
-    async function openPreview(paketId, fresh = false) {
+    async function openPackagePreview(paketId, fresh = false) {
       dashState.currentPreviewPaketId = paketId;
-      showLoading('Memuat pratinjau butir soal...');
+      $('previewPanel').classList.remove('hidden');
+      $('previewTitle').textContent = `Loading Preview for Package ${paketId}...`;
+      $('previewQuestionsList').innerHTML = '<div style="color:var(--muted); padding:16px;">Fetching items and answer keys...</div>';
+
       try {
         const res = await callApi('getPaketPreview', dashState.token, paketId, fresh);
-        const panel = $('previewPanel');
-        panel.classList.remove('hidden');
-        $('previewTitle').textContent = `Pratinjau: ${res.paket.name} (${res.questions.length} Soal)`;
+        const questions = resolveQuestionPassages(res.questions || []);
+        $('previewTitle').textContent = `Package Preview: ${res.paket.name} (${res.paket.id}) — ${questions.length} Item(s)`;
 
-        const listEl = $('previewQuestionsList');
-        if (!res.questions || res.questions.length === 0) {
-          listEl.innerHTML = '<div style="color:var(--muted);">Tidak ada soal pada paket ini.</div>';
-        } else {
-          listEl.innerHTML = res.questions.map((q, idx) => {
-            const hasIssue = q.issues && q.issues.length > 0;
-            const keyLetters = (q.key && q.key.letters) || [];
-
-            let optsHtml = '';
-            if (q.tipeSoal === 'IS') {
-              const acc = (q.key && q.key.accepted) || [];
-              optsHtml = `<div style="margin-top:8px;"><strong>Jawaban Diterima:</strong> ${acc.map(a => `<span class="opt-pill is-key">${escapeHtml(a)}</span>`).join('')}</div>`;
-            } else {
-              const pills = ['A', 'B', 'C', 'D', 'E'].map(l => {
-                const txt = String((q.options && q.options[l]) || '').trim();
-                if (!txt || txt === '-') return '';
-                const isKey = keyLetters.includes(l);
-                return `<span class="opt-pill ${isKey ? 'is-key' : ''}"><strong>${l}.</strong> ${escapeHtml(txt)}</span>`;
-              }).filter(Boolean).join('');
-              optsHtml = `<div style="margin-top:8px;">${pills || `<span class="opt-pill is-key">Kunci: ${escapeHtml(q.kunciJawaban)}</span>`}</div>`;
-            }
-
-            const issuesHtml = hasIssue
-              ? `<div class="alert-error" style="margin-top:8px; margin-bottom:0; padding:7px 10px; font-size:12px;">Perhatian (Baris ${q.sheetRow}): ${escapeHtml(q.issues.join(' | '))}</div>`
-              : '';
-
-            return `
-              <div class="preview-q ${hasIssue ? 'has-issue' : ''}">
-                <div style="display:flex; justify-content:space-between; font-size:12.5px; font-weight:700; color:var(--primary); margin-bottom:6px;">
-                  <span>No. ${escapeHtml(q.noSoal || (idx + 1))} (Baris Sheet #${q.sheetRow})</span>
-                  <span>Tipe: ${escapeHtml(q.tipeSoal)} • Kunci: ${escapeHtml(q.kunciJawaban)}</span>
-                </div>
-                <div style="font-size:14px; font-weight:600; white-space:pre-line;">${escapeHtml(q.pertanyaan)}</div>
-                ${optsHtml}
-                ${issuesHtml}
-              </div>
-            `;
-          }).join('');
+        if (questions.length === 0) {
+          $('previewQuestionsList').innerHTML = '<p style="color:var(--muted);">This assessment package contains no items.</p>';
+          return;
         }
 
-        panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        $('previewQuestionsList').innerHTML = questions.map((q, idx) => {
+          const hasIssue = (q.issues || []).length > 0;
+          const keyLetters = (q.key && q.key.letters) || [];
+          const acceptedShort = (q.key && q.key.accepted) || [];
+
+          const passageHtml = q._passage
+            ? `<div class="passage-preview-box" style="margin-top:8px;">
+                 <div style="font-size:11px; font-weight:800; color:var(--primary); text-transform:uppercase; margin-bottom:4px;">Reading Passage / Stimulus</div>
+                 <div>${formatRichMedia(q._passage)}</div>
+               </div>`
+            : '';
+
+          let optsHtml = '';
+          if (q.tipeSoal === 'IS') {
+            optsHtml = `<div class="opt-pill is-key">Accepted Answer Key(s): ${escapeHtml(acceptedShort.join(' | ') || q.kunciJawaban)}</div>`;
+          } else if (q.tipeSoal === 'MATRIKS') {
+            optsHtml = `<div class="opt-pill is-key">Matrix Answer Key Sequence: ${escapeHtml(q.kunciJawaban)}</div>`;
+          } else {
+            const letters = q.tipeSoal === 'BS' ? ['A', 'B'] : ['A', 'B', 'C', 'D', 'E'];
+            optsHtml = letters.map(l => {
+              const val = (q.options && q.options[l]) || (q.tipeSoal === 'BS' ? (l === 'A' ? 'True' : 'False') : '');
+              if (!val || val === '-') return '';
+              const isKey = keyLetters.includes(l);
+              return `<div class="opt-pill ${isKey ? 'is-key' : ''}"><strong>${l}.</strong> ${formatRichMedia(val)} ${isKey ? '✓ (KEY)' : ''}</div>`;
+            }).join('');
+          }
+
+          const issueHtml = hasIssue
+            ? `<div class="alert-error" style="margin-top:8px; margin-bottom:0;"><strong>Audit Warning:</strong> ${escapeHtml(q.issues.join(' | '))}</div>`
+            : '';
+
+          const explanationHtml = q.pembahasan
+            ? `<div style="margin-top:8px; font-size:13px; color:#1e1b4b; background:var(--primary-soft); padding:8px 11px; border-radius:8px;"><strong>Explanation:</strong> ${formatRichMedia(q.pembahasan)}</div>`
+            : '';
+
+          return `
+            <div class="preview-q ${hasIssue ? 'has-issue' : ''}">
+              <div style="display:flex; justify-content:space-between; font-size:12.5px; color:var(--muted); margin-bottom:6px;">
+                <strong>Item ${escapeHtml(q.noSoal || (idx + 1))} • ${escapeHtml(TYPE_LABELS[q.tipeSoal] || q.tipeSoal)}</strong>
+                <span>Sheet Row ${q.sheetRow}</span>
+              </div>
+              ${passageHtml}
+              <div style="font-weight:700; margin-bottom:10px; white-space:pre-line;">${formatRichMedia(q.pertanyaan)}</div>
+              ${optsHtml}
+              ${explanationHtml}
+              ${issueHtml}
+            </div>
+          `;
+        }).join('');
+
+        $('previewPanel').scrollIntoView({ behavior: 'smooth' });
       } catch (err) {
-        showToast(err.message);
-      } finally {
-        hideLoading();
+        $('previewQuestionsList').innerHTML = `<div class="alert-error">${escapeHtml(err.message)}</div>`;
       }
     }
 
     // =========================================================================
-    // TAB 6: PENGATURAN PIN & VALIDATOR BANK SOAL
+    // TAB 6: PIN SECURITY & QUESTION BANK VALIDATOR
     // =========================================================================
     function syncSecurityUI() {
-      $('settingStudentPin').value = dashState.security.requireStudentPin || 'TIDAK';
-      $('settingTeacherPin').value = dashState.security.requireTeacherPin || 'YA';
-      const valid = dashState.security.validPinCount || 0;
-      const total = dashState.security.totalStudentCount || 0;
-      $('pinCoverageBadge').textContent = `Cakupan data tanggal lahir: ${valid} dari ${total} siswa memiliki PIN 6 digit siap pakai.`;
+      $('settingStudentPin').value = dashState.security.requireStudentPin === 'YES' ? 'YES' : 'NO';
+      $('settingTeacherPin').value = dashState.security.requireTeacherPin === 'NO' ? 'NO' : 'YES';
+      $('pinCoverageBadge').textContent =
+        `Valid 6-digit birth-date PIN coverage: ${dashState.security.validPinCount} of ${dashState.security.totalStudentCount} student(s) in Data_Siswa.`;
     }
 
     async function saveSecuritySettings() {
-      const sPin = $('settingStudentPin').value;
-      const tPin = $('settingTeacherPin').value;
+      const reqStudent = $('settingStudentPin').value;
+      const reqTeacher = $('settingTeacherPin').value;
 
-      showLoading('Menyimpan pengaturan keamanan PIN...');
+      showLoading('Saving security settings to Config sheet...');
       try {
-        const res = await callApi('updateSecuritySettings', dashState.token, sPin, tPin);
+        const res = await callApi('updateSecuritySettings', dashState.token, reqStudent, reqTeacher);
         dashState.security.requireStudentPin = res.settings.REQUIRE_STUDENT_PIN;
         dashState.security.requireTeacherPin = res.settings.REQUIRE_TEACHER_PIN;
         if (res.pinCoverage) {
@@ -1926,9 +2204,9 @@
           dashState.security.totalStudentCount = res.pinCoverage.total;
         }
         syncSecurityUI();
-        showToast('Pengaturan PIN berhasil disimpan ke tab Config!');
+        showToast('PIN security settings saved successfully.');
       } catch (err) {
-        showToast(err.message);
+        alert(err.message);
       } finally {
         hideLoading();
       }
@@ -1936,17 +2214,19 @@
 
     async function runBankValidation() {
       const box = $('validationResultList');
-      box.innerHTML = 'Memeriksa seluruh baris pada Bank_Soal...';
+      box.innerHTML = 'Auditing Bank_Soal...';
       try {
         const res = await callApi('getBankValidation', dashState.token);
         const issues = res.issues || [];
         if (issues.length === 0) {
-          box.innerHTML = '<div style="background:var(--success-soft); color:var(--success); padding:12px; border-radius:9px; font-weight:700;">Semua soal valid! Tidak ditemukan masalah pada Bank_Soal.</div>';
+          box.innerHTML = '<div style="padding:12px; border-radius:9px; background:var(--success-soft); color:var(--success); font-weight:700;">All checks passed. No configuration issues were found in Bank_Soal.</div>';
         } else {
-          box.innerHTML = `<div class="alert-error" style="margin-bottom:8px;">Ditemukan ${issues.length} catatan pada Bank_Soal:</div>` +
-            `<ul style="padding-left:18px; display:grid; gap:6px; color:var(--text);">` +
-            issues.map(msg => `<li>${escapeHtml(msg)}</li>`).join('') +
-            `</ul>`;
+          box.innerHTML = `
+            <div class="alert-error">Found ${issues.length} issue(s) requiring attention:</div>
+            <ul style="padding-left:18px; display:grid; gap:6px; font-size:13px; color:var(--text);">
+              ${issues.map(iss => `<li>${escapeHtml(iss)}</li>`).join('')}
+            </ul>
+          `;
         }
       } catch (err) {
         box.innerHTML = `<div class="alert-error">${escapeHtml(err.message)}</div>`;
@@ -1954,77 +2234,29 @@
     }
 
     // =========================================================================
-    // MODAL RINCIAN JAWABAN SISWA & EKSPOR CSV
+    // CSV EXPORT FOR ASSESSMENT RESULTS
     // =========================================================================
-    async function openAttemptDetail(rowId) {
-      const row = dashState.rawRows.find(r => r.id === rowId);
-      if (!row) return;
-
-      $('detailModalTitle').textContent = `${row.namaSiswa} (${row.kelas})`;
-      $('detailModalMeta').textContent = `Paket: ${row.paketId} • Percobaan Ke-${row.percobaanKe} • Skor Akhir: ${row.skorAkhir} (${row.status})`;
-      $('detailModalBody').innerHTML = '<div style="text-align:center; padding:24px; color:var(--muted);">Memuat rincian jawaban...</div>';
-      $('detailModal').classList.remove('hidden');
-
-      try {
-        const res = await callApi('getAttemptDetail', dashState.token, rowId);
-        const details = res.details || [];
-        if (details.length === 0) {
-          $('detailModalBody').innerHTML = '<div style="color:var(--muted);">Rincian tidak tersedia.</div>';
-          return;
-        }
-
-        $('detailModalBody').innerHTML = `
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Tipe</th>
-                  <th>Jawaban Siswa</th>
-                  <th>Kunci</th>
-                  <th>Status</th>
-                  <th>Poin</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${details.map((d, i) => {
-                  const cls = d.status === 'BENAR' ? 'badge-lulus' : (d.status === 'PARSIAL' ? 'badge-warn' : 'badge-remedi');
-                  return `
-                    <tr>
-                      <td><strong>${escapeHtml(d.noSoal || (i + 1))}</strong></td>
-                      <td>${escapeHtml(d.tipeSoal)}</td>
-                      <td>${escapeHtml(d.studentAns)}</td>
-                      <td><strong>${escapeHtml(d.keyAns)}</strong></td>
-                      <td><span class="badge ${cls}">${escapeHtml(d.status)}</span></td>
-                      <td>${d.score}</td>
-                    </tr>
-                  `;
-                }).join('')}
-              </tbody>
-            </table>
-          </div>
-        `;
-      } catch (err) {
-        $('detailModalBody').innerHTML = `<div class="alert-error">${escapeHtml(err.message)}</div>`;
-      }
-    }
-
-    function exportFilteredCsv() {
-      const rows = dashState.filteredRows || [];
+    function exportResultsCsv() {
+      const rows = dashState.filteredRows;
       if (rows.length === 0) {
-        showToast('Tidak ada data untuk diekspor.');
+        showToast('There are no assessment results to export.');
         return;
       }
 
-      const headers = ['Waktu', 'Kelas', 'Nama_Siswa', 'ID_Paket', 'Percobaan_Ke', 'Jumlah_Benar', 'Total_Soal', 'Skor_Mentah', 'Skor_Akhir', 'Status', 'Durasi_Menit', 'Pindah_Tab'];
+      const headers = [
+        'Timestamp', 'Class', 'Student_Name', 'Package_ID', 'Package_Title',
+        'Attempt_No', 'Correct_Count', 'Total_Items', 'Raw_Score', 'Final_Score',
+        'Status', 'Duration_Min', 'Tab_Switches'
+      ];
+
       const escCsv = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
 
       const lines = [headers.join(',')];
       rows.forEach(r => {
         lines.push([
-          r.timestamp, r.kelas, r.namaSiswa, r.paketId, r.percobaanKe,
-          r.jumlahBenar, r.totalSoal, r.skorMentah, r.skorAkhir, r.status,
-          r.durasi, r.pindahTab
+          r.timestamp, r.kelas, r.namaSiswa, r.paketId, getPackageName(r.paketId),
+          r.percobaanKe, r.jumlahBenar, r.totalSoal, r.skorMentah, r.skorAkhir,
+          r.status, r.durasi, r.pindahTab
         ].map(escCsv).join(','));
       });
 
@@ -2032,19 +2264,19 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Rekap_NEngEva_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.download = `NEngEva_Assessment_Results_${new Date().toISOString().slice(0, 10)}.csv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      showToast('File CSV berhasil diunduh.');
+      showToast('Assessment results exported as CSV.');
     }
 
     // =========================================================================
-    // NAVIGASI TAB & EVENT LISTENERS
+    // TAB NAVIGATION & EVENT LISTENERS
     // =========================================================================
     function switchTab(tabName) {
-      dashState.currentTab = tabName;
+      dashState.activeTab = tabName;
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.tab === tabName);
       });
@@ -2052,7 +2284,7 @@
         panel.classList.toggle('hidden', panel.id !== `tab-${tabName}`);
       });
 
-      if (tabName === 'packages') loadPackagesManagement();
+      if (tabName === 'packages') loadPackagesTab();
       if (tabName === 'active') refreshActiveSessionsOnly();
     }
 
@@ -2060,13 +2292,14 @@
       btn.addEventListener('click', () => switchTab(btn.dataset.tab));
     });
 
-    $('loginForm').addEventListener('submit', handleTeacherLogin);
+    $('loginForm').addEventListener('submit', handleLoginSubmit);
     $('btnLogout').addEventListener('click', handleLogout);
     $('btnRefresh').addEventListener('click', loadAllDashboardData);
 
     $('filterPaket').addEventListener('change', () => {
-      const val = $('filterPaket').value;
-      if (val) $('missingPaketSelect').value = val;
+      if ($('filterPaket').value) {
+        $('missingPaketSelect').value = $('filterPaket').value;
+      }
       applyFiltersAndRender();
     });
     $('filterKelas').addEventListener('change', applyFiltersAndRender);
@@ -2074,23 +2307,41 @@
     $('filterSearch').addEventListener('input', applyFiltersAndRender);
     $('filterStatus').addEventListener('change', applyFiltersAndRender);
     $('filterAttemptMode').addEventListener('change', applyFiltersAndRender);
+    $('btnExportCsv').addEventListener('click', exportResultsCsv);
 
     $('missingPaketSelect').addEventListener('change', renderMissingStudents);
-    $('btnCopyMissing').addEventListener('click', copyMissingListToClipboard);
+    $('btnCopyMissing').addEventListener('click', copyMissingToClipboard);
     $('btnRefreshActive').addEventListener('click', refreshActiveSessionsOnly);
-    $('btnReloadPackages').addEventListener('click', loadPackagesManagement);
+
+    $('analysisAttemptBasis').addEventListener('change', renderItemAnalysis);
+    $('btnExportAnalysisCsv').addEventListener('click', exportAnalysisCsv);
+
+    $('btnReloadPackages').addEventListener('click', loadPackagesTab);
     $('btnRefreshPreview').addEventListener('click', () => {
-      if (dashState.currentPreviewPaketId) openPreview(dashState.currentPreviewPaketId, true);
+      if (dashState.currentPreviewPaketId) openPackagePreview(dashState.currentPreviewPaketId, true);
     });
     $('btnClosePreview').addEventListener('click', () => $('previewPanel').classList.add('hidden'));
 
     $('btnSaveSecurity').addEventListener('click', saveSecuritySettings);
     $('btnRunValidation').addEventListener('click', runBankValidation);
-    $('btnExportCsv').addEventListener('click', exportFilteredCsv);
+
     $('btnCloseDetailModal').addEventListener('click', () => $('detailModal').classList.add('hidden'));
-    $('analysisAttemptBasis').addEventListener('change', renderItemAnalysis);
-    $('btnExportAnalysisCsv').addEventListener('click', exportAnalysisCsv);
-    // Jalankan saat halaman dibuka
+    $('detailModal').addEventListener('click', (e) => {
+      if (e.target === $('detailModal')) $('detailModal').classList.add('hidden');
+    });
+
+    $('btnCloseItemPreviewModal').addEventListener('click', () => {
+      pauseItemPreviewAudio();
+      $('itemPreviewModal').classList.add('hidden');
+    });
+    $('itemPreviewModal').addEventListener('click', (e) => {
+      if (e.target === $('itemPreviewModal')) {
+        pauseItemPreviewAudio();
+        $('itemPreviewModal').classList.add('hidden');
+      }
+    });
+
+    // Initialize dashboard
     initDashboard();
   </script>
 </body>
