@@ -382,7 +382,7 @@
       white-space: pre-line;
     }
 
-    /* OPTIONS (MC, MR, TF, MATCHING) */
+    /* OPTIONS */
     .opt-list {
       display: flex;
       flex-direction: column;
@@ -674,7 +674,7 @@
         <div class="brand-logo">NE</div>
         <div>
           <div class="brand-title" id="appTitle">New English Evaluation (NEng Eva)</div>
-          <div class="brand-sub">Digital Learning Assessment System</div>
+          <div class="brand-sub">Online English Assessment</div>
         </div>
       </div>
       <a href="dashboard.html" class="btn-link-dash">Teacher Dashboard</a>
@@ -683,12 +683,12 @@
 
   <main class="container">
 
-    <!-- 1. STUDENT LOGIN -->
+    <!-- 1. STUDENT LOGIN FORM -->
     <section id="setupSection" class="setup-wrap">
       <div class="card">
         <div class="setup-header">
           <h1>Student Login</h1>
-          <p>Please select your class, full name, and the assessment package to begin.</p>
+          <p>Select your class, name, and test package to get started.</p>
         </div>
 
         <div id="setupError" class="alert-error hidden"></div>
@@ -696,7 +696,7 @@
         <div class="form-group">
           <label class="form-label" for="selectKelas">Class</label>
           <select id="selectKelas" class="form-control">
-            <option value="">-- Loading class list... --</option>
+            <option value="">-- Loading classes... --</option>
           </select>
         </div>
 
@@ -708,9 +708,9 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="selectPaket">Assessment Package</label>
+          <label class="form-label" for="selectPaket">Test Package</label>
           <select id="selectPaket" class="form-control">
-            <option value="">-- Loading assessment packages... --</option>
+            <option value="">-- Loading test packages... --</option>
           </select>
         </div>
 
@@ -733,22 +733,22 @@
 
         <div class="rules-grid">
           <div class="rule-item"><span>Passing Score (KKM)</span><strong id="infoKkm">80</strong></div>
-          <div class="rule-item"><span>Max. Attempts</span><strong id="infoAttempts">3x</strong></div>
-          <div class="rule-item"><span>Final Scoring</span><strong id="infoMethod">HIGHEST</strong></div>
+          <div class="rule-item"><span>Max Attempts</span><strong id="infoAttempts">3x</strong></div>
+          <div class="rule-item"><span>Scoring Method</span><strong id="infoMethod">HIGHEST</strong></div>
           <div class="rule-item"><span>Time Limit</span><strong id="infoTime">No Limit</strong></div>
         </div>
 
-        <button id="btnStart" class="btn btn-primary btn-block" disabled>Start Assessment</button>
+        <button id="btnStart" class="btn btn-primary btn-block" disabled>Start Test</button>
       </div>
     </section>
 
-    <!-- 2. ASSESSMENT WORKSPACE -->
+    <!-- 2. TEST WORKSPACE -->
     <section id="quizSection" class="hidden">
       <div class="quiz-status-bar">
         <div class="student-badges">
           <span class="pill" id="badgeStudent">-</span>
           <span class="pill pill-gray" id="badgePaket">-</span>
-          <span class="pill pill-timer hidden" id="timerBadge">Time Remaining: <strong id="timerText">00:00</strong></span>
+          <span class="pill pill-timer hidden" id="timerBadge">Time Left: <strong id="timerText">00:00</strong></span>
           <span class="pill pill-danger hidden" id="tabBadge">Tab Switches: <strong id="tabCount">0</strong>x</span>
         </div>
         <div style="font-size: 13px; font-weight: 700;" id="progressText">Answered 0 / 0</div>
@@ -769,7 +769,7 @@
           </div>
 
           <div class="q-meta">
-            <span class="q-num" id="qNumberBadge">Item 1</span>
+            <span class="q-num" id="qNumberBadge">Question 1</span>
             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
               <button type="button" id="btnViewPassageModal" class="btn btn-outline hidden" style="padding: 4px 11px; font-size: 12px; border-color: var(--primary); color: var(--primary);">View Passage</button>
               <span class="q-type" id="qTypeBadge">Multiple Choice</span>
@@ -786,21 +786,21 @@
           </div>
         </div>
 
-        <!-- ITEM NAVIGATION SIDEBAR -->
+        <!-- QUESTION NAVIGATOR SIDEBAR -->
         <aside class="card nav-card">
-          <div class="nav-title">Item Navigation</div>
+          <div class="nav-title">Question Navigator</div>
           <div class="legend">
             <span><i class="dot" style="background:#10b981;"></i> Answered</span>
             <span><i class="dot" style="background:#f59e0b;"></i> Flagged</span>
             <span><i class="dot" style="background:#e2e8f0;"></i> Unanswered</span>
           </div>
           <div id="questionGrid" class="q-grid"></div>
-          <button type="button" id="btnSubmitSidebar" class="btn btn-success btn-block">Submit Responses</button>
+          <button type="button" id="btnSubmitSidebar" class="btn btn-success btn-block">Submit Answers</button>
         </aside>
       </div>
     </section>
 
-    <!-- 3. ASSESSMENT RESULTS -->
+    <!-- 3. TEST RESULTS -->
     <section id="resultSection" class="hidden">
       <div class="card">
         <div class="result-hero">
@@ -809,19 +809,19 @@
           <div id="resFinalScore" class="score-big">0</div>
 
           <div class="stats-row">
-            <div class="stat-box"><span>Session Score</span><strong id="resRawScore">0</strong></div>
-            <div class="stat-box"><span>Correct Items</span><strong id="resCorrect">0 / 0</strong></div>
+            <div class="stat-box"><span>Test Score</span><strong id="resRawScore">0</strong></div>
+            <div class="stat-box"><span>Correct Answers</span><strong id="resCorrect">0 / 0</strong></div>
             <div class="stat-box"><span>Attempt</span><strong id="resAttempt">1 / 3</strong></div>
             <div class="stat-box"><span>Passing Score</span><strong id="resKkm">80</strong></div>
           </div>
 
           <div class="result-actions">
-            <button type="button" id="btnRetry" class="btn btn-primary hidden">Retake Assessment</button>
-            <button type="button" id="btnHome" class="btn btn-outline">Return to Start</button>
+            <button type="button" id="btnRetry" class="btn btn-primary hidden">Retake Test</button>
+            <button type="button" id="btnHome" class="btn btn-outline">Back to Login</button>
           </div>
         </div>
 
-        <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">Detailed Assessment Review</h3>
+        <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">Answer Review</h3>
         <div id="reviewNotice" class="pin-hint hidden" style="margin-bottom: 14px;"></div>
         <div id="reviewList"></div>
       </div>
@@ -844,14 +844,14 @@
   <div id="loadingOverlay" class="overlay">
     <div class="modal-box" style="text-align: center;">
       <div class="spinner"></div>
-      <div id="loadingText" style="font-weight: 700; font-size: 15px;">Loading assessment data...</div>
+      <div id="loadingText" style="font-weight: 700; font-size: 15px;">Loading test data...</div>
     </div>
   </div>
 
   <!-- CONFIRMATION MODAL -->
   <div id="confirmModal" class="overlay hidden">
     <div class="modal-box">
-      <h3 id="confirmTitle" style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">Confirmation</h3>
+      <h3 id="confirmTitle" style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">Submit Your Answers?</h3>
       <p id="confirmBody" style="font-size: 14px; color: var(--muted); margin-bottom: 20px;"></p>
       <div style="display: flex; justify-content: flex-end; gap: 10px;">
         <button type="button" id="btnConfirmCancel" class="btn btn-outline">Cancel</button>
@@ -864,7 +864,7 @@
 
   <script>
     // =========================================================================
-    // GOOGLE APPS SCRIPT API CONFIGURATION (REPLACE WITH YOUR DEPLOYMENT URL)
+    // GOOGLE APPS SCRIPT API CONFIGURATION
     // =========================================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycby1WiRhGdIHsaA6brxkaOVWn4mqS5cV3naYfKZmOJErpRJl0wkTUbSMIUrJLkTzkoPO/exec';
 
@@ -915,10 +915,6 @@
     // API HELPER & UTILITIES
     // =========================================================================
     async function callApi(action, ...args) {
-      if (!API_URL || API_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL') {
-        throw new Error('API_URL has not been configured in index.html. Please insert your Apps Script Web App URL.');
-      }
-
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -976,12 +972,9 @@
 
     function formatRichMedia(rawText) {
       let text = escapeHtml(rawText || '');
-      // Explicit media tags [IMG: url] or [AUDIO: url]
       text = text.replace(/\[IMG:\s*(https?:\/\/[^\]]+)\]/gi, '<br><img src="$1" alt="Stimulus Image" loading="lazy"><br>');
       text = text.replace(/\[AUDIO:\s*(https?:\/\/[^\]]+)\]/gi, '<br><audio controls src="$1"></audio><br>');
-      // Direct image URLs
       text = text.replace(/(^|\s)(https?:\/\/\S+\.(?:png|jpe?g|gif|webp)(?:\?\S*)?)/gi, '$1<br><img src="$2" alt="Image" loading="lazy"><br>');
-      // Direct audio URLs
       text = text.replace(/(^|\s)(https?:\/\/\S+\.(?:mp3|wav|ogg|m4a)(?:\?\S*)?)/gi, '$1<br><audio controls src="$2"></audio><br>');
       return text;
     }
@@ -1027,7 +1020,7 @@
     // INITIALIZATION & STUDENT LOGIN
     // =========================================================================
     async function initApp() {
-      showLoading('Connecting to assessment server...');
+      showLoading('Connecting to test server...');
       try {
         const res = await callApi('getInitialData');
         state.config = Object.assign(state.config, res.config || {});
@@ -1055,9 +1048,9 @@
 
         const selPaket = $('selectPaket');
         if (state.packages.length === 0) {
-          selPaket.innerHTML = '<option value="">-- No active assessment packages available --</option>';
+          selPaket.innerHTML = '<option value="">-- No active test packages available --</option>';
         } else {
-          selPaket.innerHTML = '<option value="">-- Select Assessment Package --</option>' +
+          selPaket.innerHTML = '<option value="">-- Select Test Package --</option>' +
             state.packages.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`).join('');
         }
 
@@ -1082,21 +1075,21 @@
       }
 
       selNama.disabled = true;
-      selNama.innerHTML = '<option value="">-- Loading student roster... --</option>';
+      selNama.innerHTML = '<option value="">-- Loading student list... --</option>';
       validateStartForm();
 
       try {
         const res = await callApi('getStudentsByClass', kelas);
         const students = res.students || [];
         if (students.length === 0) {
-          selNama.innerHTML = '<option value="">-- No students registered in this class --</option>';
+          selNama.innerHTML = '<option value="">-- No students found in this class --</option>';
         } else {
-          selNama.innerHTML = '<option value="">-- Select Your Full Name --</option>' +
+          selNama.innerHTML = '<option value="">-- Select Your Name --</option>' +
             students.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
           selNama.disabled = false;
         }
       } catch (err) {
-        selNama.innerHTML = '<option value="">-- Failed to load student roster --</option>';
+        selNama.innerHTML = '<option value="">-- Failed to load student list --</option>';
         showSetupError(err.message);
       }
       validateStartForm();
@@ -1113,7 +1106,7 @@
     }
 
     // =========================================================================
-    // START ASSESSMENT
+    // START TEST
     // =========================================================================
     async function startQuiz() {
       showSetupError('');
@@ -1128,12 +1121,12 @@
         return;
       }
 
-      showLoading('Verifying credentials & loading assessment items...');
+      showLoading('Checking login & loading questions...');
       try {
         const res = await callApi('getQuestions', paketId, kelas, nama, pin);
         const questions = res.questions || [];
         if (questions.length === 0) {
-          throw new Error('This assessment package does not contain any items.');
+          throw new Error('This test package has no questions.');
         }
 
         state.student = {
@@ -1154,7 +1147,6 @@
         loadDraft();
         if (state.currentIndex >= state.questions.length) state.currentIndex = 0;
 
-        // Switch to Assessment Workspace
         $('setupSection').classList.add('hidden');
         $('resultSection').classList.add('hidden');
         $('quizSection').classList.remove('hidden');
@@ -1195,7 +1187,7 @@
         updateTimerDisplay();
         if (state.remainingSec <= 0) {
           clearInterval(state.timerInterval);
-          showToast('Time has expired! Submitting your responses automatically...');
+          showToast('Time is up! Submitting your answers automatically...');
           submitQuiz(true);
         }
       }, 1000);
@@ -1230,7 +1222,7 @@
     });
 
     // =========================================================================
-    // PASSAGE INHERITANCE, ITEM RENDERING & RESPONSE INTERACTION
+    // PASSAGE INHERITANCE, QUESTION RENDERING & ANSWER INTERACTION
     // =========================================================================
     function resolveQuestionPassages(questions) {
       let activePassage = '';
@@ -1274,11 +1266,9 @@
       const qKey = questionKey(q, idx);
       const currentAns = state.answers[qKey];
 
-      // Item Number & Type
-      $('qNumberBadge').textContent = `Item ${idx + 1} of ${state.questions.length}`;
+      $('qNumberBadge').textContent = `Question ${idx + 1} of ${state.questions.length}`;
       $('qTypeBadge').textContent = TYPE_LABELS[q.tipeSoal] || q.tipeSoal;
 
-      // Reading Passage / Stimulus (expanded on first item, collapsed + View Passage button on subsequent items)
       pauseAllPassageAudio();
       const passage = q._passage || '';
       if (passage) {
@@ -1295,7 +1285,6 @@
         $('passageContent').innerHTML = '';
       }
 
-      // Render Question Stem & Options by Item Type
       const container = $('optionsContainer');
       container.innerHTML = '';
 
@@ -1308,12 +1297,10 @@
         $('questionText').innerHTML = formatRichMedia(q.pertanyaan);
         renderMultipleChoice(q, qKey, currentAns, container, true);
       } else {
-        // PG, BS, MENJODOHKAN
         $('questionText').innerHTML = formatRichMedia(q.pertanyaan);
         renderMultipleChoice(q, qKey, currentAns, container, false);
       }
 
-      // Flag & Navigation Buttons
       $('btnFlag').classList.toggle('active', !!state.flagged[idx]);
       $('btnPrev').disabled = idx === 0;
 
@@ -1390,7 +1377,7 @@
       }
 
       const parts = raw.split(/[\|\n]/).map(s => s.trim()).filter(Boolean);
-      const promptText = parts.length > 1 ? parts[0] : 'Select the appropriate classification for each statement below:';
+      const promptText = parts.length > 1 ? parts[0] : 'Select the correct category for each statement below:';
       const statements = parts.length > 1 ? parts.slice(1) : parts;
 
       $('questionText').innerHTML = formatRichMedia(promptText);
@@ -1446,7 +1433,7 @@
       const input = document.createElement('input');
       input.type = 'text';
       input.className = 'short-answer-input';
-      input.placeholder = 'Enter your short response here...';
+      input.placeholder = 'Type your answer here...';
       input.value = String(currentAns ?? '');
 
       input.addEventListener('input', () => {
@@ -1503,19 +1490,19 @@
     }
 
     // =========================================================================
-    // RESPONSE SUBMISSION & RESULTS RENDERING
+    // SUBMISSION & RESULTS RENDERING
     // =========================================================================
     function askSubmitConfirmation() {
       const { answered, total } = updateProgress();
       const unanswered = total - answered;
       const flaggedCount = Object.values(state.flagged).filter(Boolean).length;
 
-      let msg = `You have answered ${answered} out of ${total} items.`;
-      if (unanswered > 0) msg += ` There are still ${unanswered} unanswered item(s).`;
-      if (flaggedCount > 0) msg += ` You have ${flaggedCount} item(s) flagged for review.`;
-      msg += ' Are you sure you want to submit your responses now?';
+      let msg = `You have answered ${answered} out of ${total} questions.`;
+      if (unanswered > 0) msg += ` ${unanswered} question(s) are still unanswered.`;
+      if (flaggedCount > 0) msg += ` You flagged ${flaggedCount} question(s) for review.`;
+      msg += ' Are you sure you want to submit your answers now?';
 
-      $('confirmTitle').textContent = 'Submit Assessment Responses?';
+      $('confirmTitle').textContent = 'Submit Your Answers?';
       $('confirmBody').textContent = msg;
       $('confirmModal').classList.remove('hidden');
     }
@@ -1525,7 +1512,7 @@
       state.isSubmitting = true;
       clearInterval(state.timerInterval);
       $('confirmModal').classList.add('hidden');
-      showLoading(isAuto ? 'Time expired, submitting responses...' : 'Grading & recording your assessment results...');
+      showLoading(isAuto ? 'Time is up, submitting answers...' : 'Grading & saving your test results...');
 
       try {
         const payload = {
@@ -1542,7 +1529,7 @@
         renderResult(res);
       } catch (err) {
         state.isSubmitting = false;
-        alert('Submission failed: ' + err.message + '\n\nYour responses remain saved locally in this browser. Please click Submit again.');
+        alert('Submission failed: ' + err.message + '\n\nYour answers are still saved in this browser. Please click Submit again.');
       } finally {
         hideLoading();
       }
@@ -1553,7 +1540,7 @@
       $('resultSection').classList.remove('hidden');
 
       const badge = $('resStatusBadge');
-      badge.textContent = res.isPassed ? 'PASSED' : 'REMEDIAL REQUIRED';
+      badge.textContent = res.isPassed ? 'PASSED' : 'REMEDIAL';
       badge.className = 'status-badge ' + (res.isPassed ? 'status-passed' : 'status-remedial');
 
       $('resFinalScore').textContent = res.finalScore;
@@ -1567,7 +1554,7 @@
 
       const notice = $('reviewNotice');
       if (!res.showKey) {
-        notice.textContent = 'Answer keys and explanations are hidden in accordance with the teacher\'s assessment settings.';
+        notice.textContent = 'Answer keys and explanations are hidden based on your teacher\'s settings.';
         notice.classList.remove('hidden');
       } else {
         notice.classList.add('hidden');
@@ -1582,7 +1569,7 @@
         const statusLabel = isCorrect ? 'CORRECT' : (isPartial ? 'PARTIAL' : 'INCORRECT');
 
         const keyLine = res.showKey
-          ? `<div><strong>Answer Key:</strong> ${escapeHtml(d.keyAns)}</div>`
+          ? `<div><strong>Correct Answer:</strong> ${escapeHtml(d.keyAns)}</div>`
           : '';
         const bahasLine = (res.showKey && d.pembahasan)
           ? `<div class="review-bahas"><strong>Explanation:</strong> ${formatRichMedia(d.pembahasan)}</div>`
@@ -1591,12 +1578,12 @@
         return `
           <div class="review-item ${cls}">
             <div class="review-head">
-              <span>Item ${idx + 1} (${escapeHtml(TYPE_LABELS[d.tipeSoal] || d.tipeSoal)})</span>
+              <span>Question ${idx + 1} (${escapeHtml(TYPE_LABELS[d.tipeSoal] || d.tipeSoal)})</span>
               <span>${statusLabel} &bull; Points: ${d.score}</span>
             </div>
             <div class="review-q">${formatRichMedia(d.pertanyaan)}</div>
             <div class="review-ans">
-              <div><strong>Your Response:</strong> ${escapeHtml(d.studentAns)}</div>
+              <div><strong>Your Answer:</strong> ${escapeHtml(d.studentAns)}</div>
               ${keyLine}
             </div>
             ${bahasLine}
