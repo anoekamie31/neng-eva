@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Instructor Dashboard — NEng Eva</title>
+  <title>Teacher Dashboard — NEng Eva</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -499,33 +499,33 @@
       <div class="brand">
         <div class="brand-logo">NE</div>
         <div>
-          <div class="brand-title">Instructor Dashboard — NEng Eva</div>
-          <div class="brand-sub">Assessment Monitoring, Item Psychometrics & Security Settings</div>
+          <div class="brand-title">Teacher Dashboard — NEng Eva</div>
+          <div class="brand-sub">Test Monitoring, Item Analysis & Security Settings</div>
         </div>
       </div>
       <div class="top-actions">
         <button type="button" id="btnRefresh" class="btn btn-outline hidden">Refresh Data</button>
-        <a href="index.html" class="btn btn-outline">Candidate Portal</a>
-        <button type="button" id="btnLogout" class="btn btn-danger-soft hidden">Sign Out</button>
+        <a href="index.html" class="btn btn-outline">Student Portal</a>
+        <button type="button" id="btnLogout" class="btn btn-danger-soft hidden">Log Out</button>
       </div>
     </div>
   </header>
 
   <main class="container">
 
-    <!-- 1. INSTRUCTOR LOGIN -->
+    <!-- 1. TEACHER LOGIN -->
     <section id="loginSection" class="login-wrap hidden">
       <div class="card">
-        <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">Instructor Dashboard Access</h2>
+        <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 4px;">Teacher Login</h2>
         <p style="font-size: 13.5px; color: var(--muted); margin-bottom: 18px;">
-          Enter your Instructor PIN to access assessment records, psychometric analysis, and system configuration.
+          Enter your Teacher PIN to view test results, item analysis, and security settings.
         </p>
 
         <div id="loginError" class="alert-error hidden"></div>
 
         <form id="loginForm">
           <div style="margin-bottom: 16px;">
-            <label class="filter-label" for="inputTeacherPin">Instructor PIN</label>
+            <label class="filter-label" for="inputTeacherPin">Teacher PIN</label>
             <input
               type="password"
               id="inputTeacherPin"
@@ -535,7 +535,7 @@
               required
             />
           </div>
-          <button type="submit" id="btnTeacherLogin" class="btn btn-primary btn-block">Sign In to Dashboard</button>
+          <button type="submit" id="btnTeacherLogin" class="btn btn-primary btn-block">Log In</button>
         </form>
       </div>
     </section>
@@ -547,7 +547,7 @@
       <div class="card">
         <div class="filter-grid">
           <div>
-            <label class="filter-label" for="filterPaket">Assessment Package</label>
+            <label class="filter-label" for="filterPaket">Test Package</label>
             <select id="filterPaket" class="form-control">
               <option value="">All Packages</option>
             </select>
@@ -580,9 +580,9 @@
       <!-- KPI SUMMARY CARDS -->
       <div class="kpi-grid">
         <div class="kpi-card">
-          <div class="kpi-title">Total Submissions</div>
+          <div class="kpi-title">Total Attempts</div>
           <div class="kpi-value" id="kpiTotalAttempts">0</div>
-          <div class="kpi-sub">Recorded attempts</div>
+          <div class="kpi-sub">Recorded submissions</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-title">Students Completed</div>
@@ -590,12 +590,12 @@
           <div class="kpi-sub" id="kpiTotalStudentsSub">Out of 0 registered</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-title">Pending Completion</div>
+          <div class="kpi-title">Pending Students</div>
           <div class="kpi-value" style="color: var(--warning);" id="kpiNotDone">0</div>
           <div class="kpi-sub" id="kpiMissingSub">Select package for details</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-title">Mean Final Score</div>
+          <div class="kpi-title">Average Score</div>
           <div class="kpi-value" style="color: var(--primary);" id="kpiAvgScore">0</div>
           <div class="kpi-sub">Scale 0 – 100</div>
         </div>
@@ -608,7 +608,7 @@
 
       <!-- NAVIGATION TABS -->
       <div class="tabs-bar">
-        <button type="button" class="tab-btn active" data-tab="results">Assessment Results</button>
+        <button type="button" class="tab-btn active" data-tab="results">Test Results</button>
         <button type="button" class="tab-btn" data-tab="missing">
           Pending Students <span class="tab-badge tab-badge-warn" id="badgeMissingCount">0</span>
         </button>
@@ -616,11 +616,11 @@
           Active Sessions <span class="tab-badge tab-badge-live" id="badgeActiveCount">0</span>
         </button>
         <button type="button" class="tab-btn" data-tab="analysis">Item Analysis</button>
-        <button type="button" class="tab-btn" data-tab="packages">Package Management & Preview</button>
+        <button type="button" class="tab-btn" data-tab="packages">Package Management</button>
         <button type="button" class="tab-btn" data-tab="settings">PIN Security & Validator</button>
       </div>
 
-      <!-- TAB 1: ASSESSMENT RESULTS -->
+      <!-- TAB 1: TEST RESULTS -->
       <div id="tab-results" class="card tab-panel">
         <div class="table-toolbar">
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -630,8 +630,8 @@
               <option value="REMEDIAL">REMEDIAL</option>
             </select>
             <select id="filterAttemptMode" class="form-control" style="width: auto;">
-              <option value="ALL">Show All Attempts</option>
-              <option value="LATEST">Latest Attempt per Student Only</option>
+              <option value="ALL">All Attempts</option>
+              <option value="LATEST">Latest Attempt per Student</option>
             </select>
           </div>
           <div style="font-size: 13px; color: var(--muted); font-weight: 600;" id="resultsCountLabel">0 records displayed</div>
@@ -651,12 +651,12 @@
                 <th>Final Score</th>
                 <th>Status</th>
                 <th>Duration</th>
-                <th>Tabs</th>
+                <th>Tab Switches</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody id="resultsTableBody">
-              <tr><td colspan="12" style="text-align:center; color:var(--muted); padding:24px;">Loading assessment records...</td></tr>
+              <tr><td colspan="12" style="text-align:center; color:var(--muted); padding:24px;">Loading test results...</td></tr>
             </tbody>
           </table>
         </div>
@@ -666,16 +666,16 @@
       <div id="tab-missing" class="card tab-panel hidden">
         <div class="table-toolbar">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-            <label class="filter-label" style="margin:0;">Inspect Package:</label>
+            <label class="filter-label" style="margin:0;">Select Package:</label>
             <select id="missingPaketSelect" class="form-control" style="width: auto; min-width: 220px;">
-              <option value="">-- Select Assessment Package --</option>
+              <option value="">-- Select Test Package --</option>
             </select>
           </div>
-          <button type="button" id="btnCopyMissing" class="btn btn-outline">Copy Roster (WhatsApp Format)</button>
+          <button type="button" id="btnCopyMissing" class="btn btn-outline">Copy List (WhatsApp Format)</button>
         </div>
 
         <div id="missingNotice" class="info-banner">
-          Select an <strong>Assessment Package</strong> above (or in the primary filter bar) to list registered students who have not yet submitted responses for that package.
+          Select a <strong>Test Package</strong> above (or in the main filter bar) to see registered students who have not taken the test yet.
         </div>
 
         <div class="table-wrap">
@@ -685,12 +685,12 @@
                 <th style="width: 60px;">No.</th>
                 <th>Class</th>
                 <th>Student Name</th>
-                <th>Assessment Package</th>
+                <th>Test Package</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody id="missingTableBody">
-              <tr><td colspan="5" style="text-align:center; color:var(--muted); padding:24px;">Please select an assessment package first.</td></tr>
+              <tr><td colspan="5" style="text-align:center; color:var(--muted); padding:24px;">Please select a test package first.</td></tr>
             </tbody>
           </table>
         </div>
@@ -700,7 +700,7 @@
       <div id="tab-active" class="card tab-panel hidden">
         <div class="table-toolbar">
           <div style="font-size: 13.5px; color: var(--muted);">
-            Displays candidates who have opened an assessment package and are currently in progress.
+            Shows students who have started a test and are currently working on it.
           </div>
           <button type="button" id="btnRefreshActive" class="btn btn-outline">Refresh Active Sessions</button>
         </div>
@@ -712,23 +712,23 @@
                 <th>Class</th>
                 <th>Student Name</th>
                 <th>Package ID</th>
-                <th>Elapsed Time</th>
+                <th>Time Elapsed</th>
               </tr>
             </thead>
             <tbody id="activeSessionsBody">
-              <tr><td colspan="4" style="text-align:center; color:var(--muted); padding:24px;">No candidates are currently taking an assessment.</td></tr>
+              <tr><td colspan="4" style="text-align:center; color:var(--muted); padding:24px;">No students are currently taking a test.</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- TAB 4: ITEM ANALYSIS (WITH ITEM PREVIEW & PSYCHOMETRICS) -->
+      <!-- TAB 4: ITEM ANALYSIS (WITH QUESTION PREVIEW & PSYCHOMETRICS) -->
       <div id="tab-analysis" class="card tab-panel hidden">
         <div class="table-toolbar">
           <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
             <label class="filter-label" style="margin:0;">Calculation Basis:</label>
             <select id="analysisAttemptBasis" class="form-control" style="width: auto;">
-              <option value="FIRST">First Attempt Only (Unbiased Baseline)</option>
+              <option value="FIRST">First Attempt Only (Unbiased)</option>
               <option value="LATEST">Latest Attempt per Student</option>
               <option value="ALL">All Attempts</option>
             </select>
@@ -737,20 +737,20 @@
         </div>
 
         <div id="analysisNotice" class="info-banner">
-          Select a specific <strong>Assessment Package</strong> in the primary filter bar above to inspect item difficulty (P), discrimination index (D), distractor distribution, and full item previews.
+          Select a specific <strong>Test Package</strong> in the main filter bar above to view item difficulty (P), discrimination index (D), answer distribution, and full question previews.
         </div>
 
         <div id="analysisSummaryGrid" class="analysis-summary-grid hidden">
           <div class="analysis-sum-card" style="border-left: 4px solid var(--success);">
-            <span>Retain Item (Valid)</span>
+            <span>Good to Keep (Valid)</span>
             <strong id="sumLayakCount" style="color: var(--success);">0</strong>
           </div>
           <div class="analysis-sum-card" style="border-left: 4px solid var(--warning);">
-            <span>Revise (Difficulty / Distractors)</span>
+            <span>Needs Revision (Difficulty / Distractors)</span>
             <strong id="sumRevisiCount" style="color: var(--warning);">0</strong>
           </div>
           <div class="analysis-sum-card" style="border-left: 4px solid var(--danger);">
-            <span>Verify Key / Ambiguous</span>
+            <span>Check Key / Ambiguous</span>
             <strong id="sumKunciCount" style="color: var(--danger);">0</strong>
           </div>
         </div>
@@ -759,30 +759,30 @@
           <table>
             <thead>
               <tr>
-                <th>Item</th>
+                <th>No.</th>
                 <th>Type & Key</th>
-                <th>Question Stem</th>
-                <th>N</th>
+                <th>Question</th>
+                <th>Students</th>
                 <th>Difficulty (P)</th>
                 <th>Discrimination (D)</th>
-                <th>Recommendation</th>
+                <th>Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody id="analysisTableBody">
-              <tr><td colspan="8" style="text-align:center; color:var(--muted); padding:24px;">Please select an assessment package first.</td></tr>
+              <tr><td colspan="8" style="text-align:center; color:var(--muted); padding:24px;">Please select a test package first.</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- TAB 5: PACKAGE MANAGEMENT & PREVIEW -->
+      <!-- TAB 5: PACKAGE MANAGEMENT -->
       <div id="tab-packages" class="card tab-panel hidden">
         <div class="table-toolbar">
           <div style="font-size: 13.5px; color: var(--muted);">
-            Activate or deactivate assessment packages for candidates, preview full answer keys, and verify item completeness.
+            Activate or deactivate test packages for students, preview answer keys, and check question completeness.
           </div>
-          <button type="button" id="btnReloadPackages" class="btn btn-outline">Refresh Package List</button>
+          <button type="button" id="btnReloadPackages" class="btn btn-outline">Refresh Packages</button>
         </div>
 
         <div class="table-wrap">
@@ -790,9 +790,9 @@
             <thead>
               <tr>
                 <th>Package ID</th>
-                <th>Package Title</th>
-                <th>Total Items</th>
-                <th>Submissions</th>
+                <th>Package Name</th>
+                <th>Questions</th>
+                <th>Attempts</th>
                 <th>Status</th>
                 <th>Actions</th>
               </tr>
@@ -819,30 +819,30 @@
       <!-- TAB 6: PIN SECURITY & VALIDATOR -->
       <div id="tab-settings" class="tab-panel hidden">
         <div class="settings-grid">
-          <!-- PIN ACCESS CONTROLS -->
+          <!-- PIN SECURITY SETTINGS -->
           <div class="card" style="margin-bottom: 0;">
-            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 6px;">PIN Access & Security Settings</h3>
+            <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 6px;">PIN Security Settings</h3>
             <p style="font-size: 13px; color: var(--muted); margin-bottom: 14px;">
-              Changes are saved directly to the <strong>Config</strong> sheet and apply immediately across all devices.
+              Changes are saved directly to the <strong>Config</strong> sheet and take effect immediately.
             </p>
 
             <div class="setting-row">
-              <h4>1. Candidate Login PIN (6-Digit Date of Birth)</h4>
-              <p>When enabled (<strong>YES</strong>), candidates must enter their 6-digit birth date (e.g., <code>26 December 2011</code> &rarr; <code>261211</code>).</p>
+              <h4>1. Student Login PIN (6-Digit Date of Birth)</h4>
+              <p>When enabled (<strong>YES</strong>), students must enter their 6-digit birth date (e.g., <code>26 December 2011</code> &rarr; <code>261211</code>).</p>
               <select id="settingStudentPin" class="form-control">
-                <option value="YES">YES — Require Candidate Birth-Date PIN</option>
-                <option value="NO">NO — Disable Candidate PIN (Direct Entry)</option>
+                <option value="YES">YES — Require Student Birth-Date PIN</option>
+                <option value="NO">NO — Disable Student PIN (Direct Login)</option>
               </select>
               <div style="margin-top: 8px; font-size: 12px; font-weight: 700; color: var(--primary);" id="pinCoverageBadge">
-                Checking candidate birth-date coverage...
+                Checking student birth-date coverage...
               </div>
             </div>
 
             <div class="setting-row">
-              <h4>2. Instructor Dashboard PIN</h4>
-              <p>When disabled (<strong>NO</strong>), the Instructor Dashboard opens immediately without requesting a PIN.</p>
+              <h4>2. Teacher Dashboard PIN</h4>
+              <p>When disabled (<strong>NO</strong>), the Teacher Dashboard opens directly without asking for a PIN.</p>
               <select id="settingTeacherPin" class="form-control">
-                <option value="YES">YES — Protect Dashboard with Instructor PIN</option>
+                <option value="YES">YES — Require Teacher PIN</option>
                 <option value="NO">NO — Open Dashboard Without PIN</option>
               </select>
             </div>
@@ -854,13 +854,13 @@
           <div class="card" style="margin-bottom: 0;">
             <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 6px;">Question Bank Validator</h3>
             <p style="font-size: 13px; color: var(--muted); margin-bottom: 14px;">
-              Automatically audit <strong>Bank_Soal</strong> for duplicate item numbers, missing answer keys, or unpopulated options.
+              Automatically check <strong>Bank_Soal</strong> for duplicate question numbers, missing answer keys, or empty options.
             </p>
             <button type="button" id="btnRunValidation" class="btn btn-outline btn-block" style="margin-bottom: 14px;">
-              Run Question Bank Audit
+              Validate Question Bank
             </button>
             <div id="validationResultList" style="font-size: 13px; color: var(--muted);">
-              Click the button above to audit all assessment packages.
+              Click the button above to check all test packages.
             </div>
           </div>
         </div>
@@ -869,12 +869,12 @@
     </section>
   </main>
 
-  <!-- MODAL: STUDENT RESPONSE DETAILS -->
+  <!-- MODAL: STUDENT ANSWER DETAILS -->
   <div id="detailModal" class="overlay hidden">
     <div class="modal-box">
       <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 12px;">
         <div>
-          <h3 id="detailModalTitle" style="font-size: 17px; font-weight: 800;">Candidate Response Details</h3>
+          <h3 id="detailModalTitle" style="font-size: 17px; font-weight: 800;">Student Answer Details</h3>
           <div id="detailModalMeta" style="font-size: 12.5px; color: var(--muted);"></div>
         </div>
         <button type="button" id="btnCloseDetailModal" class="btn btn-outline btn-sm">Close</button>
@@ -883,12 +883,12 @@
     </div>
   </div>
 
-  <!-- MODAL: ITEM PREVIEW IN ITEM ANALYSIS -->
+  <!-- MODAL: QUESTION PREVIEW IN ITEM ANALYSIS -->
   <div id="itemPreviewModal" class="overlay hidden">
     <div class="modal-box" style="max-width: 840px;">
       <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 14px;">
         <div>
-          <h3 id="itemPreviewTitle" style="font-size: 17px; font-weight: 800;">Item Preview</h3>
+          <h3 id="itemPreviewTitle" style="font-size: 17px; font-weight: 800;">Question Preview</h3>
           <div id="itemPreviewMeta" style="font-size: 12.5px; color: var(--muted); margin-top: 2px;"></div>
         </div>
         <button type="button" id="btnCloseItemPreviewModal" class="btn btn-outline btn-sm">Close</button>
@@ -901,15 +901,15 @@
   <div id="loadingOverlay" class="overlay">
     <div class="modal-box" style="max-width: 340px; text-align: center;">
       <div class="spinner"></div>
-      <div id="loadingText" style="font-weight: 700; font-size: 14px;">Loading Instructor Dashboard...</div>
+      <div id="loadingText" style="font-weight: 700; font-size: 14px;">Loading Teacher Dashboard...</div>
     </div>
   </div>
 
   <div id="toastBox" class="toast hidden"></div>
 
-  <script>
+<script>
     // =========================================================================
-    // GOOGLE APPS SCRIPT API CONFIGURATION (REPLACE WITH YOUR DEPLOYMENT URL)
+    // GOOGLE APPS SCRIPT API CONFIGURATION
     // =========================================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycby1WiRhGdIHsaA6brxkaOVWn4mqS5cV3naYfKZmOJErpRJl0wkTUbSMIUrJLkTzkoPO/exec';
 
@@ -962,10 +962,6 @@
     }
 
     async function callApi(action, ...args) {
-      if (!API_URL || API_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL') {
-        throw new Error('API_URL has not been configured in dashboard.html. Please insert your Apps Script Web App URL.');
-      }
-
       const response = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -1057,7 +1053,7 @@
     // AUTHENTICATION & SESSION LIFECYCLE
     // =========================================================================
     async function initDashboard() {
-      showLoading('Checking dashboard access configuration...');
+      showLoading('Checking dashboard access...');
       try {
         const authRes = await callApi('checkDashboardAuthMode');
         dashState.requirePin = !!authRes.requirePin;
@@ -1107,7 +1103,7 @@
     function handleSessionExpired() {
       localStorage.removeItem('neng_eva_teacher_token');
       dashState.token = '';
-      showLoginView('Your instructor session has expired. Please sign in again.');
+      showLoginView('Your session has expired. Please log in again.');
     }
 
     async function handleLoginSubmit(e) {
@@ -1116,7 +1112,7 @@
       if (!pin) return;
 
       $('loginError').classList.add('hidden');
-      showLoading('Verifying Instructor PIN...');
+      showLoading('Verifying Teacher PIN...');
       try {
         const res = await callApi('teacherLogin', pin, getClientId());
         dashState.token = res.token;
@@ -1137,7 +1133,7 @@
       } catch (e) { /* ignore */ }
       localStorage.removeItem('neng_eva_teacher_token');
       dashState.token = '';
-      showLoginView('You have signed out of the Instructor Dashboard.');
+      showLoginView('You have logged out of the Teacher Dashboard.');
     }
 
     async function enterWorkspace() {
@@ -1153,7 +1149,7 @@
     // DATA LOADING & FILTER POPULATION
     // =========================================================================
     async function loadAllDashboardData() {
-      showLoading('Loading assessment records & item psychometrics...');
+      showLoading('Loading test results & item analysis...');
       try {
         const sinceDays = Number($('filterDays').value) || 0;
         const [dashRes, activeRes] = await Promise.all([
@@ -1189,7 +1185,7 @@
       $('filterPaket').innerHTML = '<option value="">All Packages</option>' + paketOptions;
       if (prevPaket) $('filterPaket').value = prevPaket;
 
-      $('missingPaketSelect').innerHTML = '<option value="">-- Select Assessment Package --</option>' + paketOptions;
+      $('missingPaketSelect').innerHTML = '<option value="">-- Select Test Package --</option>' + paketOptions;
       if (prevMissingPaket || prevPaket) {
         $('missingPaketSelect').value = prevPaket || prevMissingPaket;
       }
@@ -1286,14 +1282,14 @@
     }
 
     // =========================================================================
-    // TAB 1: ASSESSMENT RESULTS TABLE & ATTEMPT DETAIL MODAL
+    // TAB 1: TEST RESULTS TABLE & ATTEMPT DETAIL MODAL
     // =========================================================================
     function renderResultsTable(rows) {
       const tbody = $('resultsTableBody');
       $('resultsCountLabel').textContent = `${rows.length} record(s) displayed`;
 
       if (rows.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; color:var(--muted); padding:24px;">No assessment records match the selected filters.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; color:var(--muted); padding:24px;">No test results match the selected filters.</td></tr>';
         return;
       }
 
@@ -1321,7 +1317,7 @@
             <td>${durasiText}</td>
             <td>${tabBadge}</td>
             <td>
-              <button type="button" class="btn btn-outline btn-sm" onclick="openAttemptDetail(${r.id})">Inspect</button>
+              <button type="button" class="btn btn-outline btn-sm" onclick="openAttemptDetail(${r.id})">Details</button>
             </td>
           </tr>
         `;
@@ -1334,14 +1330,14 @@
 
       $('detailModalTitle').textContent = `${row.namaSiswa} (${row.kelas})`;
       $('detailModalMeta').textContent = `Package: ${getPackageName(row.paketId)} • Attempt #${row.percobaanKe} • Final Score: ${row.skorAkhir} (${row.status})`;
-      $('detailModalBody').innerHTML = '<div style="text-align:center; padding:24px; color:var(--muted);">Loading item-level grading breakdown...</div>';
+      $('detailModalBody').innerHTML = '<div style="text-align:center; padding:24px; color:var(--muted);">Loading answer breakdown...</div>';
       $('detailModal').classList.remove('hidden');
 
       try {
         const res = await callApi('getAttemptDetail', dashState.token, rowId);
         const details = res.details || [];
         if (details.length === 0) {
-          $('detailModalBody').innerHTML = '<p style="color:var(--muted);">Item-level grading details are unavailable for this submission.</p>';
+          $('detailModalBody').innerHTML = '<p style="color:var(--muted);">Detailed answers are unavailable for this submission.</p>';
           return;
         }
 
@@ -1350,9 +1346,9 @@
             <table>
               <thead>
                 <tr>
-                  <th>Item</th>
+                  <th>No.</th>
                   <th>Type</th>
-                  <th>Student Response</th>
+                  <th>Student Answer</th>
                   <th>Answer Key</th>
                   <th>Points</th>
                   <th>Result</th>
@@ -1399,7 +1395,7 @@
         dashState.missingList = [];
         $('badgeMissingCount').textContent = '0';
         notice.classList.remove('hidden');
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--muted); padding:24px;">Please select an assessment package first.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--muted); padding:24px;">Please select a test package first.</td></tr>';
         return;
       }
 
@@ -1426,7 +1422,7 @@
       $('badgeMissingCount').textContent = missing.length;
 
       if (missing.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--success); font-weight:700; padding:24px;">All registered students in the selected class(es) have completed this assessment package!</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--success); font-weight:700; padding:24px;">All registered students in the selected class(es) have completed this test package!</td></tr>';
         return;
       }
 
@@ -1436,7 +1432,7 @@
           <td><strong>${escapeHtml(m.kelas)}</strong></td>
           <td>${escapeHtml(m.namaSiswa)}</td>
           <td><span class="badge badge-neutral">${escapeHtml(m.paketId)}</span></td>
-          <td><span class="badge badge-warn">Pending</span></td>
+          <td><span class="badge badge-warn">Not Taken</span></td>
         </tr>
       `).join('');
     }
@@ -1455,14 +1451,14 @@
         grouped[m.kelas].push(m.namaSiswa);
       });
 
-      let text = `*PENDING ASSESSMENT COMPLETION*\nPackage: ${paketName} (${paketId})\n`;
+      let text = `*STUDENTS WHO HAVE NOT TAKEN THE TEST*\nPackage: ${paketName} (${paketId})\n`;
       Object.keys(grouped).forEach(cls => {
         text += `\n*Class ${cls}* (${grouped[cls].length} student(s)):\n`;
         grouped[cls].forEach((n, i) => { text += `${i + 1}. ${n}\n`; });
       });
 
       navigator.clipboard.writeText(text).then(() => {
-        showToast('Pending student roster copied to clipboard.');
+        showToast('Student list copied to clipboard.');
       }).catch(() => {
         alert(text);
       });
@@ -1485,7 +1481,7 @@
       $('badgeActiveCount').textContent = sessions.length;
       const tbody = $('activeSessionsBody');
       if (sessions.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--muted); padding:24px;">No candidates are currently taking an assessment.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--muted); padding:24px;">No students are currently taking a test.</td></tr>';
         return;
       }
 
@@ -1500,7 +1496,7 @@
     }
 
     // =========================================================================
-    // TAB 4: ITEM ANALYSIS (DIFFICULTY, DISCRIMINATION, DISTRACTORS & ITEM PREVIEW)
+    // TAB 4: ITEM ANALYSIS (DIFFICULTY, DISCRIMINATION, DISTRACTORS & QUESTION PREVIEW)
     // =========================================================================
     function getExpectedKeyLetters(q) {
       const t = String(q.tipeSoal || '').toUpperCase();
@@ -1533,7 +1529,7 @@
         dashState.analysisReport = [];
         notice.classList.remove('hidden');
         summaryGrid.classList.add('hidden');
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--muted); padding:24px;">Please select a specific assessment package in the primary filter bar above.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--muted); padding:24px;">Please select a specific test package in the main filter bar above.</td></tr>';
         return;
       }
 
@@ -1568,7 +1564,7 @@
       if (questions.length === 0) {
         dashState.analysisReport = [];
         summaryGrid.classList.add('hidden');
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--muted); padding:24px;">No items were found for this assessment package.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--muted); padding:24px;">No questions were found for this test package.</td></tr>';
         return;
       }
 
@@ -1653,7 +1649,7 @@
           dVal = Math.round(((upperSum / upperN) - (lowerSum / lowerN)) * 100) / 100;
           if (dVal >= 0.40) dLabel = 'Excellent';
           else if (dVal >= 0.30) dLabel = 'Good';
-          else if (dVal >= 0.20) dLabel = 'Marginal';
+          else if (dVal >= 0.20) dLabel = 'Fair';
           else if (dVal >= 0) dLabel = 'Poor';
           else dLabel = 'Negative!';
         }
@@ -1687,39 +1683,39 @@
         let statusCode = 'EMPTY';
         let statusText = 'No Data';
         let badgeCls = 'badge-neutral';
-        let note = 'No candidate responses recorded under the current filter criteria.';
+        let note = 'No student answers recorded under the selected filters.';
 
         if (count > 0) {
           if ((dVal !== null && dVal < 0) || hasDominantDistractor) {
             statusCode = 'CHECK_KEY';
-            statusText = 'Verify Key / Ambiguous';
+            statusText = 'Check Key / Ambiguous';
             badgeCls = 'badge-remedial';
             countKunci++;
             note = dVal !== null && dVal < 0
-              ? `Negative discrimination (D = ${dVal.toFixed(2)}): lower-scoring candidates answered this item correctly more often than upper-scoring candidates. Verify the answer key.`
-              : 'A distractor option was selected more frequently than the keyed answer. Review item clarity and the answer key.';
+              ? `Negative discrimination (D = ${dVal.toFixed(2)}): lower-scoring students answered this correctly more often than high-scoring students. Please verify the answer key.`
+              : 'A wrong option (distractor) was chosen more often than the answer key. Please review the question wording or answer key.';
           } else if ((pPct > 85 || pPct < 20) && (dVal === null || dVal >= 0.20)) {
             statusCode = 'REV_DIFF';
             statusText = 'Revise Difficulty';
             badgeCls = 'badge-warn';
             countRevisi++;
             note = pPct > 85
-              ? `Item is overly easy (${pPct}% correct). Consider increasing cognitive demand.`
-              : `Item is overly difficult (${pPct}% correct). Review stimulus clarity and option wording.`;
+              ? `Question is too easy (${pPct}% correct). Consider making it slightly more challenging.`
+              : `Question is too difficult (${pPct}% correct). Check if the passage or wording is clear enough.`;
           } else if ((dVal !== null && dVal < 0.20) || hasDeadDistractor) {
             statusCode = 'REV_DIST';
             statusText = 'Revise Distractors';
             badgeCls = 'badge-warn';
             countRevisi++;
             note = (dVal !== null && dVal < 0.20)
-              ? `Low discrimination index (D = ${dVal.toFixed(2)}). Item poorly differentiates high and low achievers.`
-              : 'Contains non-functioning distractor(s) selected by < 5% of candidates. Replace implausible distractors.';
+              ? `Low discrimination index (D = ${dVal.toFixed(2)}). This question does not clearly separate strong and weak students.`
+              : 'Contains non-functioning distractor(s) chosen by < 5% of students. Replace weak options with more plausible choices.';
           } else {
             statusCode = 'GOOD';
-            statusText = 'Retain Item';
+            statusText = 'Good to Keep';
             badgeCls = 'badge-passed';
             countLayak++;
-            note = 'Item difficulty, discrimination index, and distractor distribution fall within acceptable psychometric thresholds.';
+            note = 'Difficulty, discrimination index, and answer distribution are all well-balanced.';
           }
         }
 
@@ -1754,9 +1750,9 @@
       dashState.analysisReport = report;
 
       summaryGrid.classList.remove('hidden');
-      $('sumLayakCount').textContent = `${countLayak} item(s)`;
-      $('sumRevisiCount').textContent = `${countRevisi} item(s)`;
-      $('sumKunciCount').textContent = `${countKunci} item(s)`;
+      $('sumLayakCount').textContent = `${countLayak} question(s)`;
+      $('sumRevisiCount').textContent = `${countRevisi} question(s)`;
+      $('sumKunciCount').textContent = `${countKunci} question(s)`;
 
       tbody.innerHTML = report.map(item => {
         const dDisplay = item.dVal === null
@@ -1802,24 +1798,24 @@
         const topList = item.shortAnswers.slice(0, 10).map(sa => {
           const pct = Math.round((sa.count / item.count) * 100);
           const tag = sa.correct
-            ? '<span class="badge badge-passed">Graded Correct</span>'
-            : '<span class="badge badge-remedial">Graded Incorrect</span>';
+            ? '<span class="badge badge-passed">Marked Correct</span>'
+            : '<span class="badge badge-remedial">Marked Incorrect</span>';
           return `<div class="dist-box ${sa.correct ? 'is-key' : ''}">
             <div style="display:flex; justify-content:space-between; gap:6px; align-items:center;">
               <strong>"${escapeHtml(sa.text)}"</strong>
               ${tag}
             </div>
-            <div style="font-size:12px; color:var(--muted); margin-top:4px;">${sa.count} candidate(s) (${pct}%)</div>
+            <div style="font-size:12px; color:var(--muted); margin-top:4px;">${sa.count} student(s) (${pct}%)</div>
           </div>`;
         }).join('');
-        bodyHtml = `<div style="font-size:12.5px; font-weight:700; margin-top:8px;">Candidate Response Variations (Top 10):</div>
+        bodyHtml = `<div style="font-size:12.5px; font-weight:700; margin-top:8px;">Student Answer Variations (Top 10):</div>
           <div class="distractor-grid">${topList}</div>`;
       } else if (item.tipeSoal === 'MATRIKS') {
         const m = item.matrixStats;
         bodyHtml = `<div class="distractor-grid">
-          <div class="dist-box is-key"><strong>Full Credit (All Rows Correct)</strong><div>${m.penuh} candidate(s) (${Math.round(m.penuh / item.count * 100)}%)</div></div>
-          <div class="dist-box"><strong>Partial Credit</strong><div>${m.parsial} candidate(s) (${Math.round(m.parsial / item.count * 100)}%)</div></div>
-          <div class="dist-box is-danger"><strong>Zero Credit (All Rows Incorrect)</strong><div>${m.salah} candidate(s) (${Math.round(m.salah / item.count * 100)}%)</div></div>
+          <div class="dist-box is-key"><strong>Full Score (All Rows Correct)</strong><div>${m.penuh} student(s) (${Math.round(m.penuh / item.count * 100)}%)</div></div>
+          <div class="dist-box"><strong>Partial Score</strong><div>${m.parsial} student(s) (${Math.round(m.parsial / item.count * 100)}%)</div></div>
+          <div class="dist-box is-danger"><strong>Zero Score (All Rows Incorrect)</strong><div>${m.salah} student(s) (${Math.round(m.salah / item.count * 100)}%)</div></div>
         </div>`;
       } else {
         const minKeyCount = item.keyLetters.length > 0
@@ -1834,8 +1830,8 @@
           const isDead = !isKey && item.count >= 5 && pct < 5;
 
           let subNote = isKey ? 'Answer Key' : 'Distractor';
-          if (isDominant) subNote = 'Distractor Exceeds Key!';
-          else if (isDead) subNote = 'Non-Functioning (<5%)';
+          if (isDominant) subNote = 'Chosen More Than Key!';
+          else if (isDead) subNote = 'Weak Distractor (<5%)';
 
           return `<div class="dist-box ${isKey ? 'is-key' : (isDominant ? 'is-danger' : '')}">
             <div style="display:flex; justify-content:space-between; font-size:13px;">
@@ -1857,7 +1853,7 @@
 
       return `
         <div style="font-size:13px; margin-bottom:6px;">
-          <strong>Diagnostic Note:</strong> ${escapeHtml(item.note)}
+          <strong>Analysis Note:</strong> ${escapeHtml(item.note)}
         </div>
         ${bodyHtml}
       `;
@@ -1869,7 +1865,7 @@
     }
 
     // =========================================================================
-    // ITEM PREVIEW MODAL INSIDE ITEM ANALYSIS
+    // QUESTION PREVIEW MODAL INSIDE ITEM ANALYSIS
     // =========================================================================
     function pauseItemPreviewAudio() {
       document.querySelectorAll('#itemPreviewBody audio').forEach(a => {
@@ -1887,10 +1883,9 @@
       const paketId = $('filterPaket').value || '';
       const typeLabel = TYPE_LABELS[item.tipeSoal] || item.tipeSoal;
 
-      $('itemPreviewTitle').textContent = `Item ${item.qNo} Preview (${typeLabel})`;
-      $('itemPreviewMeta').textContent = `Package: ${getPackageName(paketId)} (${paketId}) • Sheet Row: ${item.sheetRow || '-'} • Respondents: ${item.count}`;
+      $('itemPreviewTitle').textContent = `Question ${item.qNo} Preview (${typeLabel})`;
+      $('itemPreviewMeta').textContent = `Package: ${getPackageName(paketId)} (${paketId}) • Sheet Row: ${item.sheetRow || '-'} • Students: ${item.count}`;
 
-      // 1. Reading Passage / Stimulus
       const passageHtml = item.passage
         ? `<div class="passage-preview-box">
              <div style="font-size:11.5px; font-weight:800; color:var(--primary); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:6px;">Reading Passage / Stimulus</div>
@@ -1898,7 +1893,6 @@
            </div>`
         : '';
 
-      // 2. Question Stem & Options / Matrix / Short Answer
       let stemAndOptionsHtml = '';
       if (item.tipeSoal === 'MATRIKS') {
         let raw = String(item.rawPertanyaan || '');
@@ -1909,7 +1903,7 @@
           raw = raw.replace(headerMatch[0], '').trim();
         }
         const parts = raw.split(/[\|\n]/).map(s => s.trim()).filter(Boolean);
-        const promptText = parts.length > 1 ? parts[0] : 'Matrix / Category Item';
+        const promptText = parts.length > 1 ? parts[0] : 'Matrix / Category Question';
         const statements = parts.length > 1 ? parts.slice(1) : parts;
 
         const filledLetters = ['A', 'B', 'C', 'D', 'E'].filter(l => {
@@ -1951,7 +1945,7 @@
         const accepted = String(item.kunciJawaban || '').split('|').map(s => s.trim()).filter(Boolean);
         stemAndOptionsHtml = `
           <div class="stem-preview-box" style="font-size:15px; font-weight:700; margin-bottom:12px; white-space:pre-line;">${formatRichMedia(item.rawPertanyaan)}</div>
-          <div class="opt-pill is-key">Accepted Answer Key(s): ${escapeHtml(accepted.join('  |  '))}</div>
+          <div class="opt-pill is-key">Accepted Answer(s): ${escapeHtml(accepted.join('  |  '))}</div>
         `;
       } else {
         const letters = item.tipeSoal === 'BS' ? ['A', 'B'] : ['A', 'B', 'C', 'D', 'E'];
@@ -1983,14 +1977,12 @@
         `;
       }
 
-      // 3. Explanation (if available)
       const explanationHtml = item.pembahasan
         ? `<div style="margin-top:12px; padding:11px 14px; border-radius:10px; background:var(--primary-soft); color:#1e1b4b; font-size:13.5px;">
-             <strong>Explanation / Rationale:</strong><br>${formatRichMedia(item.pembahasan)}
+             <strong>Explanation:</strong><br>${formatRichMedia(item.pembahasan)}
            </div>`
         : '';
 
-      // 4. Psychometric Summary & Prev/Next Item Controls
       const dText = item.dVal === null ? item.dLabel : `${item.dVal.toFixed(2)} (${item.dLabel})`;
       const navFooterHtml = `
         <div style="margin-top:16px; padding:12px 14px; border-radius:10px; background:#f8fafc; border:1px solid var(--border); display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px;">
@@ -2000,8 +1992,8 @@
             <span class="badge ${item.badgeCls}">${item.statusText}</span>
           </div>
           <div style="display:flex; gap:8px;">
-            <button type="button" class="btn btn-outline btn-sm" ${idx === 0 ? 'disabled' : ''} onclick="openItemPreviewModal(${idx - 1})">&larr; Previous Item</button>
-            <button type="button" class="btn btn-outline btn-sm" ${idx >= report.length - 1 ? 'disabled' : ''} onclick="openItemPreviewModal(${idx + 1})">Next Item &rarr;</button>
+            <button type="button" class="btn btn-outline btn-sm" ${idx === 0 ? 'disabled' : ''} onclick="openItemPreviewModal(${idx - 1})">&larr; Previous</button>
+            <button type="button" class="btn btn-outline btn-sm" ${idx >= report.length - 1 ? 'disabled' : ''} onclick="openItemPreviewModal(${idx + 1})">Next &rarr;</button>
           </div>
         </div>
       `;
@@ -2013,16 +2005,16 @@
     function exportAnalysisCsv() {
       const list = dashState.analysisReport || [];
       if (list.length === 0) {
-        showToast('Please select an assessment package before exporting Item Analysis.');
+        showToast('Please select a test package before exporting Item Analysis.');
         return;
       }
 
       const headers = [
-        'Item_No', 'Item_Type', 'Answer_Key', 'Question_Stem', 'Respondents_N',
-        'Difficulty_P_Pct', 'Difficulty_Category',
-        'Discrimination_D', 'Discrimination_Category',
+        'Question_No', 'Type', 'Answer_Key', 'Question_Text', 'Students_Count',
+        'Difficulty_P_Pct', 'Difficulty_Level',
+        'Discrimination_D', 'Discrimination_Level',
         'Opt_A', 'Opt_B', 'Opt_C', 'Opt_D', 'Opt_E', 'Unanswered',
-        'Recommendation', 'Diagnostic_Note'
+        'Status', 'Analysis_Note'
       ];
       const escCsv = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
 
@@ -2047,7 +2039,7 @@
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      showToast('Item Analysis report (CSV) exported successfully.');
+      showToast('Item Analysis exported as CSV.');
     }
 
     // =========================================================================
@@ -2055,13 +2047,13 @@
     // =========================================================================
     async function loadPackagesTab() {
       const tbody = $('packagesTableBody');
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--muted); padding:24px;">Loading package inventory...</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--muted); padding:24px;">Loading package list...</td></tr>';
 
       try {
         const res = await callApi('getPaketManagementData', dashState.token);
         const pkgs = res.packages || [];
         if (pkgs.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--muted); padding:24px;">No assessment packages were found in Bank_Soal.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:var(--muted); padding:24px;">No test packages were found in Bank_Soal.</td></tr>';
           return;
         }
 
@@ -2077,12 +2069,12 @@
             <tr>
               <td><strong>${escapeHtml(p.id)}</strong></td>
               <td>${escapeHtml(p.name)}</td>
-              <td>${p.jumlahSoal} items</td>
+              <td>${p.jumlahSoal} questions</td>
               <td>${p.jumlahPengerjaan}x</td>
               <td>${statusBadge}</td>
               <td>
                 <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                  <button type="button" class="btn btn-outline btn-sm" onclick="openPackagePreview('${escapeHtml(p.id)}', false)">Preview Package</button>
+                  <button type="button" class="btn btn-outline btn-sm" onclick="openPackagePreview('${escapeHtml(p.id)}', false)">Preview</button>
                   <button type="button" class="btn ${isAktif ? 'btn-danger-soft' : 'btn-success'} btn-sm" onclick="handleTogglePackage('${escapeHtml(p.id)}', '${toggleTarget}')">${toggleLabel}</button>
                 </div>
               </td>
@@ -2095,7 +2087,7 @@
     }
 
     async function handleTogglePackage(paketId, newStatus) {
-      showLoading(`Updating package ${paketId} status to ${newStatus}...`);
+      showLoading(`Updating package ${paketId} to ${newStatus}...`);
       try {
         const res = await callApi('togglePaketStatus', dashState.token, paketId, newStatus);
         showToast(res.message || 'Package status updated.');
@@ -2112,15 +2104,15 @@
       dashState.currentPreviewPaketId = paketId;
       $('previewPanel').classList.remove('hidden');
       $('previewTitle').textContent = `Loading Preview for Package ${paketId}...`;
-      $('previewQuestionsList').innerHTML = '<div style="color:var(--muted); padding:16px;">Fetching items and answer keys...</div>';
+      $('previewQuestionsList').innerHTML = '<div style="color:var(--muted); padding:16px;">Fetching questions and answer keys...</div>';
 
       try {
         const res = await callApi('getPaketPreview', dashState.token, paketId, fresh);
         const questions = resolveQuestionPassages(res.questions || []);
-        $('previewTitle').textContent = `Package Preview: ${res.paket.name} (${res.paket.id}) — ${questions.length} Item(s)`;
+        $('previewTitle').textContent = `Package Preview: ${res.paket.name} (${res.paket.id}) — ${questions.length} Question(s)`;
 
         if (questions.length === 0) {
-          $('previewQuestionsList').innerHTML = '<p style="color:var(--muted);">This assessment package contains no items.</p>';
+          $('previewQuestionsList').innerHTML = '<p style="color:var(--muted);">This test package has no questions.</p>';
           return;
         }
 
@@ -2138,9 +2130,9 @@
 
           let optsHtml = '';
           if (q.tipeSoal === 'IS') {
-            optsHtml = `<div class="opt-pill is-key">Accepted Answer Key(s): ${escapeHtml(acceptedShort.join(' | ') || q.kunciJawaban)}</div>`;
+            optsHtml = `<div class="opt-pill is-key">Accepted Answer(s): ${escapeHtml(acceptedShort.join(' | ') || q.kunciJawaban)}</div>`;
           } else if (q.tipeSoal === 'MATRIKS') {
-            optsHtml = `<div class="opt-pill is-key">Matrix Answer Key Sequence: ${escapeHtml(q.kunciJawaban)}</div>`;
+            optsHtml = `<div class="opt-pill is-key">Matrix Key Sequence: ${escapeHtml(q.kunciJawaban)}</div>`;
           } else {
             const letters = q.tipeSoal === 'BS' ? ['A', 'B'] : ['A', 'B', 'C', 'D', 'E'];
             optsHtml = letters.map(l => {
@@ -2152,7 +2144,7 @@
           }
 
           const issueHtml = hasIssue
-            ? `<div class="alert-error" style="margin-top:8px; margin-bottom:0;"><strong>Audit Warning:</strong> ${escapeHtml(q.issues.join(' | '))}</div>`
+            ? `<div class="alert-error" style="margin-top:8px; margin-bottom:0;"><strong>Warning:</strong> ${escapeHtml(q.issues.join(' | '))}</div>`
             : '';
 
           const explanationHtml = q.pembahasan
@@ -2162,7 +2154,7 @@
           return `
             <div class="preview-q ${hasIssue ? 'has-issue' : ''}">
               <div style="display:flex; justify-content:space-between; font-size:12.5px; color:var(--muted); margin-bottom:6px;">
-                <strong>Item ${escapeHtml(q.noSoal || (idx + 1))} • ${escapeHtml(TYPE_LABELS[q.tipeSoal] || q.tipeSoal)}</strong>
+                <strong>Question ${escapeHtml(q.noSoal || (idx + 1))} • ${escapeHtml(TYPE_LABELS[q.tipeSoal] || q.tipeSoal)}</strong>
                 <span>Sheet Row ${q.sheetRow}</span>
               </div>
               ${passageHtml}
@@ -2194,7 +2186,7 @@
       const reqStudent = $('settingStudentPin').value;
       const reqTeacher = $('settingTeacherPin').value;
 
-      showLoading('Saving security settings to Config sheet...');
+      showLoading('Saving security settings...');
       try {
         const res = await callApi('updateSecuritySettings', dashState.token, reqStudent, reqTeacher);
         dashState.security.requireStudentPin = res.settings.REQUIRE_STUDENT_PIN;
@@ -2204,7 +2196,7 @@
           dashState.security.totalStudentCount = res.pinCoverage.total;
         }
         syncSecurityUI();
-        showToast('PIN security settings saved successfully.');
+        showToast('PIN security settings saved.');
       } catch (err) {
         alert(err.message);
       } finally {
@@ -2214,15 +2206,15 @@
 
     async function runBankValidation() {
       const box = $('validationResultList');
-      box.innerHTML = 'Auditing Bank_Soal...';
+      box.innerHTML = 'Checking Bank_Soal...';
       try {
         const res = await callApi('getBankValidation', dashState.token);
         const issues = res.issues || [];
         if (issues.length === 0) {
-          box.innerHTML = '<div style="padding:12px; border-radius:9px; background:var(--success-soft); color:var(--success); font-weight:700;">All checks passed. No configuration issues were found in Bank_Soal.</div>';
+          box.innerHTML = '<div style="padding:12px; border-radius:9px; background:var(--success-soft); color:var(--success); font-weight:700;">All checks passed! No issues were found in Bank_Soal.</div>';
         } else {
           box.innerHTML = `
-            <div class="alert-error">Found ${issues.length} issue(s) requiring attention:</div>
+            <div class="alert-error">Found ${issues.length} issue(s) to fix:</div>
             <ul style="padding-left:18px; display:grid; gap:6px; font-size:13px; color:var(--text);">
               ${issues.map(iss => `<li>${escapeHtml(iss)}</li>`).join('')}
             </ul>
@@ -2234,18 +2226,18 @@
     }
 
     // =========================================================================
-    // CSV EXPORT FOR ASSESSMENT RESULTS
+    // CSV EXPORT FOR TEST RESULTS
     // =========================================================================
     function exportResultsCsv() {
       const rows = dashState.filteredRows;
       if (rows.length === 0) {
-        showToast('There are no assessment results to export.');
+        showToast('There are no test results to export.');
         return;
       }
 
       const headers = [
-        'Timestamp', 'Class', 'Student_Name', 'Package_ID', 'Package_Title',
-        'Attempt_No', 'Correct_Count', 'Total_Items', 'Raw_Score', 'Final_Score',
+        'Timestamp', 'Class', 'Student_Name', 'Package_ID', 'Package_Name',
+        'Attempt_No', 'Correct_Count', 'Total_Questions', 'Raw_Score', 'Final_Score',
         'Status', 'Duration_Min', 'Tab_Switches'
       ];
 
@@ -2264,12 +2256,12 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `NEngEva_Assessment_Results_${new Date().toISOString().slice(0, 10)}.csv`;
+      a.download = `NEngEva_Test_Results_${new Date().toISOString().slice(0, 10)}.csv`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      showToast('Assessment results exported as CSV.');
+      showToast('Test results exported as CSV.');
     }
 
     // =========================================================================
