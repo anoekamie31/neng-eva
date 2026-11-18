@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -309,7 +309,7 @@
       align-items: start;
     }
 
-    /* PASSAGE / MEDIA */
+    /* PASSAGE / STIMULUS (AUTO-HEIGHT WITHOUT INNER SCROLL) */
     .passage-card {
       background: #f8fafc;
       border: 1px solid var(--border);
@@ -382,7 +382,7 @@
       white-space: pre-line;
     }
 
-    /* OPTIONS (PG, PGK, BS, MENJODOHKAN) */
+    /* OPTIONS (MC, MR, TF, MATCHING) */
     .opt-list {
       display: flex;
       flex-direction: column;
@@ -456,7 +456,7 @@
       cursor: pointer;
     }
 
-    /* ISIAN SINGKAT */
+    /* SHORT ANSWER */
     .short-answer-input {
       width: 100%;
       padding: 13px 15px;
@@ -547,8 +547,8 @@
       letter-spacing: 0.5px;
       margin-bottom: 10px;
     }
-    .status-lulus { background: var(--success-soft); color: var(--success); }
-    .status-remedi { background: var(--danger-soft); color: var(--danger); }
+    .status-passed { background: var(--success-soft); color: var(--success); }
+    .status-remedial { background: var(--danger-soft); color: var(--danger); }
     .score-big {
       font-size: 52px;
       font-weight: 800;
@@ -585,9 +585,9 @@
       padding: 16px;
       margin-bottom: 12px;
     }
-    .review-item.benar { border-left: 4px solid var(--success); }
-    .review-item.salah { border-left: 4px solid var(--danger); }
-    .review-item.parsial { border-left: 4px solid var(--warning); }
+    .review-item.correct { border-left: 4px solid var(--success); }
+    .review-item.incorrect { border-left: 4px solid var(--danger); }
+    .review-item.partial { border-left: 4px solid var(--warning); }
     .review-head {
       display: flex;
       justify-content: space-between;
@@ -674,48 +674,48 @@
         <div class="brand-logo">NE</div>
         <div>
           <div class="brand-title" id="appTitle">New English Evaluation (NEng Eva)</div>
-          <div class="brand-sub">Sistem Evaluasi Pembelajaran Digital</div>
+          <div class="brand-sub">Digital Learning Assessment System</div>
         </div>
       </div>
-      <a href="dashboard.html" class="btn-link-dash">Dashboard Guru</a>
+      <a href="dashboard.html" class="btn-link-dash">Instructor Dashboard</a>
     </div>
   </header>
 
   <main class="container">
 
-    <!-- 1. FORM IDENTITAS SISWA -->
+    <!-- 1. CANDIDATE IDENTIFICATION FORM -->
     <section id="setupSection" class="setup-wrap">
       <div class="card">
         <div class="setup-header">
-          <h1>Identitas Peserta</h1>
-          <p>Pilih kelas, nama Anda, dan paket evaluasi yang akan dikerjakan.</p>
+          <h1>Candidate Identification</h1>
+          <p>Please select your class, full name, and the assessment package to begin.</p>
         </div>
 
         <div id="setupError" class="alert-error hidden"></div>
 
         <div class="form-group">
-          <label class="form-label" for="selectKelas">Kelas</label>
+          <label class="form-label" for="selectKelas">Class</label>
           <select id="selectKelas" class="form-control">
-            <option value="">-- Memuat daftar kelas... --</option>
+            <option value="">-- Loading class list... --</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="selectNama">Nama Siswa</label>
+          <label class="form-label" for="selectNama">Student Name</label>
           <select id="selectNama" class="form-control" disabled>
-            <option value="">-- Pilih kelas terlebih dahulu --</option>
+            <option value="">-- Please select a class first --</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="selectPaket">Paket Evaluasi</label>
+          <label class="form-label" for="selectPaket">Assessment Package</label>
           <select id="selectPaket" class="form-control">
-            <option value="">-- Memuat paket evaluasi... --</option>
+            <option value="">-- Loading assessment packages... --</option>
           </select>
         </div>
 
         <div id="pinGroup" class="form-group hidden">
-          <label class="form-label" for="inputPin">PIN Siswa (6 Digit Tanggal Lahir)</label>
+          <label class="form-label" for="inputPin">Student PIN (6-Digit Date of Birth)</label>
           <input
             type="password"
             id="inputPin"
@@ -726,53 +726,53 @@
             autocomplete="off"
           />
           <div class="pin-hint">
-            Masukkan 6 digit tanggal lahir format <strong>ddmmyy</strong>.<br />
-            Contoh: lahir <strong>26 Desember 2011</strong> &rarr; ketik <strong>261211</strong>.
+            Enter your 6-digit date of birth in <strong>ddmmyy</strong> format.<br />
+            Example: born on <strong>26 December 2011</strong> &rarr; enter <strong>261211</strong>.
           </div>
         </div>
 
         <div class="rules-grid">
-          <div class="rule-item"><span>Nilai KKM</span><strong id="infoKkm">80</strong></div>
-          <div class="rule-item"><span>Maks. Percobaan</span><strong id="infoAttempts">3x</strong></div>
-          <div class="rule-item"><span>Penilaian Akhir</span><strong id="infoMethod">TERTINGGI</strong></div>
-          <div class="rule-item"><span>Batas Waktu</span><strong id="infoTime">Tanpa Batas</strong></div>
+          <div class="rule-item"><span>Passing Score (KKM)</span><strong id="infoKkm">80</strong></div>
+          <div class="rule-item"><span>Max. Attempts</span><strong id="infoAttempts">3x</strong></div>
+          <div class="rule-item"><span>Final Scoring</span><strong id="infoMethod">HIGHEST</strong></div>
+          <div class="rule-item"><span>Time Limit</span><strong id="infoTime">No Limit</strong></div>
         </div>
 
-        <button id="btnStart" class="btn btn-primary btn-block" disabled>Mulai Mengerjakan</button>
+        <button id="btnStart" class="btn btn-primary btn-block" disabled>Start Assessment</button>
       </div>
     </section>
 
-    <!-- 2. AREA PENGERJAAN SOAL -->
+    <!-- 2. ASSESSMENT WORKSPACE -->
     <section id="quizSection" class="hidden">
       <div class="quiz-status-bar">
         <div class="student-badges">
           <span class="pill" id="badgeStudent">-</span>
           <span class="pill pill-gray" id="badgePaket">-</span>
-          <span class="pill pill-timer hidden" id="timerBadge">Sisa Waktu: <strong id="timerText">00:00</strong></span>
-          <span class="pill pill-danger hidden" id="tabBadge">Pindah Tab: <strong id="tabCount">0</strong>x</span>
+          <span class="pill pill-timer hidden" id="timerBadge">Time Remaining: <strong id="timerText">00:00</strong></span>
+          <span class="pill pill-danger hidden" id="tabBadge">Tab Switches: <strong id="tabCount">0</strong>x</span>
         </div>
-        <div style="font-size: 13px; font-weight: 700;" id="progressText">Terjawab 0 / 0</div>
+        <div style="font-size: 13px; font-weight: 700;" id="progressText">Answered 0 / 0</div>
         <div class="progress-wrap">
           <div class="progress-track"><div class="progress-fill" id="progressBar"></div></div>
         </div>
       </div>
 
       <div class="quiz-grid">
-        <!-- KOLOM SOAL -->
+        <!-- QUESTION COLUMN -->
         <div class="card">
           <div id="passageBox" class="passage-card hidden">
             <div class="passage-head">
-              <span>Teks Bacaan / Stimulus</span>
-              <button type="button" id="passageToggle" class="btn btn-outline" style="padding: 4px 10px; font-size: 12px;">Sembunyikan</button>
+              <span>Reading Passage / Stimulus</span>
+              <button type="button" id="passageToggle" class="btn btn-outline" style="padding: 4px 10px; font-size: 12px;">Hide</button>
             </div>
             <div id="passageContent" class="passage-body"></div>
           </div>
 
           <div class="q-meta">
-            <span class="q-num" id="qNumberBadge">Soal No. 1</span>
+            <span class="q-num" id="qNumberBadge">Item 1</span>
             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-              <button type="button" id="btnViewPassageModal" class="btn btn-outline hidden" style="padding: 4px 11px; font-size: 12px; border-color: var(--primary); color: var(--primary);">Lihat Teks</button>
-              <span class="q-type" id="qTypeBadge">Pilihan Ganda</span>
+              <button type="button" id="btnViewPassageModal" class="btn btn-outline hidden" style="padding: 4px 11px; font-size: 12px; border-color: var(--primary); color: var(--primary);">View Passage</button>
+              <span class="q-type" id="qTypeBadge">Multiple Choice</span>
             </div>
           </div>
 
@@ -780,81 +780,82 @@
           <div id="optionsContainer"></div>
 
           <div class="q-actions">
-            <button type="button" id="btnPrev" class="btn btn-outline">&larr; Sebelumnya</button>
-            <button type="button" id="btnFlag" class="btn btn-warning-soft">Ragu-ragu</button>
-            <button type="button" id="btnNext" class="btn btn-primary">Berikutnya &rarr;</button>
+            <button type="button" id="btnPrev" class="btn btn-outline">&larr; Previous</button>
+            <button type="button" id="btnFlag" class="btn btn-warning-soft">Flag for Review</button>
+            <button type="button" id="btnNext" class="btn btn-primary">Next &rarr;</button>
           </div>
         </div>
 
-        <!-- NAVIGASI NOMOR -->
+        <!-- ITEM NAVIGATION SIDEBAR -->
         <aside class="card nav-card">
-          <div class="nav-title">Navigasi Nomor Soal</div>
+          <div class="nav-title">Item Navigation</div>
           <div class="legend">
-            <span><i class="dot" style="background:#10b981;"></i> Dijawab</span>
-            <span><i class="dot" style="background:#f59e0b;"></i> Ragu-ragu</span>
-            <span><i class="dot" style="background:#e2e8f0;"></i> Kosong</span>
+            <span><i class="dot" style="background:#10b981;"></i> Answered</span>
+            <span><i class="dot" style="background:#f59e0b;"></i> Flagged</span>
+            <span><i class="dot" style="background:#e2e8f0;"></i> Unanswered</span>
           </div>
           <div id="questionGrid" class="q-grid"></div>
-          <button type="button" id="btnSubmitSidebar" class="btn btn-success btn-block">Kumpulkan Jawaban</button>
+          <button type="button" id="btnSubmitSidebar" class="btn btn-success btn-block">Submit Responses</button>
         </aside>
       </div>
     </section>
 
-    <!-- 3. HASIL EVALUASI -->
+    <!-- 3. ASSESSMENT RESULTS -->
     <section id="resultSection" class="hidden">
       <div class="card">
         <div class="result-hero">
-          <span id="resStatusBadge" class="status-badge status-lulus">LULUS</span>
-          <div style="font-size: 14px; color: var(--muted); font-weight: 600;">Skor Akhir Anda</div>
+          <span id="resStatusBadge" class="status-badge status-passed">PASSED</span>
+          <div style="font-size: 14px; color: var(--muted); font-weight: 600;">Your Final Score</div>
           <div id="resFinalScore" class="score-big">0</div>
 
           <div class="stats-row">
-            <div class="stat-box"><span>Skor Sesi Ini</span><strong id="resRawScore">0</strong></div>
-            <div class="stat-box"><span>Jawaban Benar</span><strong id="resCorrect">0 / 0</strong></div>
-            <div class="stat-box"><span>Percobaan Ke</span><strong id="resAttempt">1 / 3</strong></div>
-            <div class="stat-box"><span>Target KKM</span><strong id="resKkm">80</strong></div>
+            <div class="stat-box"><span>Session Score</span><strong id="resRawScore">0</strong></div>
+            <div class="stat-box"><span>Correct Items</span><strong id="resCorrect">0 / 0</strong></div>
+            <div class="stat-box"><span>Attempt</span><strong id="resAttempt">1 / 3</strong></div>
+            <div class="stat-box"><span>Passing Score</span><strong id="resKkm">80</strong></div>
           </div>
 
           <div class="result-actions">
-            <button type="button" id="btnRetry" class="btn btn-primary hidden">Kerjakan Ulang</button>
-            <button type="button" id="btnHome" class="btn btn-outline">Kembali ke Halaman Awal</button>
+            <button type="button" id="btnRetry" class="btn btn-primary hidden">Retake Assessment</button>
+            <button type="button" id="btnHome" class="btn btn-outline">Return to Start</button>
           </div>
         </div>
 
-        <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">Rincian Hasil Pengerjaan</h3>
+        <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">Detailed Assessment Review</h3>
         <div id="reviewNotice" class="pin-hint hidden" style="margin-bottom: 14px;"></div>
         <div id="reviewList"></div>
       </div>
     </section>
 
   </main>
-  <!-- MODAL LIHAT TEKS BACAAN -->
+
+  <!-- PASSAGE MODAL -->
   <div id="passageModal" class="overlay hidden">
     <div class="modal-box" style="max-width: 880px; width: 100%; max-height: 92vh; overflow-y: auto;">
       <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 14px; position: sticky; top: -22px; background: #fff; z-index: 2; padding-top: 4px;">
-        <h3 style="font-size: 16px; font-weight: 800; color: var(--primary);">Teks Bacaan / Stimulus</h3>
-        <button type="button" id="btnClosePassageModal" class="btn btn-outline" style="padding: 5px 12px; font-size: 12.5px;">Tutup</button>
+        <h3 style="font-size: 16px; font-weight: 800; color: var(--primary);">Reading Passage / Stimulus</h3>
+        <button type="button" id="btnClosePassageModal" class="btn btn-outline" style="padding: 5px 12px; font-size: 12.5px;">Close</button>
       </div>
       <div id="passageModalContent" class="passage-body"></div>
     </div>
   </div>
-  
+
   <!-- LOADING OVERLAY -->
   <div id="loadingOverlay" class="overlay">
     <div class="modal-box" style="text-align: center;">
       <div class="spinner"></div>
-      <div id="loadingText" style="font-weight: 700; font-size: 15px;">Memuat data evaluasi...</div>
+      <div id="loadingText" style="font-weight: 700; font-size: 15px;">Loading assessment data...</div>
     </div>
   </div>
 
-  <!-- MODAL KONFIRMASI -->
+  <!-- CONFIRMATION MODAL -->
   <div id="confirmModal" class="overlay hidden">
     <div class="modal-box">
-      <h3 id="confirmTitle" style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">Konfirmasi</h3>
+      <h3 id="confirmTitle" style="font-size: 18px; font-weight: 800; margin-bottom: 8px;">Confirmation</h3>
       <p id="confirmBody" style="font-size: 14px; color: var(--muted); margin-bottom: 20px;"></p>
       <div style="display: flex; justify-content: flex-end; gap: 10px;">
-        <button type="button" id="btnConfirmCancel" class="btn btn-outline">Batal</button>
-        <button type="button" id="btnConfirmOk" class="btn btn-success">Ya, Kumpulkan</button>
+        <button type="button" id="btnConfirmCancel" class="btn btn-outline">Cancel</button>
+        <button type="button" id="btnConfirmOk" class="btn btn-success">Yes, Submit</button>
       </div>
     </div>
   </div>
@@ -863,21 +864,21 @@
 
   <script>
     // =========================================================================
-    // KONFIGURASI API GOOGLE APPS SCRIPT (GANTI DENGAN URL DEPLOYMENT ANDA)
+    // GOOGLE APPS SCRIPT API CONFIGURATION (REPLACE WITH YOUR DEPLOYMENT URL)
     // =========================================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycby1WiRhGdIHsaA6brxkaOVWn4mqS5cV3naYfKZmOJErpRJl0wkTUbSMIUrJLkTzkoPO/exec';
 
     // =========================================================================
-    // STATE APLIKASI
+    // APPLICATION STATE
     // =========================================================================
     const state = {
       config: {
         KKM: 80,
         MAX_ATTEMPTS: 3,
-        SCORE_METHOD: 'TERTINGGI',
+        SCORE_METHOD: 'HIGHEST',
         APP_TITLE: 'New English Evaluation (NEng Eva)',
-        SHOW_KEY: 'SELALU',
-        REQUIRE_STUDENT_PIN: 'TIDAK',
+        SHOW_KEY: 'ALWAYS',
+        REQUIRE_STUDENT_PIN: 'NO',
         TIME_LIMIT_MIN: 0
       },
       classes: [],
@@ -896,27 +897,26 @@
       tabSwitches: 0,
       isSubmitting: false,
       timerInterval: null,
-      remainingSec: 0,
-      passageCollapsed: false
+      remainingSec: 0
     };
 
     const TYPE_LABELS = {
-      PG: 'Pilihan Ganda',
-      PGK: 'Pilihan Ganda Kompleks (Pilih > 1)',
-      BS: 'Benar / Salah',
-      MENJODOHKAN: 'Menjodohkan',
-      MATRIKS: 'Matriks / Kategori',
-      IS: 'Isian Singkat'
+      PG: 'Multiple Choice',
+      PGK: 'Multiple Response (Select > 1)',
+      BS: 'True / False',
+      MENJODOHKAN: 'Matching',
+      MATRIKS: 'Matrix / Category',
+      IS: 'Short Answer'
     };
 
     const $ = (id) => document.getElementById(id);
 
     // =========================================================================
-    // HELPER API & UTILITAS
+    // API HELPER & UTILITIES
     // =========================================================================
     async function callApi(action, ...args) {
-      if (!API_URL || API_URL === 'URL_WEB_APP_APPS_SCRIPT_ANDA') {
-        throw new Error('API_URL belum diisi pada index.html. Silakan masukkan URL Web App Apps Script Anda.');
+      if (!API_URL || API_URL === 'YOUR_APPS_SCRIPT_WEB_APP_URL') {
+        throw new Error('API_URL has not been configured in index.html. Please insert your Apps Script Web App URL.');
       }
 
       const response = await fetch(API_URL, {
@@ -926,17 +926,17 @@
       });
 
       if (!response.ok) {
-        throw new Error('Gagal terhubung ke server (' + response.status + ')');
+        throw new Error('Failed to connect to the server (' + response.status + ').');
       }
 
       const data = await response.json();
       if (data && data.status === 'error') {
-        throw new Error(data.message || 'Terjadi kesalahan pada server.');
+        throw new Error(data.message || 'An unexpected server error occurred.');
       }
       return data;
     }
 
-    function showLoading(text = 'Memuat...') {
+    function showLoading(text = 'Loading...') {
       $('loadingText').textContent = text;
       $('loadingOverlay').classList.remove('hidden');
     }
@@ -976,14 +976,19 @@
 
     function formatRichMedia(rawText) {
       let text = escapeHtml(rawText || '');
-      // Tag eksplisit [IMG: url] atau [AUDIO: url]
-      text = text.replace(/\[IMG:\s*(https?:\/\/[^\]]+)\]/gi, '<br><img src="$1" alt="Gambar Soal" loading="lazy"><br>');
+      // Explicit media tags [IMG: url] or [AUDIO: url]
+      text = text.replace(/\[IMG:\s*(https?:\/\/[^\]]+)\]/gi, '<br><img src="$1" alt="Stimulus Image" loading="lazy"><br>');
       text = text.replace(/\[AUDIO:\s*(https?:\/\/[^\]]+)\]/gi, '<br><audio controls src="$1"></audio><br>');
-      // URL gambar langsung
-      text = text.replace(/(^|\s)(https?:\/\/\S+\.(?:png|jpe?g|gif|webp)(?:\?\S*)?)/gi, '$1<br><img src="$2" alt="Gambar" loading="lazy"><br>');
-      // URL audio langsung
+      // Direct image URLs
+      text = text.replace(/(^|\s)(https?:\/\/\S+\.(?:png|jpe?g|gif|webp)(?:\?\S*)?)/gi, '$1<br><img src="$2" alt="Image" loading="lazy"><br>');
+      // Direct audio URLs
       text = text.replace(/(^|\s)(https?:\/\/\S+\.(?:mp3|wav|ogg|m4a)(?:\?\S*)?)/gi, '$1<br><audio controls src="$2"></audio><br>');
       return text;
+    }
+
+    function isPinRequired() {
+      const flag = String(state.config.REQUIRE_STUDENT_PIN || '').toUpperCase();
+      return flag === 'YES' || flag === 'YA';
     }
 
     function draftStorageKey() {
@@ -999,7 +1004,7 @@
           tabSwitches: state.tabSwitches,
           savedAt: Date.now()
         }));
-      } catch (e) { /* abaikan jika storage penuh */ }
+      } catch (e) { /* ignore if storage quota exceeded */ }
     }
 
     function loadDraft() {
@@ -1011,18 +1016,18 @@
         if (d && typeof d.flagged === 'object') state.flagged = d.flagged;
         if (typeof d.currentIndex === 'number') state.currentIndex = d.currentIndex;
         if (typeof d.tabSwitches === 'number') state.tabSwitches = d.tabSwitches;
-      } catch (e) { /* abaikan */ }
+      } catch (e) { /* ignore */ }
     }
 
     function clearDraft() {
-      try { localStorage.removeItem(draftStorageKey()); } catch (e) { /* abaikan */ }
+      try { localStorage.removeItem(draftStorageKey()); } catch (e) { /* ignore */ }
     }
 
     // =========================================================================
-    // INISIALISASI HALAMAN & IDENTITAS
+    // INITIALIZATION & CANDIDATE IDENTIFICATION
     // =========================================================================
     async function initApp() {
-      showLoading('Menghubungkan ke server evaluasi...');
+      showLoading('Connecting to assessment server...');
       try {
         const res = await callApi('getInitialData');
         state.config = Object.assign(state.config, res.config || {});
@@ -1035,24 +1040,24 @@
         $('infoAttempts').textContent = state.config.MAX_ATTEMPTS + 'x';
         $('infoMethod').textContent = state.config.SCORE_METHOD;
         $('infoTime').textContent = state.config.TIME_LIMIT_MIN > 0
-          ? state.config.TIME_LIMIT_MIN + ' Menit'
-          : 'Tanpa Batas';
+          ? state.config.TIME_LIMIT_MIN + ' Minutes'
+          : 'No Limit';
 
-        if (state.config.REQUIRE_STUDENT_PIN === 'YA') {
+        if (isPinRequired()) {
           $('pinGroup').classList.remove('hidden');
         } else {
           $('pinGroup').classList.add('hidden');
         }
 
         const selKelas = $('selectKelas');
-        selKelas.innerHTML = '<option value="">-- Pilih Kelas --</option>' +
+        selKelas.innerHTML = '<option value="">-- Select Class --</option>' +
           state.classes.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
 
         const selPaket = $('selectPaket');
         if (state.packages.length === 0) {
-          selPaket.innerHTML = '<option value="">-- Belum ada paket soal aktif --</option>';
+          selPaket.innerHTML = '<option value="">-- No active assessment packages available --</option>';
         } else {
-          selPaket.innerHTML = '<option value="">-- Pilih Paket Evaluasi --</option>' +
+          selPaket.innerHTML = '<option value="">-- Select Assessment Package --</option>' +
             state.packages.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`).join('');
         }
 
@@ -1070,28 +1075,28 @@
       showSetupError('');
 
       if (!kelas) {
-        selNama.innerHTML = '<option value="">-- Pilih kelas terlebih dahulu --</option>';
+        selNama.innerHTML = '<option value="">-- Please select a class first --</option>';
         selNama.disabled = true;
         validateStartForm();
         return;
       }
 
       selNama.disabled = true;
-      selNama.innerHTML = '<option value="">-- Memuat nama siswa... --</option>';
+      selNama.innerHTML = '<option value="">-- Loading student roster... --</option>';
       validateStartForm();
 
       try {
         const res = await callApi('getStudentsByClass', kelas);
         const students = res.students || [];
         if (students.length === 0) {
-          selNama.innerHTML = '<option value="">-- Tidak ada siswa di kelas ini --</option>';
+          selNama.innerHTML = '<option value="">-- No students registered in this class --</option>';
         } else {
-          selNama.innerHTML = '<option value="">-- Pilih Nama Anda --</option>' +
+          selNama.innerHTML = '<option value="">-- Select Your Full Name --</option>' +
             students.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
           selNama.disabled = false;
         }
       } catch (err) {
-        selNama.innerHTML = '<option value="">-- Gagal memuat siswa --</option>';
+        selNama.innerHTML = '<option value="">-- Failed to load student roster --</option>';
         showSetupError(err.message);
       }
       validateStartForm();
@@ -1101,15 +1106,14 @@
       const kelas = $('selectKelas').value;
       const nama = $('selectNama').value;
       const paket = $('selectPaket').value;
-      const pinRequired = state.config.REQUIRE_STUDENT_PIN === 'YA';
       const pinVal = $('inputPin').value.trim();
 
-      const pinOk = !pinRequired || /^\d{6}$/.test(pinVal);
+      const pinOk = !isPinRequired() || /^\d{6}$/.test(pinVal);
       $('btnStart').disabled = !(kelas && nama && paket && pinOk);
     }
 
     // =========================================================================
-    // MULAI UJIAN
+    // START ASSESSMENT
     // =========================================================================
     async function startQuiz() {
       showSetupError('');
@@ -1119,17 +1123,17 @@
       const paketObj = state.packages.find(p => p.id === paketId);
       const pin = $('inputPin').value.trim();
 
-      if (state.config.REQUIRE_STUDENT_PIN === 'YA' && !/^\d{6}$/.test(pin)) {
-        showSetupError('PIN harus berupa 6 digit tanggal lahir (contoh: 26 Desember 2011 ditulis 261211).');
+      if (isPinRequired() && !/^\d{6}$/.test(pin)) {
+        showSetupError('PIN must be your 6-digit date of birth (e.g., 26 December 2011 entered as 261211).');
         return;
       }
 
-      showLoading('Memverifikasi identitas & memuat soal...');
+      showLoading('Verifying credentials & loading assessment items...');
       try {
         const res = await callApi('getQuestions', paketId, kelas, nama, pin);
         const questions = res.questions || [];
         if (questions.length === 0) {
-          throw new Error('Paket soal ini belum memiliki butir soal.');
+          throw new Error('This assessment package does not contain any items.');
         }
 
         state.student = {
@@ -1150,7 +1154,7 @@
         loadDraft();
         if (state.currentIndex >= state.questions.length) state.currentIndex = 0;
 
-        // Tampilkan UI Ujian
+        // Switch to Assessment Workspace
         $('setupSection').classList.add('hidden');
         $('resultSection').classList.add('hidden');
         $('quizSection').classList.remove('hidden');
@@ -1171,7 +1175,7 @@
     }
 
     // =========================================================================
-    // TIMER & DETEKSI PINDAH TAB
+    // TIMER & TAB-SWITCH MONITORING
     // =========================================================================
     function setupTimer(elapsedSec) {
       clearInterval(state.timerInterval);
@@ -1191,7 +1195,7 @@
         updateTimerDisplay();
         if (state.remainingSec <= 0) {
           clearInterval(state.timerInterval);
-          showToast('Waktu habis! Jawaban dikirim otomatis...');
+          showToast('Time has expired! Submitting your responses automatically...');
           submitQuiz(true);
         }
       }, 1000);
@@ -1226,13 +1230,13 @@
     });
 
     // =========================================================================
-    // RENDER SOAL & INTERAKSI JAWABAN
+    // PASSAGE INHERITANCE, ITEM RENDERING & RESPONSE INTERACTION
     // =========================================================================
     function resolveQuestionPassages(questions) {
       let activePassage = '';
       questions.forEach((q) => {
         const raw = String(q.teksBacaan || '').trim();
-        if (raw === '-' || raw.toUpperCase() === 'NONE' || raw.toUpperCase() === 'TANPA TEKS') {
+        if (raw === '-' || raw.toUpperCase() === 'NONE' || raw.toUpperCase() === 'NO PASSAGE') {
           activePassage = '';
           q._passage = '';
           q._isNewPassage = false;
@@ -1253,7 +1257,7 @@
         try { a.pause(); } catch (e) {}
       });
     }
-    
+
     function questionKey(q, idx) {
       return q.noSoal || q.rawNoSoal || String(idx + 1);
     }
@@ -1270,11 +1274,11 @@
       const qKey = questionKey(q, idx);
       const currentAns = state.answers[qKey];
 
-      // Nomor & Tipe
-      $('qNumberBadge').textContent = `Soal No. ${idx + 1} dari ${state.questions.length}`;
+      // Item Number & Type
+      $('qNumberBadge').textContent = `Item ${idx + 1} of ${state.questions.length}`;
       $('qTypeBadge').textContent = TYPE_LABELS[q.tipeSoal] || q.tipeSoal;
 
-      // Bacaan / Stimulus (tampil penuh di soal pertama, diringkas + tombol Lihat Teks di soal lanjutan)
+      // Reading Passage / Stimulus (expanded on first item, collapsed + View Passage button on subsequent items)
       pauseAllPassageAudio();
       const passage = q._passage || '';
       if (passage) {
@@ -1284,14 +1288,14 @@
 
         const shouldCollapse = !q._isNewPassage;
         $('passageContent').classList.toggle('hidden', shouldCollapse);
-        $('passageToggle').textContent = shouldCollapse ? 'Tampilkan' : 'Sembunyikan';
+        $('passageToggle').textContent = shouldCollapse ? 'Show' : 'Hide';
       } else {
         $('btnViewPassageModal').classList.add('hidden');
         $('passageBox').classList.add('hidden');
         $('passageContent').innerHTML = '';
       }
 
-      // Render isi soal & opsi sesuai tipe
+      // Render Question Stem & Options by Item Type
       const container = $('optionsContainer');
       container.innerHTML = '';
 
@@ -1309,16 +1313,16 @@
         renderMultipleChoice(q, qKey, currentAns, container, false);
       }
 
-      // Tombol Ragu-ragu & Navigasi
+      // Flag & Navigation Buttons
       $('btnFlag').classList.toggle('active', !!state.flagged[idx]);
       $('btnPrev').disabled = idx === 0;
 
       if (idx === state.questions.length - 1) {
-        $('btnNext').textContent = 'Selesai & Kumpulkan';
+        $('btnNext').textContent = 'Finish & Submit';
         $('btnNext').classList.remove('btn-primary');
         $('btnNext').classList.add('btn-success');
       } else {
-        $('btnNext').innerHTML = 'Berikutnya &rarr;';
+        $('btnNext').innerHTML = 'Next &rarr;';
         $('btnNext').classList.remove('btn-success');
         $('btnNext').classList.add('btn-primary');
       }
@@ -1336,8 +1340,8 @@
 
       if (q.tipeSoal === 'BS') {
         letters = ['A', 'B'];
-        if (!opts.A || opts.A === '-') opts.A = 'True / Benar';
-        if (!opts.B || opts.B === '-') opts.B = 'False / Salah';
+        if (!opts.A || opts.A === '-') opts.A = 'True';
+        if (!opts.B || opts.B === '-') opts.B = 'False';
       }
 
       const selectedSet = isMulti
@@ -1386,12 +1390,11 @@
       }
 
       const parts = raw.split(/[\|\n]/).map(s => s.trim()).filter(Boolean);
-      const promptText = parts.length > 1 ? parts[0] : 'Tentukan pilihan yang tepat untuk setiap pernyataan berikut:';
+      const promptText = parts.length > 1 ? parts[0] : 'Select the appropriate classification for each statement below:';
       const statements = parts.length > 1 ? parts.slice(1) : parts;
 
       $('questionText').innerHTML = formatRichMedia(promptText);
 
-      // Kolom pilihan (A, B, C...) diambil dari opsi yang terisi atau header
       const filledLetters = ['A', 'B', 'C', 'D', 'E'].filter(l => {
         const v = String((q.options && q.options[l]) || '').trim();
         return v !== '' && v !== '-';
@@ -1399,10 +1402,10 @@
 
       const colLabels = filledLetters.length > 0
         ? filledLetters.map(l => q.options[l].trim())
-        : (headers.length > 1 ? headers.slice(1) : ['Benar', 'Salah']);
+        : (headers.length > 1 ? headers.slice(1) : ['True', 'False']);
 
       const letters = colLabels.map((_, i) => String.fromCharCode(65 + i));
-      const firstColTitle = headers.length > 0 ? headers[0] : 'Pernyataan';
+      const firstColTitle = headers.length > 0 ? headers[0] : 'Statement';
 
       const ansArr = Array.isArray(currentAns) ? currentAns.slice() : new Array(statements.length).fill('');
 
@@ -1443,7 +1446,7 @@
       const input = document.createElement('input');
       input.type = 'text';
       input.className = 'short-answer-input';
-      input.placeholder = 'Ketik jawaban singkat Anda di sini...';
+      input.placeholder = 'Enter your short response here...';
       input.value = String(currentAns ?? '');
 
       input.addEventListener('input', () => {
@@ -1457,7 +1460,7 @@
     }
 
     // =========================================================================
-    // NAVIGASI & PROGRESS
+    // NAVIGATION & PROGRESS BAR
     // =========================================================================
     function renderNavigationGrid() {
       const grid = $('questionGrid');
@@ -1494,25 +1497,25 @@
       state.questions.forEach((q, idx) => {
         if (isQuestionAnswered(q, idx)) answered++;
       });
-      $('progressText').textContent = `Terjawab ${answered} / ${total}`;
+      $('progressText').textContent = `Answered ${answered} / ${total}`;
       $('progressBar').style.width = total > 0 ? `${Math.round((answered / total) * 100)}%` : '0%';
       return { answered, total };
     }
 
     // =========================================================================
-    // PENGUMPULAN JAWABAN & HASIL
+    // RESPONSE SUBMISSION & RESULTS RENDERING
     // =========================================================================
     function askSubmitConfirmation() {
       const { answered, total } = updateProgress();
       const unanswered = total - answered;
       const flaggedCount = Object.values(state.flagged).filter(Boolean).length;
 
-      let msg = `Anda telah menjawab ${answered} dari ${total} soal.`;
-      if (unanswered > 0) msg += ` Masih ada ${unanswered} soal yang belum dijawab.`;
-      if (flaggedCount > 0) msg += ` Terdapat ${flaggedCount} soal bertanda ragu-ragu.`;
-      msg += ' Apakah Anda yakin ingin mengumpulkan jawaban sekarang?';
+      let msg = `You have answered ${answered} out of ${total} items.`;
+      if (unanswered > 0) msg += ` There are still ${unanswered} unanswered item(s).`;
+      if (flaggedCount > 0) msg += ` You have ${flaggedCount} item(s) flagged for review.`;
+      msg += ' Are you sure you want to submit your responses now?';
 
-      $('confirmTitle').textContent = 'Kumpulkan Jawaban?';
+      $('confirmTitle').textContent = 'Submit Assessment Responses?';
       $('confirmBody').textContent = msg;
       $('confirmModal').classList.remove('hidden');
     }
@@ -1522,7 +1525,7 @@
       state.isSubmitting = true;
       clearInterval(state.timerInterval);
       $('confirmModal').classList.add('hidden');
-      showLoading(isAuto ? 'Waktu habis, mengirim jawaban...' : 'Menilai & menyimpan hasil evaluasi...');
+      showLoading(isAuto ? 'Time expired, submitting responses...' : 'Grading & recording your assessment results...');
 
       try {
         const payload = {
@@ -1539,7 +1542,7 @@
         renderResult(res);
       } catch (err) {
         state.isSubmitting = false;
-        alert('Gagal mengirim jawaban: ' + err.message + '\n\nJawaban Anda tetap tersimpan di browser. Silakan klik Kumpulkan lagi.');
+        alert('Submission failed: ' + err.message + '\n\nYour responses remain saved locally in this browser. Please click Submit again.');
       } finally {
         hideLoading();
       }
@@ -1550,8 +1553,8 @@
       $('resultSection').classList.remove('hidden');
 
       const badge = $('resStatusBadge');
-      badge.textContent = res.isPassed ? 'LULUS KKM' : 'BELUM TUNTAS (REMEDI)';
-      badge.className = 'status-badge ' + (res.isPassed ? 'status-lulus' : 'status-remedi');
+      badge.textContent = res.isPassed ? 'PASSED' : 'REMEDIAL REQUIRED';
+      badge.className = 'status-badge ' + (res.isPassed ? 'status-passed' : 'status-remedial');
 
       $('resFinalScore').textContent = res.finalScore;
       $('resRawScore').textContent = res.rawScore;
@@ -1564,7 +1567,7 @@
 
       const notice = $('reviewNotice');
       if (!res.showKey) {
-        notice.textContent = 'Kunci jawaban dan pembahasan disembunyikan sesuai pengaturan guru.';
+        notice.textContent = 'Answer keys and explanations are hidden in accordance with the instructor\'s assessment settings.';
         notice.classList.remove('hidden');
       } else {
         notice.classList.add('hidden');
@@ -1572,23 +1575,28 @@
 
       const list = $('reviewList');
       list.innerHTML = (res.details || []).map((d, idx) => {
-        const cls = d.status === 'BENAR' ? 'benar' : (d.status === 'PARSIAL' ? 'parsial' : 'salah');
+        const stUpper = String(d.status || '').toUpperCase();
+        const isCorrect = stUpper === 'CORRECT' || stUpper === 'BENAR';
+        const isPartial = stUpper === 'PARTIAL' || stUpper === 'PARSIAL';
+        const cls = isCorrect ? 'correct' : (isPartial ? 'partial' : 'incorrect');
+        const statusLabel = isCorrect ? 'CORRECT' : (isPartial ? 'PARTIAL' : 'INCORRECT');
+
         const keyLine = res.showKey
-          ? `<div><strong>Kunci Jawaban:</strong> ${escapeHtml(d.keyAns)}</div>`
+          ? `<div><strong>Answer Key:</strong> ${escapeHtml(d.keyAns)}</div>`
           : '';
         const bahasLine = (res.showKey && d.pembahasan)
-          ? `<div class="review-bahas"><strong>Pembahasan:</strong> ${formatRichMedia(d.pembahasan)}</div>`
+          ? `<div class="review-bahas"><strong>Explanation:</strong> ${formatRichMedia(d.pembahasan)}</div>`
           : '';
 
         return `
           <div class="review-item ${cls}">
             <div class="review-head">
-              <span>Soal No. ${idx + 1} (${escapeHtml(d.tipeSoal)})</span>
-              <span>${escapeHtml(d.status)} • Skor: ${d.score}</span>
+              <span>Item ${idx + 1} (${escapeHtml(TYPE_LABELS[d.tipeSoal] || d.tipeSoal)})</span>
+              <span>${statusLabel} &bull; Points: ${d.score}</span>
             </div>
             <div class="review-q">${formatRichMedia(d.pertanyaan)}</div>
             <div class="review-ans">
-              <div><strong>Jawaban Anda:</strong> ${escapeHtml(d.studentAns)}</div>
+              <div><strong>Your Response:</strong> ${escapeHtml(d.studentAns)}</div>
               ${keyLine}
             </div>
             ${bahasLine}
@@ -1613,7 +1621,7 @@
 
     $('passageToggle').addEventListener('click', () => {
       const isNowHidden = $('passageContent').classList.toggle('hidden');
-      $('passageToggle').textContent = isNowHidden ? 'Tampilkan' : 'Sembunyikan';
+      $('passageToggle').textContent = isNowHidden ? 'Show' : 'Hide';
       if (isNowHidden) pauseAllPassageAudio();
     });
 
@@ -1683,7 +1691,7 @@
       }
     });
 
-    // Jalankan saat halaman dibuka
+    // Initialize on page load
     initApp();
   </script>
 </body>
