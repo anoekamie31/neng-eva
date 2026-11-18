@@ -332,14 +332,18 @@
       font-size: 14.5px;
       color: #1e293b;
       white-space: pre-line;
-      max-height: 320px;
-      overflow-y: auto;
-      padding-right: 4px;
+      height: auto;
+      max-height: none;
+      overflow: visible;
     }
-    .passage-body img, .q-text img {
+    .passage-body img, .q-text img, .opt-val img {
+      display: block;
+      width: auto;
       max-width: 100%;
+      height: auto;
+      max-height: none;
       border-radius: 10px;
-      margin: 8px 0;
+      margin: 10px auto;
       border: 1px solid var(--border);
     }
     .passage-body audio {
@@ -766,7 +770,10 @@
 
           <div class="q-meta">
             <span class="q-num" id="qNumberBadge">Soal No. 1</span>
-            <span class="q-type" id="qTypeBadge">Pilihan Ganda</span>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <button type="button" id="btnViewPassageModal" class="btn btn-outline hidden" style="padding: 4px 11px; font-size: 12px; border-color: var(--primary); color: var(--primary);">Lihat Teks</button>
+              <span class="q-type" id="qTypeBadge">Pilihan Ganda</span>
+            </div>
           </div>
 
           <div id="questionText" class="q-text"></div>
@@ -821,7 +828,17 @@
     </section>
 
   </main>
-
+  <!-- MODAL LIHAT TEKS BACAAN -->
+  <div id="passageModal" class="overlay hidden">
+    <div class="modal-box" style="max-width: 880px; width: 100%; max-height: 92vh; overflow-y: auto;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 14px; position: sticky; top: -22px; background: #fff; z-index: 2; padding-top: 4px;">
+        <h3 style="font-size: 16px; font-weight: 800; color: var(--primary);">Teks Bacaan / Stimulus</h3>
+        <button type="button" id="btnClosePassageModal" class="btn btn-outline" style="padding: 5px 12px; font-size: 12.5px;">Tutup</button>
+      </div>
+      <div id="passageModalContent" class="passage-body"></div>
+    </div>
+  </div>
+  
   <!-- LOADING OVERLAY -->
   <div id="loadingOverlay" class="overlay">
     <div class="modal-box" style="text-align: center;">
@@ -1123,6 +1140,7 @@
           pin
         };
         state.questions = questions;
+        resolveQuestionPassages(state.questions);
         state.currentIndex = 0;
         state.answers = {};
         state.flagged = {};
@@ -1210,6 +1228,32 @@
     // =========================================================================
     // RENDER SOAL & INTERAKSI JAWABAN
     // =========================================================================
+    function resolveQuestionPassages(questions) {
+      let activePassage = '';
+      questions.forEach((q) => {
+        const raw = String(q.teksBacaan || '').trim();
+        if (raw === '-' || raw.toUpperCase() === 'NONE' || raw.toUpperCase() === 'TANPA TEKS') {
+          activePassage = '';
+          q._passage = '';
+          q._isNewPassage = false;
+        } else if (raw !== '') {
+          const isSameAsPrev = (raw === activePassage);
+          activePassage = raw;
+          q._passage = activePassage;
+          q._isNewPassage = !isSameAsPrev;
+        } else {
+          q._passage = activePassage;
+          q._isNewPassage = false;
+        }
+      });
+    }
+
+    function pauseAllPassageAudio() {
+      document.querySelectorAll('#passageContent audio, #passageModalContent audio').forEach(a => {
+        try { a.pause(); } catch (e) {}
+      });
+    }
+    
     function questionKey(q, idx) {
       return q.noSoal || q.rawNoSoal || String(idx + 1);
     }
@@ -1230,15 +1274,21 @@
       $('qNumberBadge').textContent = `Soal No. ${idx + 1} dari ${state.questions.length}`;
       $('qTypeBadge').textContent = TYPE_LABELS[q.tipeSoal] || q.tipeSoal;
 
-      // Bacaan / Stimulus
-      const passage = String(q.teksBacaan || '').trim();
-      if (passage && passage !== '-') {
+      // Bacaan / Stimulus (tampil penuh di soal pertama, diringkas + tombol Lihat Teks di soal lanjutan)
+      pauseAllPassageAudio();
+      const passage = q._passage || '';
+      if (passage) {
+        $('btnViewPassageModal').classList.remove('hidden');
         $('passageBox').classList.remove('hidden');
         $('passageContent').innerHTML = formatRichMedia(passage);
-        $('passageContent').classList.toggle('hidden', state.passageCollapsed);
-        $('passageToggle').textContent = state.passageCollapsed ? 'Tampilkan' : 'Sembunyikan';
+
+        const shouldCollapse = !q._isNewPassage;
+        $('passageContent').classList.toggle('hidden', shouldCollapse);
+        $('passageToggle').textContent = shouldCollapse ? 'Tampilkan' : 'Sembunyikan';
       } else {
+        $('btnViewPassageModal').classList.add('hidden');
         $('passageBox').classList.add('hidden');
+        $('passageContent').innerHTML = '';
       }
 
       // Render isi soal & opsi sesuai tipe
@@ -1562,9 +1612,29 @@
     $('btnStart').addEventListener('click', startQuiz);
 
     $('passageToggle').addEventListener('click', () => {
-      state.passageCollapsed = !state.passageCollapsed;
-      $('passageContent').classList.toggle('hidden', state.passageCollapsed);
-      $('passageToggle').textContent = state.passageCollapsed ? 'Tampilkan' : 'Sembunyikan';
+      const isNowHidden = $('passageContent').classList.toggle('hidden');
+      $('passageToggle').textContent = isNowHidden ? 'Tampilkan' : 'Sembunyikan';
+      if (isNowHidden) pauseAllPassageAudio();
+    });
+
+    $('btnViewPassageModal').addEventListener('click', () => {
+      const q = state.questions[state.currentIndex];
+      if (!q || !q._passage) return;
+      pauseAllPassageAudio();
+      $('passageModalContent').innerHTML = formatRichMedia(q._passage);
+      $('passageModal').classList.remove('hidden');
+    });
+
+    $('btnClosePassageModal').addEventListener('click', () => {
+      pauseAllPassageAudio();
+      $('passageModal').classList.add('hidden');
+    });
+
+    $('passageModal').addEventListener('click', (e) => {
+      if (e.target === $('passageModal')) {
+        pauseAllPassageAudio();
+        $('passageModal').classList.add('hidden');
+      }
     });
 
     $('btnPrev').addEventListener('click', () => {
