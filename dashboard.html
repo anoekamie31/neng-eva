@@ -309,6 +309,73 @@
       margin-right: 6px;
     }
     .diff-fill { height: 100%; background: var(--primary); }
+    /* ANALISIS BUTIR LANJUTAN */
+    .analysis-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .analysis-sum-card {
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 13px 15px;
+      background: #f8fafc;
+    }
+    .analysis-sum-card span {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+    .analysis-sum-card strong {
+      font-size: 22px;
+      font-weight: 800;
+      display: block;
+      margin-top: 2px;
+    }
+    .detail-drawer-row td {
+      background: #f8fafc !important;
+      padding: 16px 18px;
+      border-bottom: 2px solid #cbd5e1;
+    }
+    .distractor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .dist-box {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 10px 12px;
+    }
+    .dist-box.is-key {
+      border-color: #6ee7b7;
+      background: #ecfdf5;
+    }
+    .dist-box.is-danger {
+      border-color: #fca5a5;
+      background: #fef2f2;
+    }
+    .dist-bar-track {
+      width: 100%;
+      height: 7px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 6px 0;
+    }
+    .dist-bar-fill {
+      height: 100%;
+      background: #64748b;
+    }
+    .dist-box.is-key .dist-bar-fill { background: var(--success); }
+    .dist-box.is-danger .dist-bar-fill { background: var(--danger); }
+    @media (max-width: 768px) {
+      .analysis-summary-grid { grid-template-columns: 1fr; }
+    }
 
     /* SETTINGS GRID */
     .settings-grid {
@@ -637,8 +704,35 @@
 
       <!-- TAB 4: ANALISIS BUTIR SOAL -->
       <div id="tab-analysis" class="card tab-panel hidden">
+        <div class="table-toolbar">
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <label class="filter-label" style="margin:0;">Basis Data:</label>
+            <select id="analysisAttemptBasis" class="form-control" style="width: auto;">
+              <option value="FIRST">Percobaan Ke-1 Saja (Murni)</option>
+              <option value="LATEST">Percobaan Terakhir per Siswa</option>
+              <option value="ALL">Semua Percobaan</option>
+            </select>
+          </div>
+          <button type="button" id="btnExportAnalysisCsv" class="btn btn-outline">Export CSV Analisis Butir</button>
+        </div>
+
         <div id="analysisNotice" class="info-banner">
-          Pilih satu <strong>Paket Evaluasi</strong> pada filter di atas untuk melihat analisis tingkat kesukaran tiap nomor soal.
+          Pilih satu <strong>Paket Evaluasi</strong> pada filter di atas untuk melihat analisis tingkat kesukaran, daya pembeda (D), sebaran pengecoh, dan rekomendasi butir soal.
+        </div>
+
+        <div id="analysisSummaryGrid" class="analysis-summary-grid hidden">
+          <div class="analysis-sum-card" style="border-left: 4px solid var(--success);">
+            <span>Layak Simpan</span>
+            <strong id="sumLayakCount" style="color: var(--success);">0</strong>
+          </div>
+          <div class="analysis-sum-card" style="border-left: 4px solid var(--warning);">
+            <span>Perlu Revisi (Kesukaran / Pengecoh)</span>
+            <strong id="sumRevisiCount" style="color: var(--warning);">0</strong>
+          </div>
+          <div class="analysis-sum-card" style="border-left: 4px solid var(--danger);">
+            <span>Cek Kunci / Indikasi Ambigu</span>
+            <strong id="sumKunciCount" style="color: var(--danger);">0</strong>
+          </div>
         </div>
 
         <div class="table-wrap">
@@ -646,20 +740,22 @@
             <thead>
               <tr>
                 <th>No</th>
-                <th>Tipe</th>
-                <th>Kunci</th>
+                <th>Tipe & Kunci</th>
                 <th>Cuplikan Pertanyaan</th>
                 <th>Penjawab</th>
-                <th>Skor Rata-Rata</th>
-                <th>Tingkat Kesukaran</th>
+                <th>Kesukaran (P)</th>
+                <th>Daya Pembeda (D)</th>
+                <th>Rekomendasi Status</th>
+                <th>Sebaran Jawaban</th>
               </tr>
             </thead>
             <tbody id="analysisTableBody">
-              <tr><td colspan="7" style="text-align:center; color:var(--muted); padding:24px;">Pilih paket evaluasi terlebih dahulu.</td></tr>
+              <tr><td colspan="8" style="text-align:center; color:var(--muted); padding:24px;">Pilih paket evaluasi terlebih dahulu.</td></tr>
             </tbody>
           </table>
         </div>
       </div>
+      
 
       <!-- TAB 5: KELOLA & PRATINJAU PAKET -->
       <div id="tab-packages" class="card tab-panel hidden">
@@ -804,6 +900,7 @@
       },
       activeSessions: [],
       missingList: [],
+      analysisReport: [],
       currentPreviewPaketId: '',
       currentTab: 'results'
     };
@@ -1301,65 +1398,393 @@
     }
 
     // =========================================================================
-    // TAB 4: ANALISIS BUTIR SOAL
+    // TAB 4: ANALISIS BUTIR SOAL (KESUKARAN, DAYA PEMBEDA & SEBARAN PENGECOH)
     // =========================================================================
+    function getExpectedKeyLetters(q) {
+      const t = String(q.tipeSoal || '').toUpperCase();
+      const k = String(q.kunciJawaban || '').trim().toUpperCase();
+      if (!k) return [];
+      if (t === 'BS') {
+        if (['A', 'TRUE', 'BENAR', '1', 'T'].includes(k)) return ['A'];
+        if (['B', 'FALSE', 'SALAH', '0', 'F'].includes(k)) return ['B'];
+        return [];
+      }
+      if (t === 'PGK') {
+        return k.replace(/[^A-E,|;]/g, '').split(/[,|;]/).map(s => s.trim()).filter(Boolean);
+      }
+      if (t === 'PG' || t === 'MENJODOHKAN') {
+        const clean = k.replace(/[^A-E]/g, '');
+        return clean ? [clean[0]] : [];
+      }
+      return [];
+    }
+
     function renderItemAnalysis() {
       const paketId = $('filterPaket').value;
+      const kelasFilter = $('filterKelas').value;
+      const basis = $('analysisAttemptBasis').value;
       const tbody = $('analysisTableBody');
       const notice = $('analysisNotice');
+      const summaryGrid = $('analysisSummaryGrid');
 
       if (!paketId) {
+        dashState.analysisReport = [];
         notice.classList.remove('hidden');
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--muted); padding:24px;">Pilih satu paket evaluasi pada filter utama di atas untuk melihat analisis butir soal.</td></tr>';
+        summaryGrid.classList.add('hidden');
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--muted); padding:24px;">Pilih satu paket evaluasi pada filter utama di atas untuk melihat analisis butir soal.</td></tr>';
         return;
       }
 
       notice.classList.add('hidden');
       const questions = dashState.bankSoal[paketId] || [];
-      const rows = dashState.filteredRows.filter(r => r.paketId === paketId);
+
+      // Filter baris sesuai paket & kelas terpilih
+      let pool = dashState.rawRows.filter(r => {
+        if (r.paketId !== paketId) return false;
+        if (kelasFilter && r.kelas !== kelasFilter) return false;
+        return true;
+      });
+
+      // Terapkan basis percobaan (Ke-1 / Terakhir / Semua)
+      if (basis === 'FIRST') {
+        const firstMap = new Map();
+        pool.forEach(r => {
+          const key = `${r.kelas}|${r.namaSiswa}`;
+          const prev = firstMap.get(key);
+          if (!prev || r.percobaanKe < prev.percobaanKe) firstMap.set(key, r);
+        });
+        pool = Array.from(firstMap.values());
+      } else if (basis === 'LATEST') {
+        const latestMap = new Map();
+        pool.forEach(r => {
+          const key = `${r.kelas}|${r.namaSiswa}`;
+          const prev = latestMap.get(key);
+          if (!prev || r.percobaanKe > prev.percobaanKe) latestMap.set(key, r);
+        });
+        pool = Array.from(latestMap.values());
+      }
 
       if (questions.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--muted); padding:24px;">Belum ada data butir soal atau pengerjaan untuk paket ini.</td></tr>';
+        dashState.analysisReport = [];
+        summaryGrid.classList.add('hidden');
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--muted); padding:24px;">Belum ada data butir soal untuk paket ini.</td></tr>';
         return;
       }
 
-      tbody.innerHTML = questions.map((q, idx) => {
+      // Siapkan kelompok Atas (27%) & Bawah (27%) berdasarkan skor total untuk Daya Pembeda (D)
+      const sortedPool = pool.slice().sort((a, b) => (b.skorMentah - a.skorMentah) || (b.jumlahBenar - a.jumlahBenar));
+      const nTotal = sortedPool.length;
+      const canCalcD = nTotal >= 4;
+      const groupSize = canCalcD ? Math.min(Math.floor(nTotal / 2), Math.max(1, Math.round(nTotal * 0.27))) : 0;
+      const upperIds = new Set(sortedPool.slice(0, groupSize).map(r => r.id));
+      const lowerIds = new Set(sortedPool.slice(nTotal - groupSize).map(r => r.id));
+
+      let countLayak = 0;
+      let countRevisi = 0;
+      let countKunci = 0;
+      const report = [];
+
+      questions.forEach((q, idx) => {
+        const qNo = String(q.noSoal || (idx + 1));
+        const t = String(q.tipeSoal || 'PG').toUpperCase();
+        const keyLetters = getExpectedKeyLetters(q);
+
         let totalScore = 0;
         let count = 0;
+        let upperSum = 0, upperN = 0;
+        let lowerSum = 0, lowerN = 0;
 
-        rows.forEach(r => {
-          const det = (r.details || []).find(d => String(d.noSoal) === String(q.noSoal));
-          if (det && typeof det.score === 'number') {
-            totalScore += det.score;
-            count++;
+        const optionCounts = { A: 0, B: 0, C: 0, D: 0, E: 0, KOSONG: 0 };
+        const shortAnsMap = new Map();
+        const matrixStats = { penuh: 0, parsial: 0, salah: 0 };
+
+        pool.forEach(r => {
+          const det = (r.details || []).find(d => String(d.noSoal) === qNo);
+          if (!det || typeof det.score !== 'number') return;
+
+          totalScore += det.score;
+          count++;
+
+          if (canCalcD) {
+            if (upperIds.has(r.id)) { upperSum += det.score; upperN++; }
+            if (lowerIds.has(r.id)) { lowerSum += det.score; lowerN++; }
+          }
+
+          if (t === 'IS') {
+            const rawAns = String(det.studentAns || '').trim() || '(Kosong)';
+            const normKey = rawAns.toLowerCase();
+            const cur = shortAnsMap.get(normKey) || { text: rawAns, count: 0, correct: det.score >= 1 };
+            cur.count++;
+            if (det.score >= 1) cur.correct = true;
+            shortAnsMap.set(normKey, cur);
+          } else if (t === 'MATRIKS') {
+            if (det.score >= 1) matrixStats.penuh++;
+            else if (det.score > 0) matrixStats.parsial++;
+            else matrixStats.salah++;
+          } else {
+            const picked = Array.isArray(det.picked) ? det.picked : [];
+            if (picked.length === 0) {
+              optionCounts.KOSONG++;
+            } else {
+              picked.forEach(opt => {
+                if (Object.prototype.hasOwnProperty.call(optionCounts, opt)) {
+                  optionCounts[opt]++;
+                }
+              });
+            }
           }
         });
 
+        // 1. Tingkat Kesukaran (P)
         const pIndex = count > 0 ? (totalScore / count) : 0;
-        const pct = Math.round(pIndex * 100);
-
-        let category = '<span class="badge badge-neutral">Belum Ada Data</span>';
+        const pPct = Math.round(pIndex * 100);
+        let diffLabel = 'Belum Ada Data';
         if (count > 0) {
-          if (pIndex >= 0.7) category = '<span class="badge badge-lulus">Mudah (≥70%)</span>';
-          else if (pIndex >= 0.3) category = '<span class="badge badge-primary">Sedang (30–69%)</span>';
-          else category = '<span class="badge badge-remedi">Sukar (<30%)</span>';
+          if (pPct >= 70) diffLabel = 'Mudah';
+          else if (pPct >= 30) diffLabel = 'Sedang';
+          else diffLabel = 'Sukar';
         }
+
+        // 2. Daya Pembeda (D)
+        let dVal = null;
+        let dLabel = 'N < 4';
+        if (canCalcD && upperN > 0 && lowerN > 0) {
+          dVal = Math.round(((upperSum / upperN) - (lowerSum / lowerN)) * 100) / 100;
+          if (dVal >= 0.40) dLabel = 'Sangat Baik';
+          else if (dVal >= 0.30) dLabel = 'Baik';
+          else if (dVal >= 0.20) dLabel = 'Cukup';
+          else if (dVal >= 0) dLabel = 'Lemah';
+          else dLabel = 'Negatif!';
+        }
+
+        // 3. Evaluasi Pengecoh
+        let hasDeadDistractor = false;
+        let hasDominantDistractor = false;
+        const activeLetters = t === 'BS'
+          ? ['A', 'B']
+          : ((optionCounts.E > 0 || keyLetters.includes('E')) ? ['A', 'B', 'C', 'D', 'E'] : ['A', 'B', 'C', 'D']);
+
+        if (count > 0 && ['PG', 'PGK', 'BS', 'MENJODOHKAN'].includes(t)) {
+          const minKeyCount = keyLetters.length > 0
+            ? Math.min(...keyLetters.map(k => optionCounts[k] || 0))
+            : 0;
+
+          activeLetters.forEach(l => {
+            if (!keyLetters.includes(l)) {
+              const pctOpt = (optionCounts[l] / count) * 100;
+              if (count >= 5 && pctOpt < 5) hasDeadDistractor = true;
+              if (t !== 'PGK' && keyLetters.length > 0 && optionCounts[l] > minKeyCount) {
+                hasDominantDistractor = true;
+              }
+            }
+          });
+        }
+
+        // 4. Matriks Keputusan Status
+        let statusCode = 'EMPTY';
+        let statusText = 'Belum Ada Data';
+        let badgeCls = 'badge-neutral';
+        let note = 'Belum ada peserta yang mengerjakan soal ini pada filter terpilih.';
+
+        if (count > 0) {
+          if ((dVal !== null && dVal < 0) || hasDominantDistractor) {
+            statusCode = 'CHECK_KEY';
+            statusText = 'Cek Kunci / Ambigu';
+            badgeCls = 'badge-remedi';
+            countKunci++;
+            note = dVal !== null && dVal < 0
+              ? `Daya pembeda negatif (${dVal.toFixed(2)}): kelompok bawah lebih banyak menjawab benar daripada kelompok atas. Periksa kemungkinan salah kunci.`
+              : 'Salah satu opsi pengecoh dipilih lebih banyak daripada kunci jawaban. Periksa kejelasan soal atau kunci jawaban.';
+          } else if ((pPct > 85 || pPct < 20) && (dVal === null || dVal >= 0.20)) {
+            statusCode = 'REV_DIFF';
+            statusText = 'Revisi Kesukaran';
+            badgeCls = 'badge-warn';
+            countRevisi++;
+            note = pPct > 85
+              ? `Soal terlalu mudah (${pPct}% benar). Tingkatkan level kognitif pertanyaan.`
+              : `Soal terlalu sukar (${pPct}% benar). Periksa kembali keterbacaan stimulus/opsi.`;
+          } else if ((dVal !== null && dVal < 0.20) || hasDeadDistractor) {
+            statusCode = 'REV_DIST';
+            statusText = 'Revisi Pengecoh';
+            badgeCls = 'badge-warn';
+            countRevisi++;
+            note = (dVal !== null && dVal < 0.20)
+              ? `Daya pembeda lemah (D = ${dVal.toFixed(2)}). Soal kurang mampu membedakan siswa paham dan belum paham.`
+              : 'Terdapat opsi pengecoh mati (dipilih < 5% siswa). Ganti pengecoh agar lebih mengecoh secara logis.';
+          } else {
+            statusCode = 'GOOD';
+            statusText = 'Layak Simpan';
+            badgeCls = 'badge-lulus';
+            countLayak++;
+            note = 'Tingkat kesukaran, daya pembeda, dan sebaran jawaban berada pada rentang yang baik.';
+          }
+        }
+
+        report.push({
+          idx, qNo, tipeSoal: t, kunciJawaban: q.kunciJawaban,
+          pertanyaan: stripMediaTags(q.pertanyaan),
+          count, pPct, diffLabel, dVal, dLabel,
+          statusCode, statusText, badgeCls, note,
+          keyLetters, activeLetters, optionCounts,
+          shortAnswers: Array.from(shortAnsMap.values()).sort((a, b) => b.count - a.count),
+          matrixStats
+        });
+      });
+
+      dashState.analysisReport = report;
+
+      // Perbarui Kartu Ringkasan
+      summaryGrid.classList.remove('hidden');
+      $('sumLayakCount').textContent = `${countLayak} soal`;
+      $('sumRevisiCount').textContent = `${countRevisi} soal`;
+      $('sumKunciCount').textContent = `${countKunci} soal`;
+
+      // Render Baris Tabel + Baris Laci Detail
+      tbody.innerHTML = report.map(item => {
+        const dDisplay = item.dVal === null
+          ? `<span style="color:var(--muted); font-size:12px;">${item.dLabel}</span>`
+          : `<strong style="color:${item.dVal < 0 ? 'var(--danger)' : (item.dVal >= 0.3 ? 'var(--success)' : 'var(--text)')};">${item.dVal.toFixed(2)}</strong> <span style="font-size:11.5px; color:var(--muted);">(${item.dLabel})</span>`;
 
         return `
           <tr>
-            <td><strong>${escapeHtml(q.noSoal || (idx + 1))}</strong></td>
-            <td><span class="badge badge-neutral">${escapeHtml(q.tipeSoal)}</span></td>
-            <td><strong>${escapeHtml(q.kunciJawaban)}</strong></td>
-            <td style="max-width: 380px;">${escapeHtml(stripMediaTags(q.pertanyaan).substring(0, 120))}</td>
-            <td>${count}</td>
+            <td><strong>${escapeHtml(item.qNo)}</strong></td>
             <td>
-              <div class="diff-bar"><div class="diff-fill" style="width:${pct}%;"></div></div>
-              <strong>${pct}%</strong>
+              <span class="badge badge-neutral">${escapeHtml(item.tipeSoal)}</span>
+              <div style="font-size:12px; margin-top:3px;">Kunci: <strong>${escapeHtml(item.kunciJawaban)}</strong></div>
             </td>
-            <td>${category}</td>
+            <td style="max-width: 320px;">${escapeHtml(item.pertanyaan.substring(0, 110))}</td>
+            <td>${item.count}</td>
+            <td>
+              <div class="diff-bar"><div class="diff-fill" style="width:${item.pPct}%;"></div></div>
+              <strong>${item.pPct}%</strong> <span style="font-size:11.5px; color:var(--muted);">(${item.diffLabel})</span>
+            </td>
+            <td>${dDisplay}</td>
+            <td><span class="badge ${item.badgeCls}">${item.statusText}</span></td>
+            <td>
+              <button type="button" class="btn btn-outline btn-sm" onclick="toggleAnalysisDetail(${item.idx})">Lihat Sebaran</button>
+            </td>
+          </tr>
+          <tr id="analysis-detail-${item.idx}" class="detail-drawer-row hidden">
+            <td colspan="8">${buildDistractorDetailHtml(item)}</td>
           </tr>
         `;
       }).join('');
+    }
+
+    function buildDistractorDetailHtml(item) {
+      if (item.count === 0) {
+        return `<div style="font-size:13px; color:var(--muted);">${escapeHtml(item.note)}</div>`;
+      }
+
+      let bodyHtml = '';
+      if (item.tipeSoal === 'IS') {
+        const topList = item.shortAnswers.slice(0, 10).map(sa => {
+          const pct = Math.round((sa.count / item.count) * 100);
+          const tag = sa.correct
+            ? '<span class="badge badge-lulus">Dinilai Benar</span>'
+            : '<span class="badge badge-remedi">Dinilai Salah</span>';
+          return `<div class="dist-box ${sa.correct ? 'is-key' : ''}">
+            <div style="display:flex; justify-content:space-between; gap:6px; align-items:center;">
+              <strong>"${escapeHtml(sa.text)}"</strong>
+              ${tag}
+            </div>
+            <div style="font-size:12px; color:var(--muted); margin-top:4px;">${sa.count} siswa (${pct}%)</div>
+          </div>`;
+        }).join('');
+        bodyHtml = `<div style="font-size:12.5px; font-weight:700; margin-top:8px;">Variasi Jawaban Siswa (Top 10):</div>
+          <div class="distractor-grid">${topList}</div>`;
+      } else if (item.tipeSoal === 'MATRIKS') {
+        const m = item.matrixStats;
+        bodyHtml = `<div class="distractor-grid">
+          <div class="dist-box is-key"><strong>Skor Penuh (Semua Baris Benar)</strong><div>${m.penuh} siswa (${Math.round(m.penuh / item.count * 100)}%)</div></div>
+          <div class="dist-box"><strong>Skor Parsial (Sebagian Benar)</strong><div>${m.parsial} siswa (${Math.round(m.parsial / item.count * 100)}%)</div></div>
+          <div class="dist-box is-danger"><strong>Salah Semua Baris</strong><div>${m.salah} siswa (${Math.round(m.salah / item.count * 100)}%)</div></div>
+        </div>`;
+      } else {
+        const minKeyCount = item.keyLetters.length > 0
+          ? Math.min(...item.keyLetters.map(k => item.optionCounts[k] || 0))
+          : 0;
+
+        const cards = item.activeLetters.map(l => {
+          const cnt = item.optionCounts[l] || 0;
+          const pct = Math.round((cnt / item.count) * 100);
+          const isKey = item.keyLetters.includes(l);
+          const isDominant = !isKey && item.tipeSoal !== 'PGK' && item.keyLetters.length > 0 && cnt > minKeyCount;
+          const isDead = !isKey && item.count >= 5 && pct < 5;
+
+          let subNote = isKey ? 'Kunci Jawaban' : 'Pengecoh';
+          if (isDominant) subNote = 'Pengecoh Lebih Dominan dari Kunci!';
+          else if (isDead) subNote = 'Pengecoh Mati (<5%)';
+
+          return `<div class="dist-box ${isKey ? 'is-key' : (isDominant ? 'is-danger' : '')}">
+            <div style="display:flex; justify-content:space-between; font-size:13px;">
+              <strong>Opsi ${l} ${isKey ? '✓' : ''}</strong>
+              <span><strong>${cnt}</strong> (${pct}%)</span>
+            </div>
+            <div class="dist-bar-track"><div class="dist-bar-fill" style="width:${pct}%;"></div></div>
+            <div style="font-size:11.5px; color:${isDominant ? 'var(--danger)' : 'var(--muted)'}; font-weight:600;">${subNote}</div>
+          </div>`;
+        }).join('');
+
+        const kosongPct = Math.round((item.optionCounts.KOSONG / item.count) * 100);
+        const kosongCard = item.optionCounts.KOSONG > 0
+          ? `<div class="dist-box"><div style="display:flex; justify-content:space-between; font-size:13px;"><strong>Tidak Dijawab</strong><span><strong>${item.optionCounts.KOSONG}</strong> (${kosongPct}%)</span></div><div class="dist-bar-track"><div class="dist-bar-fill" style="width:${kosongPct}%;"></div></div><div style="font-size:11.5px; color:var(--muted);">Kosong</div></div>`
+          : '';
+
+        bodyHtml = `<div class="distractor-grid">${cards}${kosongCard}</div>`;
+      }
+
+      return `
+        <div style="font-size:13px; margin-bottom:6px;">
+          <strong>Catatan Analisis:</strong> ${escapeHtml(item.note)}
+        </div>
+        ${bodyHtml}
+      `;
+    }
+
+    function toggleAnalysisDetail(idx) {
+      const row = $(`analysis-detail-${idx}`);
+      if (row) row.classList.toggle('hidden');
+    }
+
+    function exportAnalysisCsv() {
+      const list = dashState.analysisReport || [];
+      if (list.length === 0) {
+        showToast('Pilih paket evaluasi terlebih dahulu sebelum mengekspor analisis butir.');
+        return;
+      }
+
+      const headers = [
+        'No_Soal', 'Tipe', 'Kunci', 'Pertanyaan', 'Penjawab',
+        'Tingkat_Kesukaran_Persen', 'Kategori_Kesukaran',
+        'Daya_Pembeda_D', 'Kategori_Daya_Pembeda',
+        'Pilih_A', 'Pilih_B', 'Pilih_C', 'Pilih_D', 'Pilih_E', 'Kosong',
+        'Rekomendasi_Status', 'Catatan_Analisis'
+      ];
+      const escCsv = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
+
+      const lines = [headers.join(',')];
+      list.forEach(it => {
+        lines.push([
+          it.qNo, it.tipeSoal, it.kunciJawaban, it.pertanyaan, it.count,
+          it.pPct, it.diffLabel,
+          it.dVal === null ? 'N<4' : it.dVal.toFixed(2), it.dLabel,
+          it.optionCounts.A, it.optionCounts.B, it.optionCounts.C, it.optionCounts.D, it.optionCounts.E, it.optionCounts.KOSONG,
+          it.statusText, it.note
+        ].map(escCsv).join(','));
+      });
+
+      const paketId = $('filterPaket').value || 'Paket';
+      const blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Analisis_Butir_${paketId}_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Laporan Analisis Butir (CSV) berhasil diunduh.');
     }
 
     // =========================================================================
@@ -1663,7 +2088,8 @@
     $('btnRunValidation').addEventListener('click', runBankValidation);
     $('btnExportCsv').addEventListener('click', exportFilteredCsv);
     $('btnCloseDetailModal').addEventListener('click', () => $('detailModal').classList.add('hidden'));
-
+    $('analysisAttemptBasis').addEventListener('change', renderItemAnalysis);
+    $('btnExportAnalysisCsv').addEventListener('click', exportAnalysisCsv);
     // Jalankan saat halaman dibuka
     initDashboard();
   </script>
