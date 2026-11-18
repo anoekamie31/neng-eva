@@ -978,13 +978,22 @@
           </div>
         </div>
 
-        <!-- TAB 3: ACTIVE SESSIONS -->
+        <!-- TAB 3: ACTIVE SESSIONS WITH AUTO-EXPIRE & END SESSION -->
         <div id="tab-active" class="tab-panel hidden">
           <div class="table-toolbar">
-            <div style="font-size: 12.5px; color: var(--text-muted);">
-              Shows students who are currently working on a test package.
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span style="font-size: 12.5px; color: var(--text-muted);">
+                Sessions older than <strong>120 min</strong> auto-expire.
+              </span>
+              <select id="activeSessionFilter" class="form-control" style="width: auto;">
+                <option value="ACTIVE_ONLY">Active Only (&le; 120 min)</option>
+                <option value="ALL">Show All (Include Expired &gt; 120 min)</option>
+              </select>
             </div>
-            <button type="button" id="btnRefreshActive" class="btn btn-outline btn-sm">Refresh Sessions</button>
+            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+              <button type="button" id="btnClearExpiredSessions" class="btn btn-danger-soft btn-sm">Clear Expired (&gt;120m)</button>
+              <button type="button" id="btnRefreshActive" class="btn btn-outline btn-sm">Refresh Sessions</button>
+            </div>
           </div>
 
           <div class="table-wrap">
@@ -995,10 +1004,11 @@
                   <th>Class</th>
                   <th>Package ID</th>
                   <th>Time Elapsed</th>
+                  <th style="text-align:center;">Action</th>
                 </tr>
               </thead>
               <tbody id="activeSessionsBody">
-                <tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:20px;">No students are currently taking a test.</td></tr>
+                <tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:20px;">No students are currently taking a test.</td></tr>
               </tbody>
             </table>
           </div>
@@ -1193,6 +1203,7 @@
     // GOOGLE APPS SCRIPT API CONFIGURATION
     // =========================================================================
     const API_URL = 'https://script.google.com/macros/s/AKfycby1WiRhGdIHsaA6brxkaOVWn4mqS5cV3naYfKZmOJErpRJl0wkTUbSMIUrJLkTzkoPO/exec';
+    const SESSION_EXPIRE_MINUTES = 120;
 
     // =========================================================================
     // DASHBOARD STATE
@@ -1202,6 +1213,7 @@
       requirePin: true,
       rawRows: [],
       filteredRows: [],
+      activeSessions: [],
       bankSoal: {},
       studentsByClass: {},
       allPackages: [],
@@ -1299,6 +1311,13 @@
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
+    }
+
+    function escapeJsAttr(str) {
+      return String(str ?? '')
+        .replace(/\\/g, '\\\\')
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '&quot;');
     }
 
     function stripMediaTags(text) {
@@ -1548,7 +1567,6 @@
         } else if (field === 'pindahTab') {
           cmp = (Number(a.pindahTab) || 0) - (Number(b.pindahTab) || 0);
         } else {
-          // Default: timestamp (with row id tie-breaker)
           const tA = parseTimestampValue(a.timestamp, a.id);
           const tB = parseTimestampValue(b.timestamp, b.id);
           cmp = tA - tB;
@@ -1663,7 +1681,7 @@
         const scoreLabel = studentCount > 0 ? avg.toFixed(1) : '—';
 
         return `
-          <div class="gauge-item ${isSelected ? 'active-pkg' : ''}" onclick="togglePackageFilterFromGauge('${escapeHtml(pkg.id)}')" title="Click to filter by ${escapeHtml(pkg.name)}">
+          <div class="gauge-item ${isSelected ? 'active-pkg' : ''}" onclick="togglePackageFilterFromGauge('${escapeJsAttr(pkg.id)}')" title="Click to filter by ${escapeHtml(pkg.name)}">
             <div class="gauge-title">${escapeHtml(pkg.name)}</div>
             <svg width="118" height="54" viewBox="0 0 160 72" style="display:block; margin: 0 auto;">
               <path d="M 38 56 A 42 42 0 0 1 122 56" fill="none" stroke="#d3dce0" stroke-width="11" stroke-linecap="butt" />
@@ -2074,7 +2092,7 @@
     }
 
     // =========================================================================
-    // TAB 3: ACTIVE SESSIONS
+    // TAB 3: ACTIVE SESSIONS (AUTO-EXPIRE >120m & END SESSION)
     // =========================================================================
     async function refreshActiveSessionsOnly() {
       try {
@@ -2087,21 +2105,80 @@
     }
 
     function renderActiveSessions(sessions) {
-      $('badgeActiveCount').textContent = sessions.length;
+      dashState.activeSessions = Array.isArray(sessions) ? sessions : [];
+      const activeOnly = dashState.activeSessions.filter(s => (Number(s.menit) || 0) <= SESSION_EXPIRE_MINUTES);
+      const expiredCount = dashState.activeSessions.length - activeOnly.length;
+
+      $('badgeActiveCount').textContent = activeOnly.length;
+
+      const filterMode = $('activeSessionFilter').value;
+      const listToShow = filterMode === 'ALL' ? dashState.activeSessions : activeOnly;
       const tbody = $('activeSessionsBody');
-      if (sessions.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-muted); padding:20px;">No students are currently taking a test.</td></tr>';
+
+      if (listToShow.length === 0) {
+        const extraNote = expiredCount > 0
+          ? ` (${expiredCount} expired session(s) &gt; ${SESSION_EXPIRE_MINUTES} min hidden)`
+          : '';
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:20px;">No active sessions currently running${extraNote}.</td></tr>`;
         return;
       }
 
-      tbody.innerHTML = sessions.map(s => `
-        <tr>
-          <td><strong>${escapeHtml(s.namaSiswa)}</strong></td>
-          <td>${escapeHtml(s.kelas)}</td>
-          <td><span class="badge badge-neutral">${escapeHtml(s.paketId)}</span></td>
-          <td><span class="badge badge-passed">${s.menit} min elapsed</span></td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = listToShow.map(s => {
+        const menit = Number(s.menit) || 0;
+        const isExpired = menit > SESSION_EXPIRE_MINUTES;
+        const timeBadge = isExpired
+          ? `<span class="badge badge-remedial">${menit} min (Expired)</span>`
+          : `<span class="badge badge-passed">${menit} min elapsed</span>`;
+
+        return `
+          <tr>
+            <td><strong>${escapeHtml(s.namaSiswa)}</strong></td>
+            <td>${escapeHtml(s.kelas)}</td>
+            <td><span class="badge badge-neutral">${escapeHtml(s.paketId)}</span></td>
+            <td>${timeBadge}</td>
+            <td class="action-cell" style="text-align:center;">
+              <button type="button" class="btn btn-danger-soft btn-xs"
+                onclick="handleEndSession('${escapeJsAttr(s.namaSiswa)}', '${escapeJsAttr(s.kelas)}', '${escapeJsAttr(s.paketId)}')">
+                End Session
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function handleEndSession(namaSiswa, kelas, paketId) {
+      if (!confirm(`Akhiri dan hapus sesi pengerjaan milik ${namaSiswa} (${kelas} - ${paketId})?`)) {
+        return;
+      }
+      showLoading(`Ending session for ${namaSiswa}...`);
+      try {
+        const res = await callApi('endActiveSession', dashState.token, namaSiswa, kelas, paketId);
+        showToast(res.message || 'Session ended.');
+        const activeRes = await callApi('getActiveSessions', dashState.token);
+        renderActiveSessions(activeRes.sessions || []);
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        hideLoading();
+      }
+    }
+
+    async function handleClearExpiredSessions() {
+      if (!confirm(`Hapus permanen semua sesi yang sudah berjalan lebih dari ${SESSION_EXPIRE_MINUTES} menit dari Google Sheets?`)) {
+        return;
+      }
+      showLoading('Clearing expired sessions...');
+      try {
+        const res = await callApi('endActiveSession', dashState.token, '__EXPIRED__', '', '');
+        showToast(res.message || 'Expired sessions cleared.');
+        const activeRes = await callApi('getActiveSessions', dashState.token);
+        renderActiveSessions(activeRes.sessions || []);
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        hideLoading();
+      }
     }
 
     // =========================================================================
@@ -2678,8 +2755,8 @@
               <td>${statusBadge}</td>
               <td class="action-cell">
                 <div style="display:flex; gap:5px; flex-wrap:nowrap;">
-                  <button type="button" class="btn btn-outline btn-xs" onclick="openPackagePreview('${escapeHtml(p.id)}', false)">Preview</button>
-                  <button type="button" class="btn ${isAktif ? 'btn-danger-soft' : 'btn-success'} btn-xs" onclick="handleTogglePackage('${escapeHtml(p.id)}', '${toggleTarget}')">${toggleLabel}</button>
+                  <button type="button" class="btn btn-outline btn-xs" onclick="openPackagePreview('${escapeJsAttr(p.id)}', false)">Preview</button>
+                  <button type="button" class="btn ${isAktif ? 'btn-danger-soft' : 'btn-success'} btn-xs" onclick="handleTogglePackage('${escapeJsAttr(p.id)}', '${toggleTarget}')">${toggleLabel}</button>
                 </div>
               </td>
             </tr>
@@ -2940,6 +3017,9 @@
 
     $('missingPaketSelect').addEventListener('change', renderMissingStudents);
     $('btnCopyMissing').addEventListener('click', copyMissingToClipboard);
+
+    $('activeSessionFilter').addEventListener('change', () => renderActiveSessions(dashState.activeSessions));
+    $('btnClearExpiredSessions').addEventListener('click', handleClearExpiredSessions);
     $('btnRefreshActive').addEventListener('click', refreshActiveSessionsOnly);
 
     $('analysisAttemptBasis').addEventListener('change', renderItemAnalysis);
