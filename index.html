@@ -677,17 +677,17 @@
           <div class="brand-sub">Digital Learning Assessment System</div>
         </div>
       </div>
-      <a href="dashboard.html" class="btn-link-dash">Instructor Dashboard</a>
+      <a href="dashboard.html" class="btn-link-dash">Teacher Dashboard</a>
     </div>
   </header>
 
   <main class="container">
 
-    <!-- 1. CANDIDATE IDENTIFICATION FORM -->
+    <!-- 1. STUDENT LOGIN -->
     <section id="setupSection" class="setup-wrap">
       <div class="card">
         <div class="setup-header">
-          <h1>Candidate Identification</h1>
+          <h1>Student Login</h1>
           <p>Please select your class, full name, and the assessment package to begin.</p>
         </div>
 
@@ -1024,7 +1024,7 @@
     }
 
     // =========================================================================
-    // INITIALIZATION & CANDIDATE IDENTIFICATION
+    // INITIALIZATION & STUDENT LOGIN
     // =========================================================================
     async function initApp() {
       showLoading('Connecting to assessment server...');
@@ -1567,7 +1567,7 @@
 
       const notice = $('reviewNotice');
       if (!res.showKey) {
-        notice.textContent = 'Answer keys and explanations are hidden in accordance with the instructor\'s assessment settings.';
+        notice.textContent = 'Answer keys and explanations are hidden in accordance with the teacher\'s assessment settings.';
         notice.classList.remove('hidden');
       } else {
         notice.classList.add('hidden');
