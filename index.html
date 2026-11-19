@@ -465,7 +465,7 @@
       dummy: null, teacherToken: '',
       kelas: '', namaSiswa: '', pin: '', paketId: '', paketName: '',
       questions: [], byKey: {}, passages: {}, passRange: {}, shownPassageId: '', passageCollapsed: {},
-      currentIndex: 0, answers: {}, flagged: {}, tabSwitches: 0,
+      currentIndex: 0, answers: {}, flagged: {}, tabSwitches: 0, tabLog: [],
       elapsedSec: 0, startedAtMs: 0, timerInterval: null,
       examActive: false, submitting: false, submitToken: '', isDummy: false,
       lastTabWarnMs: 0, draftTimer: null, pendingPayload: null
@@ -695,7 +695,7 @@
       if (!state.examActive) return;
       safeSet(draftKey(), JSON.stringify({
         t: Date.now(), answers: state.answers, flagged: state.flagged,
-        tabSwitches: state.tabSwitches, currentIndex: state.currentIndex
+        tabSwitches: state.tabSwitches, tabLog: state.tabLog, currentIndex: state.currentIndex
       }));
     }
     function saveDraftSoon() {
@@ -709,6 +709,7 @@
       if (d.answers) { for (k in d.answers) { if (state.byKey[k]) state.answers[k] = d.answers[k]; } }
       if (d.flagged) { for (k in d.flagged) { if (state.byKey[k]) state.flagged[k] = d.flagged[k]; } }
       if (typeof d.tabSwitches === 'number') state.tabSwitches = d.tabSwitches;
+      if (d.tabLog && d.tabLog.length) state.tabLog = d.tabLog;
       if (typeof d.currentIndex === 'number') state.currentIndex = d.currentIndex;
     }
     function clearLocalDraft() { safeRemove(draftKey()); }
@@ -772,7 +773,7 @@
             }
           }
 
-          state.answers = {}; state.flagged = {}; state.tabSwitches = 0; state.currentIndex = 0;
+          state.answers = {}; state.flagged = {}; state.tabSwitches = 0; state.tabLog = []; state.currentIndex = 0;
           state.elapsedSec = Math.max(0, Number(res.elapsedSec) || 0);
           state.examActive = true; state.submitting = false; state.pendingPayload = null;
           loadLocalDraft();
@@ -860,6 +861,7 @@
       if (now - state.lastTabWarnMs < 1500) return;
       state.lastTabWarnMs = now;
       state.tabSwitches++;
+      if (state.tabLog.length < 60) state.tabLog.push({ t: Math.max(0, state.elapsedSec), n: curQ() ? curQ().num : 0 });
       updateTabSwitchBadge();
       saveLocalDraft();
       $('tabWarningCountPill').textContent = T.violation(state.tabSwitches);
@@ -1106,7 +1108,7 @@
       hide($('submitConfirmModal')); hide($('tabWarningModal'));
       state.pendingPayload = {
         kelas: state.kelas, namaSiswa: state.namaSiswa, paketId: state.paketId,
-        answers: state.answers, tabSwitches: state.tabSwitches,
+        answers: state.answers, tabSwitches: state.tabSwitches, tabLog: state.tabLog,
         submitToken: state.submitToken, teacherToken: state.isDummy ? state.teacherToken : ''
       };
       showLoading(isAuto ? T.submittingAuto : T.submitting);
