@@ -47,6 +47,7 @@
     .form-control:focus { outline: none; border-color: #3e5b61; }
     .pin-input { letter-spacing: 6px; font-size: 18px; font-weight: 800; text-align: center; }
     .hint { font-size: 11px; color: #626d69; margin-top: 4px; }
+    .essay-textarea { min-height: 150px; resize: vertical; line-height: 1.55; }
 
     .alert-error { background: #fbeae8; color: #c93b2b; border: 1px solid #e6b4ae; padding: 10px 13px; border-radius: 5px; font-size: 13px; font-weight: 600; margin-bottom: 13px; }
     .info-banner { background: #f3f0d7; border: 1px solid #c9c177; padding: 10px 13px; border-radius: 5px; font-size: 12.5px; margin-bottom: 13px; }
@@ -128,7 +129,7 @@
     .toast { position: fixed; bottom: 18px; right: 18px; left: 18px; max-width: 420px; margin-left: auto; background: #3e5b61; color: #fff; padding: 10px 15px; border-radius: 5px; font-size: 12.5px; font-weight: 600; z-index: 70; }
 
     .exam-lock, .exam-lock .question-card, .exam-lock .passage-card { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; -webkit-touch-callout: none; }
-    .exam-lock input[type="text"] { -webkit-user-select: text; user-select: text; }
+    .exam-lock input[type="text"], .exam-lock textarea { -webkit-user-select: text; user-select: text; }
 
     @media (max-width: 640px) {
       .res-stat-box { width: 50%; }
@@ -331,7 +332,7 @@
     var IS_GURU = /[?&]mode=guru(&|$)/.test(window.location.search);
     var IS_TOUCH = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (navigator.msMaxTouchPoints > 0);
     var OPTS = ['A', 'B', 'C', 'D', 'E'];
-    var DRAFT_MAX_AGE_MS = 150 * 60 * 1000;   // sama dengan masa sesi server (120 mnt) + toleransi
+    var DRAFT_MAX_AGE_MS = 150 * 60 * 1000;
     var INIT_CACHE_MAX_AGE_MS = 24 * 3600 * 1000;
     var STU_CACHE_MAX_AGE_MS = 30 * 60 * 1000;
     var SUBMIT_MAX_RETRY = 3;
@@ -379,8 +380,19 @@
       showPassage: 'Tampilkan Bacaan',
       flag: 'Tandai Ragu-ragu',
       flagged: 'Ditandai ★',
-      types: { PG: 'Pilihan Ganda', PGK: 'Pilihan Ganda Kompleks', BS: 'Benar / Salah', MENJODOHKAN: 'Menjodohkan', MATRIKS: 'Matriks / Kategori', IS: 'Isian Singkat' },
+      types: {
+        PG: 'Pilihan Ganda',
+        PGK: 'Pilihan Ganda Kompleks',
+        BS: 'Benar / Salah',
+        MENJODOHKAN: 'Menjodohkan',
+        MATCHING: 'Menjodohkan',
+        MATRIKS: 'Matriks / Kategori',
+        IS: 'Isian Singkat',
+        ESSAY: 'Uraian / Esai',
+        ESAI: 'Uraian / Esai'
+      },
       pgkHint: 'Pilih satu atau lebih jawaban yang benar:',
+      matchingHint: 'Pilih pasangan yang paling tepat:',
       yourAnswer: 'Jawaban Anda',
       typeHere: 'Ketik jawaban di sini...',
       stmt: 'Pernyataan',
@@ -438,7 +450,6 @@
       return normalizeApostrophes(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
-    // Teks kaya: <b>/<u>/<i>, [b][u][i], **tebal**, __garis bawah__, [IMG: url], [AUDIO: url]
     function formatRichMedia(rawText) {
       var text = escapeHtml(rawText || '');
       text = text
@@ -640,7 +651,6 @@
       });
     }
 
-    // ---- daftar siswa per kelas (dengan cache singkat) ----
     function fillStudents(list, wanted) {
       var sel = $('selectSiswa'), prev = wanted || sel.value;
       sel.innerHTML = optionsHtml(T.selectName, list);
@@ -659,14 +669,13 @@
       else { sel.disabled = true; sel.innerHTML = '<option value="">' + T.loadingStudents + '</option>'; }
 
       callApiRetry('getStudentsByClass', [kelas], 2, function (err, res) {
-        if ($('selectKelas').value !== kelas) return;   // kelas sudah diganti
+        if ($('selectKelas').value !== kelas) return;
         if (err) { if (!hasCache) { sel.innerHTML = '<option value="">' + T.failedStudents + '</option>'; showSetupError(err.message); } return; }
         fillStudents(res.students || [], wantedName);
         safeSet(ck, JSON.stringify({ t: Date.now(), list: res.students || [] }));
       });
     }
 
-    // ---- penanda tes yang belum selesai (tanpa menyimpan PIN) ----
     function saveActiveMarker() {
       if (IS_GURU) return;
       safeSet('neng_eva_active_v2', JSON.stringify({ kelas: state.kelas, nama: state.namaSiswa, paketId: state.paketId, t: Date.now() }));
@@ -818,7 +827,7 @@
     }
 
     // =====================================================================
-    // TIMER (berbasis jam dinding) & PELANGGARAN PINDAH TAB
+    // TIMER & PELANGGARAN PINDAH TAB
     // =====================================================================
     function formatSeconds(sec) {
       var s = Math.max(0, Math.floor(sec)), h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), x = s % 60;
@@ -873,10 +882,8 @@
       if (document.hidden) registerTabExitViolation();
       else tickTimer();
     });
-    // 'blur' hanya di perangkat non-sentuh: di HP, notifikasi/keyboard memicu blur palsu.
     if (!IS_TOUCH) window.addEventListener('blur', registerTabExitViolation);
 
-    // Pencegah ringan (bukan pengamanan mutlak)
     function isTextTarget(t) { return t && t.nodeType === 1 && /^(input|textarea)$/i.test(t.tagName); }
     function blockIfExam(ev) {
       if (!state.examActive || IS_GURU || isTextTarget(ev.target)) return;
@@ -935,7 +942,6 @@
       if (idx < 0 || idx >= state.questions.length) return;
       var prevPassage = curQ() ? curQ().passageId : '';
       if (!state.questions[idx].passageId || state.questions[idx].passageId !== prevPassage) pauseAudio();
-      else { /* bacaan sama: audio bacaan tetap berjalan */ }
       state.currentIndex = idx;
       saveLocalDraft();
       renderQuestion();
@@ -967,7 +973,6 @@
       var q = curQ(); if (!q) return;
       updateNavigator();
 
-      // --- bacaan: hanya dibangun ulang bila berganti bacaan (audio/gambar tidak ter-reset) ---
       var pBox = $('passageContainer');
       if (q.passageId && state.passages[q.passageId]) {
         if (state.shownPassageId !== q.passageId) {
@@ -1013,6 +1018,16 @@
         area.removeAttribute('data-rows');
         area.innerHTML = '<div class="form-group" style="margin-bottom:0;"><label class="form-label" for="shortAnswerInput">' + T.yourAnswer + '</label>' +
           '<input type="text" id="shortAnswerInput" class="form-control" placeholder="' + escapeHtml(T.typeHere) + '" value="' + escapeHtml(cur || '') + '" autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" /></div>';
+      } else if (q.tipeSoal === 'ESSAY' || q.tipeSoal === 'ESAI') {
+        var valStr = cur || '';
+        var words = trim(valStr) ? trim(valStr).split(/\s+/).length : 0;
+        $('questionStem').innerHTML = formatRichMedia(q.pertanyaan);
+        area.removeAttribute('data-rows');
+        area.innerHTML = '<div class="form-group" style="margin-bottom:0;">' +
+          '<label class="form-label" for="essayAnswerInput">' + T.yourAnswer + '</label>' +
+          '<textarea id="essayAnswerInput" class="form-control essay-textarea" rows="6" placeholder="' + escapeHtml(T.typeHere) + '">' + escapeHtml(valStr) + '</textarea>' +
+          '<div id="essayCharCount" class="hint">' + words + ' kata &bull; ' + valStr.length + ' karakter</div>' +
+          '</div>';
       } else {
         $('questionStem').innerHTML = formatRichMedia(q.pertanyaan);
         area.removeAttribute('data-rows');
@@ -1023,7 +1038,8 @@
         }
         var letters = [], pool = q.tipeSoal === 'BS' ? ['A', 'B'] : OPTS;
         for (i = 0; i < pool.length; i++) { if (opts[pool[i]] && opts[pool[i]] !== '-') letters.push(pool[i]); }
-        html = multi ? '<div class="multi-hint">' + T.pgkHint + '</div>' : '';
+        var isMatch = (q.tipeSoal === 'MENJODOHKAN' || q.tipeSoal === 'MATCHING');
+        html = multi ? '<div class="multi-hint">' + T.pgkHint + '</div>' : (isMatch ? '<div class="multi-hint">' + T.matchingHint + '</div>' : '');
         for (i = 0; i < letters.length; i++) {
           l = letters[i];
           var checked = multi ? (cur && indexOf(cur, l) !== -1) : cur === l;
@@ -1041,7 +1057,6 @@
 
     function indexOf(arr, v) { for (var i = 0; i < arr.length; i++) { if (arr[i] === v) return i; } return -1; }
 
-    // Pembaruan parsial: tidak membangun ulang soal/bacaan saat memilih jawaban.
     function refreshOptionStates() {
       var labels = $('questionInputArea').getElementsByTagName('label');
       for (var i = 0; i < labels.length; i++) {
@@ -1077,8 +1092,16 @@
     }
 
     function onAnswerInput(ev) {
-      var q = curQ(), t = ev.target; if (!q || !t || t.id !== 'shortAnswerInput') return;
+      var q = curQ(), t = ev.target;
+      if (!q || !t || (t.id !== 'shortAnswerInput' && t.id !== 'essayAnswerInput')) return;
       state.answers[q.key] = t.value;
+      if (t.id === 'essayAnswerInput') {
+        var cntEl = $('essayCharCount');
+        if (cntEl) {
+          var w = trim(t.value) ? trim(t.value).split(/\s+/).length : 0;
+          cntEl.innerHTML = w + ' kata &bull; ' + t.value.length + ' karakter';
+        }
+      }
       saveDraftSoon();
       updateNavigator();
     }
@@ -1187,8 +1210,9 @@
           '<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">' +
           '<span class="badge badge-neutral">' + T.question + ' ' + (q ? q.num : escapeHtml(d.noSoal)) + '</span>' + badge + '</div>' +
           '<div class="review-stem">' + formatRichMedia(reviewStem(q)) + '</div>' +
-          '<div class="review-ans-row"><strong>' + T.yourAns + '</strong> ' + escapeHtml(ansText) + '</div>' +
-          ((showKey && d.keyAns) ? '<div class="review-ans-row" style="background:#e4f2ed;border-color:#9ecab9;"><strong>' + T.keyLabel + '</strong> ' + escapeHtml(d.keyAns) + '</div>' : '') +
+          '<div class="review-ans-row"><strong>' + T.yourAns + '</strong> <span style="white-space:pre-line;">' + escapeHtml(ansText) + '</span></div>' +
+          (d.feedback ? '<div class="review-ans-row" style="background:#e3ecee;border-color:#b8cdd1;"><strong>Catatan Penilaian:</strong> ' + escapeHtml(d.feedback) + '</div>' : '') +
+          ((showKey && d.keyAns) ? '<div class="review-ans-row" style="background:#e4f2ed;border-color:#9ecab9;"><strong>' + T.keyLabel + '</strong> <span style="white-space:pre-line;">' + escapeHtml(d.keyAns) + '</span></div>' : '') +
           ((showKey && d.pembahasan) ? '<div class="review-explanation"><strong>' + T.explLabel + '</strong> ' + formatRichMedia(d.pembahasan) + '</div>' : '') +
           '</div>';
       }
